@@ -1,0 +1,14 @@
+[package]
+name = "chriscerie/roact-spring"
+description = "A spring-based animation library for Roact inspired by React Spring"
+version = "0.0.1"
+license = "MIT"
+authors = ["chriscerie"]
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+include = ["default.project.json", "src"]
+
+[dependencies]
+Roact = "roblox/roact@^1"
+Hooks = "kampfkarren/roact-hooks@^0.3"
+Promise = "evaera/promise@^3.2"

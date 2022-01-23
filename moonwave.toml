@@ -1,0 +1,13 @@
+gitRepoUrl = "https://github.com/chriscerie/roact-spring"
+
+classOrder = [
+	"useSpring",
+    "SpringValue",
+]
+
+[home]
+enabled = true
+includeReadme = false
+
+[docusaurus]
+tagline = "A spring-based animation library for Roact"
