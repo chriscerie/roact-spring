@@ -10,6 +10,8 @@ export type SpringConfig = {
     from: number,
     to: number,
     onChange: (position: number) -> ()?,
+
+    immediate: boolean?,
     mass: number?,
     tension: number?,
     friction: number?,
@@ -22,6 +24,8 @@ export type SpringConfig = {
 
 local function applyConfigDefault(config)
     return {
+        immediate = config.immediate or false,
+
         mass = config.mass or 1,
         tension = config.tension or 170,
         friction = config.friction or 26,
@@ -47,8 +51,6 @@ function SpringValue.new(config: SpringConfig)
         to = config.to,
         onChange = config.onChange or function() end,
         _finished = false,
-        _elapsedTime = 0,
-        _immediate = false,
         _lastPosition = config.from,
         _config = applyConfigDefault(config),
 
@@ -59,20 +61,21 @@ end
 
 function SpringValue:start(config)
     return Promise.new(function(resolve)
-        if config then
-            self._config = applyConfigDefault(config)
-            if config.to then
-                self.to = config.to
+        self.from = config.from or self.from
+        self._lastPosition = self.from
+        self.to = config.to or self.to
+        self.onChange = config.onChange or self.onChange
+        self._finished = false
+
+        if not self._connection then
+            if config then
+                self._config = applyConfigDefault(config)
             end
+
+            self._connection = RunService.Heartbeat:connect(function(dt)
+                self:advance(dt)
+            end)
         end
-    
-        if self._connection then
-            self._connection:Disconnect()
-        end
-    
-        self._connection = RunService.Heartbeat:connect(function(dt)
-            self:advance(dt)
-        end)
 
         self.onComplete:Wait()
         resolve()
@@ -86,6 +89,8 @@ function SpringValue:stop()
         self._connection = nil
     end
 
+    self._lastVelocity = 0
+
     self.onComplete:Fire()
 end
 
@@ -94,6 +99,7 @@ function SpringValue:advance(dt: number)
     local to = self.to
     local position = self.to
     local from = self.from
+    self._finished = config.immediate
 
     if not self._finished then
         position = self._lastPosition
@@ -103,8 +109,6 @@ function SpringValue:advance(dt: number)
             self._finished = true
             return
         end
-
-        local elapsed = self._elapsedTime + dt
 
         local _v0 = if self.v0 ~= nil then self.v0 else config.velocity
 
@@ -126,14 +130,11 @@ function SpringValue:advance(dt: number)
 
             -- When `true`, the value is increasing over time
             local isGrowing = if from == to then _v0 > 0 else to > from
-
-            local isMoving: boolean
-            local isBouncing = false
             
             local step = 1 -- 1ms
             local numSteps = math.ceil(dt / step)
             for n = 0, numSteps do
-                isMoving = math.abs(velocity) > restVelocity
+                local isMoving = math.abs(velocity) > restVelocity
 
                 if not isMoving then
                     self._finished = math.abs(to - position) <= config.precision
@@ -143,7 +144,7 @@ function SpringValue:advance(dt: number)
                 end
 
                 if canBounce then
-                    isBouncing = position == to or position > to == isGrowing
+                    local isBouncing = position == to or position > to == isGrowing
 
                     -- Invert the velocity with a magnitude, or clamp it
                     if isBouncing then
@@ -159,18 +160,18 @@ function SpringValue:advance(dt: number)
                 velocity = velocity + acceleration * step -- pt/ms
                 position = position + velocity * step
             end
-
-            self._lastVelocity = velocity
-
-            if position ~= self._lastPosition then
-                self._lastPosition = position
-                self.onChange(position)
-            end
-
-            if self._finished then
-                self:stop()
-            end
         end
+
+        self._lastVelocity = velocity
+    end
+
+    if position ~= self._lastPosition then
+        self._lastPosition = position
+        self.onChange(position)
+    end
+
+    if self._finished then
+        self:stop()
     end
 end
 

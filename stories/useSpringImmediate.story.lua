@@ -12,28 +12,28 @@ local function Button(props, hooks)
             Rotation = 0,
             Position = UDim2.fromScale(0.5, 0.5),
         },
-        config = {
-            mass = 0.1,
-        },
     })
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = styles.Position.value,
 		Size = UDim2.fromScale(0.3, 0.3),
-		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+		BackgroundColor3 = Color3.fromRGB(99, 255, 130),
         Rotation = styles.Rotation.value,
+        Text = "Click me",
 
         [Roact.Event.Activated] = function()
             api.start({
                 Position = UDim2.fromScale(0.5, 0.8),
             }, {
-                velocity = -0.3,
+                immediate = true,
             }):andThen(function()
                 print("Completed")
             end)
         end,
-	})
+	}, {
+        UICorner = e("UICorner"),
+    })
 end
 
 Button = Hooks.new(Roact)(Button)

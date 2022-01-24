@@ -19,6 +19,34 @@ type useSpringProps = {
     .start () -> Promise
 ]=]
 
+local function getValueFromAlpha(value, target, alpha)
+    if typeof(value) == "number" then
+        return value + (target - value) * alpha
+    elseif value.Lerp then
+        return value:Lerp(target, alpha)
+    end
+    error("Cannot start animation. Value is not a number or lerpable.")
+end
+
+local function initStyles(hooks, useSpringProps: useSpringProps)
+    local styles = {}
+    for k, v in pairs(useSpringProps.from) do
+        local style, setStyle = hooks.useBinding(v)
+        styles[k] = {
+            value = style,
+            _binding = style,
+            _setValue = setStyle,
+            _springValue = SpringValue.new(
+                MergeTable(useSpringProps, {
+                    from = 0,
+                    to = 1,
+                })
+            ),
+        }
+    end
+    return styles
+end
+
 --[=[
     @within useSpring
 
@@ -34,26 +62,21 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
                 value: any,
                 _binding: any,
                 _setValue: any,
+                _springValue: any,
             },
         },
-    } = hooks.useValue({})
+    } = hooks.useValue(initStyles(hooks, useSpringProps))
 
     if useSpringProps.config == nil then
         useSpringProps.config = {}
     end
 
-    for k, v in pairs(useSpringProps.from) do
-        local style, setStyle = hooks.useBinding(v)
-
-        styles.value[k] = {
-            value = style,
-            _binding = style,
-            _setValue = setStyle,
-        }
-    end
-
     local api = {
         start = function(startProps, config)
+            if not startProps then
+                return Promise.new()
+            end
+
             config = if config then MergeTable(useSpringProps.config, config) else useSpringProps.config
             local promises = {}
 
@@ -62,24 +85,13 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
                     local style = styles.value[name]
                     local value = style.value:getValue()
 
-                    local getValueFromAlpha = function(alpha)
-                        if typeof(value) == "number" then
-                            return value + (target - value) * alpha
-                        elseif value.Lerp then
-                            return value:Lerp(target, alpha)
-                        end
-                        error("Cannot start animation for " .. name .. ". Value is not a number or lerpable.")
-                    end
-
-                    local spring = SpringValue.new(MergeTable(config, {
+                    style._springValue:start(MergeTable(config, {
                         from = 0,
                         to = 1,
-                        onChange = function(alpha)
-                            style._setValue(getValueFromAlpha(alpha))
-                        end,
-                    }))
-
-                    spring:start():andThen(function()
+                        onChange = function(position)
+                            style._setValue(getValueFromAlpha(value, target, position))
+                        end
+                    })):andThen(function()
                         resolve()
                     end)
                 end))
