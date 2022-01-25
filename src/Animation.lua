@@ -82,6 +82,7 @@ function Animation:setConfig(config)
         self.fromValues = if config.from then getValuesFromType(config.from) else self.fromValues
         self.lastPosition = if config.from then getValuesFromType(config.from) else self.lastPosition
         self.config = AnimationConfig:applyDefaults(config)
+        self.done = table.create(#getValuesFromType(#self.values), false)
     end
 end
 
