@@ -7,7 +7,7 @@ local defaults = table.freeze(merge(constants.config.default, {
     immediate = false,
     mass = 1,
     clamp = false,
-    precision = 0.01,
+    precision = 0.005,
     velocity = 0,
 }))
 

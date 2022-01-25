@@ -25,9 +25,6 @@ local function Button(props, hooks)
             api.start({
                 position = UDim2.fromScale(0.5, 0.8),
             }, {
-                bounce = 2,
-                tension = 180,
-                friction = 8,
             }):andThen(function()
                 print("Completed")
             end)

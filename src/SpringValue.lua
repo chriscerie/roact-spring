@@ -49,7 +49,7 @@ function SpringValue:start(config)
         self.onChange = config.onChange or self.onChange
 
         if not self._connection then
-            self._connection = RunService.Heartbeat:Connect(function(dt)
+            self._connection = RunService.RenderStepped:Connect(function(dt)
                 self:advance(dt)
             end)
         end
@@ -100,12 +100,12 @@ function SpringValue:advance(dt: number)
     
             -- Duration easing
             if config.duration then
-                
+
             else
                 -- Spring easing
                 velocity = anim.lastVelocity[i] or _v0
 
-                local precision = config.precision or (if from == to then 0.01 else math.min(1, math.abs(to - from) * 0.01))
+                local precision = config.precision or (if from == to then 0.005 else math.min(1, math.abs(to - from) * 0.001))
                 
                 -- The velocity at which movement is essentially none
                 local restVelocity = config.restVelocity or precision / 10
@@ -118,7 +118,7 @@ function SpringValue:advance(dt: number)
                 local isGrowing = if from == to then _v0 > 0 else from < to
                 
                 local step = 1 -- 1ms
-                local numSteps = math.ceil(dt / step)
+                local numSteps = math.ceil(dt / step) * 10
                 for n = 0, numSteps do
                     local isMoving = math.abs(velocity) > restVelocity
     
@@ -138,8 +138,8 @@ function SpringValue:advance(dt: number)
                             position = to
                         end
                     end
-    
-                    local springForce = -config.tension * 0.00001 * (position - to)
+
+                    local springForce = -config.tension * 0.000001 * (position - to)
                     local dampingForce = -config.friction * 0.001 * velocity
                     local acceleration = (springForce + dampingForce) / config.mass -- pt/ms^2
     

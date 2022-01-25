@@ -52,10 +52,8 @@ local function Button(props, hooks)
                         api.start(function(i)
                             if i == index then
                                 return {
-                                    Size = UDim2.fromScale(1.17, 0.2),
-                                }, {
-                                    tension = 200,
-                                }
+                                    Size = UDim2.new(1, 20, 0.18, 20),
+                                }, RoactSpring.constants.config.stiff
                             end
                             return {}
                         end)
@@ -75,8 +73,6 @@ local function Button(props, hooks)
                             if i ~= index then
                                 return {
                                     Position = UDim2.fromScale(0.5, (table.find(sortedButtonNums, i) - 1) * 0.2 + 0.2),
-                                }, {
-                                    tension = 250,
                                 }
                             end
                             return {}
@@ -84,22 +80,29 @@ local function Button(props, hooks)
                     end)
                 end
             end,
-            [Roact.Event.InputEnded] = function(_,input)
+            [Roact.Event.InputEnded] = function(button,input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     if connection.value then
                         connection.value:Disconnect()
                         connection.value = nil
                     end
 
+                    local buttons = button.Parent:GetChildren()
+
+                    table.sort(buttons, function(a, b)
+                        return a.AbsolutePosition.Y < b.AbsolutePosition.Y
+                    end)
+
+                    local sortedButtonNums = {}
+                    for _, v in ipairs(buttons) do
+                        table.insert(sortedButtonNums, tonumber(v.Name))
+                    end
+
                     api.start(function(i)
-                        if i == index then
-                            return {
-                                Size = UDim2.fromScale(1, 0.17),
-                            }, {
-                                tension = 200,
-                            }
-                        end
-                        return {}
+                        return {
+                            Position = UDim2.fromScale(0.5, (table.find(sortedButtonNums, i) - 1) * 0.2 + 0.2),
+                            Size = UDim2.fromScale(1, 0.18),
+                        }
                     end)
                 end
             end

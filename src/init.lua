@@ -5,6 +5,8 @@ local RoactSpring = {
 
 	-- Additional classes
 	SpringValue = require(script.SpringValue),
+
+	constants = require(script.constants),
 }
 
 return RoactSpring
