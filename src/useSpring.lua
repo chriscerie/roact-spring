@@ -7,7 +7,7 @@ local RunService = game:GetService("RunService")
 
 local SpringValue = require(script.Parent.SpringValue)
 local Promise = require(script.Parent.Parent.Promise)
-local MergeTable = require(script.Parent.util.MergeTable)
+local merge = require(script.Parent.util.merge)
 
 type useSpringProps = {
     [string]: any,
@@ -19,15 +19,6 @@ type useSpringProps = {
     .start () -> Promise
 ]=]
 
-local function getValueFromAlpha(value, target, alpha)
-    if typeof(value) == "number" then
-        return value + (target - value) * alpha
-    elseif value.Lerp then
-        return value:Lerp(target, alpha)
-    end
-    error("Cannot start animation. Value is not a number or lerpable.")
-end
-
 local function initStyles(hooks, useSpringProps: useSpringProps)
     local styles = {}
     for k, v in pairs(useSpringProps.from) do
@@ -37,9 +28,9 @@ local function initStyles(hooks, useSpringProps: useSpringProps)
             _binding = style,
             _setValue = setStyle,
             _springValue = SpringValue.new(
-                MergeTable(useSpringProps, {
-                    from = 0,
-                    to = 1,
+                merge(useSpringProps, {
+                    from = v,
+                    to = v,
                 })
             ),
         }
@@ -77,7 +68,7 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
                 return Promise.new()
             end
 
-            config = if config then MergeTable(useSpringProps.config, config) else useSpringProps.config
+            config = if config then merge(useSpringProps.config, config) else useSpringProps.config
             local promises = {}
 
             for name, target in pairs(startProps) do
@@ -85,11 +76,11 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
                     local style = styles.value[name]
                     local value = style.value:getValue()
 
-                    style._springValue:start(MergeTable(config, {
-                        from = 0,
-                        to = 1,
-                        onChange = function(position)
-                            style._setValue(getValueFromAlpha(value, target, position))
+                    style._springValue:start(merge(config, {
+                        from = value,
+                        to = target,
+                        onChange = function(newValue)
+                            style._setValue(newValue)
                         end
                     })):andThen(function()
                         resolve()

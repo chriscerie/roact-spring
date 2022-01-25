@@ -2,6 +2,7 @@ local RunService = game:GetService("RunService")
 
 local Promise = require(script.Parent.Parent.Promise)
 local Signal = require(script.Parent.Signal)
+local Animation = require(script.Parent.Animation)
 
 local SpringValue = {}
 SpringValue.__index = SpringValue
@@ -22,57 +23,33 @@ export type SpringConfig = {
     restVelocity: number?,
 }
 
-local function applyConfigDefault(config)
-    return {
-        immediate = config.immediate or false,
-
-        mass = config.mass or 1,
-        tension = config.tension or 170,
-        friction = config.friction or 26,
-        clamp = config.clamp or false,
-        precision = config.precision or 0.01,
-        velocity = config.velocity or 0,
-        bounce = config.bounce,
-        restVelocity = config.restVelocity,
-    }
-end
-
 --[=[
     @class SpringValue
 
-    Spring values. Generally, you should use the `useSpring` hook instead of this class.
+    Spring values. Generally, you should use the `useSpring` hook instead.
 ]=]
 function SpringValue.new(config: SpringConfig)
     assert(config.from, "Spring.new: from is required")
     assert(config.to, "Spring.new: to is required")
 
 	return setmetatable({
-        from = config.from,
-        to = config.to,
+        animation = Animation.new(config),
         onChange = config.onChange or function() end,
-        _finished = false,
-        _lastPosition = config.from,
-        _config = applyConfigDefault(config),
 
         -- Events
-        onComplete = Signal.new()
+        onComplete = Signal.new(),
 	}, SpringValue)
 end
 
 function SpringValue:start(config)
     return Promise.new(function(resolve)
-        self.from = config.from or self.from
-        self._lastPosition = self.from
-        self.to = config.to or self.to
+        local anim = self.animation
+        anim:setConfig(config)
+
         self.onChange = config.onChange or self.onChange
-        self._finished = false
 
         if not self._connection then
-            if config then
-                self._config = applyConfigDefault(config)
-            end
-
-            self._connection = RunService.Heartbeat:connect(function(dt)
+            self._connection = RunService.Heartbeat:Connect(function(dt)
                 self:advance(dt)
             end)
         end
@@ -84,94 +61,112 @@ end
 
 function SpringValue:stop()
     if self._connection then
-        self._finished = true
         self._connection:Disconnect()
         self._connection = nil
     end
-
-    self._lastVelocity = 0
 
     self.onComplete:Fire()
 end
 
 function SpringValue:advance(dt: number)
-    local config = self._config
-    local to = self.to
-    local position = self.to
-    local from = self.from
-    self._finished = config.immediate
+    local idle = true
+    local changed = false
 
-    if not self._finished then
-        position = self._lastPosition
+    local anim = self.animation
+    local config = anim.config
+    local toValues = anim.toValues
 
-        -- Loose springs never move
-        if config.tension <= 0 then
-            self._finished = true
-            return
+    for i, node in ipairs(anim.values) do
+        if anim.done[i] then
+            continue
         end
 
-        local _v0 = if self.v0 ~= nil then self.v0 else config.velocity
+        local finished = config.immediate
+        local position = toValues[i]
+        local from = anim.fromValues[i]
+        local to = anim.toValues[i]
 
-        local velocity
+        if not finished then
+            position = anim.lastPosition[i]
 
-        -- Duration easing
-        if config.duration then
-            
-        else
-            -- Spring easing
-            velocity = if self._lastVelocity == nil then _v0 else self._lastVelocity
-            
-            -- The velocity at which movement is essentially none
-            local restVelocity = config.restVelocity or config.precision / 10
-
-            -- Bouncing is opt-in (not to be confused with overshooting)
-            local bounceFactor = if config.clamp then 0 else config.bounce
-            local canBounce = bounceFactor ~= nil
-
-            -- When `true`, the value is increasing over time
-            local isGrowing = if from == to then _v0 > 0 else to > from
-            
-            local step = 1 -- 1ms
-            local numSteps = math.ceil(dt / step)
-            for n = 0, numSteps do
-                local isMoving = math.abs(velocity) > restVelocity
-
-                if not isMoving then
-                    self._finished = math.abs(to - position) <= config.precision
-                    if self._finished then
-                        break
-                    end
-                end
-
-                if canBounce then
-                    local isBouncing = position == to or position > to == isGrowing
-
-                    -- Invert the velocity with a magnitude, or clamp it
-                    if isBouncing then
-                        velocity = -velocity * bounceFactor
-                        position = to
-                    end
-                end
-
-                local springForce = -config.tension * 0.00001 * (position - to)
-                local dampingForce = -config.friction * 0.001 * velocity
-                local acceleration = (springForce + dampingForce) / config.mass -- pt/ms^2
-
-                velocity = velocity + acceleration * step -- pt/ms
-                position = position + velocity * step
+            -- Loose springs never move
+            if config.tension <= 0 then
+                anim.done[i] = true
+                continue
             end
+    
+            local _v0 = anim.v0[i]
+            local velocity
+    
+            -- Duration easing
+            if config.duration then
+                
+            else
+                -- Spring easing
+                velocity = anim.lastVelocity[i] or _v0
+
+                local precision = config.precision or (if from == to then 0.01 else math.min(1, math.abs(to - from) * 0.01))
+                
+                -- The velocity at which movement is essentially none
+                local restVelocity = config.restVelocity or precision / 10
+    
+                -- Bouncing is opt-in (not to be confused with overshooting)
+                local bounceFactor = if config.clamp then 0 else config.bounce
+                local canBounce = bounceFactor ~= nil
+    
+                -- When `true`, the value is increasing over time
+                local isGrowing = if from == to then _v0 > 0 else from < to
+                
+                local step = 1 -- 1ms
+                local numSteps = math.ceil(dt / step)
+                for n = 0, numSteps do
+                    local isMoving = math.abs(velocity) > restVelocity
+    
+                    if not isMoving then
+                        finished = math.abs(to - position) <= precision
+                        if finished then
+                            break
+                        end
+                    end
+    
+                    if canBounce then
+                        local isBouncing = position == to or position > to == isGrowing
+    
+                        -- Invert the velocity with a magnitude, or clamp it
+                        if isBouncing then
+                            velocity = -velocity * bounceFactor
+                            position = to
+                        end
+                    end
+    
+                    local springForce = -config.tension * 0.00001 * (position - to)
+                    local dampingForce = -config.friction * 0.001 * velocity
+                    local acceleration = (springForce + dampingForce) / config.mass -- pt/ms^2
+    
+                    velocity = velocity + acceleration * step -- pt/ms
+                    position = position + velocity * step
+                end
+            end
+    
+            anim.lastVelocity[i] = velocity
         end
 
-        self._lastVelocity = velocity
+        if finished then
+            anim.done[i] = true
+        else
+            idle = false
+        end
+
+        if anim:setValue(i, position) then
+            changed = true
+        end
     end
 
-    if position ~= self._lastPosition then
-        self._lastPosition = position
-        self.onChange(position)
-    end
-
-    if self._finished then
+    if idle then
+        self.onChange(anim:getValue())
         self:stop()
+    elseif changed then
+        self.onChange(anim:getValue())
     end
 end
 

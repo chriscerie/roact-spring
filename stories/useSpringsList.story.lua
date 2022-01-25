@@ -40,7 +40,6 @@ local function Button(props, hooks)
 
                         api.start(function(i)
                             if i == index then
-                                print("YS")
                                 return {
                                     Position = UDim2.fromScale(0.5, (yPos - frame.AbsolutePosition.Y) / frame.AbsoluteSize.Y),
                                 }, {

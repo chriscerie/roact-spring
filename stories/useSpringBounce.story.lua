@@ -9,22 +9,21 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, {
         from = {
-            Rotation = 0,
-            Position = UDim2.fromScale(0.5, 0.5),
+            size = UDim2.fromOffset(30, 30),
+            position = UDim2.fromScale(0.5, 0.5),
         },
     })
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = styles.Position.value,
-		Size = UDim2.fromScale(0.3, 0.3),
+        Position = styles.position.value,
+		Size = styles.size.value,
 		BackgroundColor3 = Color3.fromRGB(99, 255, 130),
-        Rotation = styles.Rotation.value,
         Text = "Click me",
 
         [Roact.Event.Activated] = function()
             api.start({
-                Position = UDim2.fromScale(0.5, 0.8),
+                position = UDim2.fromScale(0.5, 0.8),
             }, {
                 bounce = 1,
                 velocity = -0.05,

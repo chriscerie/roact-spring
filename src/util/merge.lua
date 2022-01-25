@@ -1,4 +1,4 @@
-local function MergeTable(...)
+local function merge(...)
 	local new = {}
 
 	for dictionaryIndex = 1, select("#", ...) do
@@ -6,11 +6,7 @@ local function MergeTable(...)
 
 		if dictionary ~= nil then
 			for key, value in pairs(dictionary) do
-				if value == None then
-					new[key] = nil
-				else
-					new[key] = value
-				end
+				new[key] = value
 			end
 		end
 	end
@@ -18,4 +14,4 @@ local function MergeTable(...)
 	return new
 end
 
-return MergeTable
+return merge

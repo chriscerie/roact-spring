@@ -4,7 +4,7 @@ registry = "test"
 
 [[package]]
 name = "chriscerie/roact-spring"
-version = "0.0.1"
+version = "0.0.3"
 dependencies = [["Hooks", "kampfkarren/roact-hooks@0.3.0"], ["Promise", "evaera/promise@3.2.1"], ["Roact", "roblox/roact@1.4.2"]]
 
 [[package]]
