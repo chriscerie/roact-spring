@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[988],{34623:function(e){e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"SpringValue","desc":"Spring values. Generally, you should use the `useSpring` hook instead of this class.","source":{"line":41,"path":"src/SpringValue.lua"}}')}}]);
