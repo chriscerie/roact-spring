@@ -43,8 +43,20 @@ return Roact.createElement("TextButton", {
 
 ## Demos
 
-[View source](./useSpringsList)
-<img src="https://media.giphy.com/media/4qOEZ93YjhfKtSlx7b/giphy.gif" width="400" />
+These demos are publicly available. Click on each gif to go to their source.
 
-[View source](./useSpringDrag)
-<img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
+### useSpring
+
+<a href="stories/useSpringDrag.story.lua">
+  <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
+</a>
+
+### useSprings
+
+<a href="stories/useSpringsList.story.lua">
+  <img src="https://media.giphy.com/media/4qOEZ93YjhfKtSlx7b/giphy.gif" width="400" />
+</a>
+
+## License
+
+`roact-spring` is available under the MIT license. See [LICENSE](LICENSE) for details.
