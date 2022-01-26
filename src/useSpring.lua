@@ -20,14 +20,17 @@ type useSpringProps = {
 ]=]
 
 local function initStyles(hooks, useSpringProps: useSpringProps)
-    local styles = {}
+    local styles = {
+        bindings = {},
+        controls = {},
+    }
+
     for k, v in pairs(useSpringProps.from) do
         local style, setStyle = hooks.useBinding(v)
-        styles[k] = {
-            value = style,
-            _binding = style,
-            _setValue = setStyle,
-            _springValue = SpringValue.new(
+        styles.bindings[k] = style
+        styles.controls[k] = {
+            setValue = setStyle,
+            springValue = SpringValue.new(
                 merge(useSpringProps, {
                     from = v,
                     to = v,
@@ -35,6 +38,7 @@ local function initStyles(hooks, useSpringProps: useSpringProps)
             ),
         }
     end
+
     return styles
 end
 
@@ -47,20 +51,19 @@ end
     @return ({[string]: RoactBinding}, api)
 ]=]
 local function useSpring(hooks, useSpringProps: useSpringProps)
+    assert(typeof(useSpringProps) == "table", "Props for `useSpring` is required.")
+
     local styles: {
-        value: {
+        bindings: { [string]: any },
+        controls: {
             [string]: {
-                value: any,
-                _binding: any,
-                _setValue: any,
-                _springValue: any,
-            },
-        },
+                setValue: () -> (),
+                springValue: typeof(SpringValue.new({ from = 0, to = 0 })),
+            }
+        }
     } = hooks.useValue(initStyles(hooks, useSpringProps))
 
-    if useSpringProps.config == nil then
-        useSpringProps.config = {}
-    end
+    useSpringProps.config = useSpringProps.config or {}
 
     local api = {
         start = function(startProps, config)
@@ -73,14 +76,15 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
 
             for name, target in pairs(startProps) do
                 table.insert(promises, Promise.new(function(resolve)
-                    local style = styles.value[name]
-                    local value = style.value:getValue()
+                    local binding = styles.value.bindings[name]
+                    local control = styles.value.controls[name]
+                    local value = binding:getValue()
 
-                    style._springValue:start(merge(config, {
+                    control.springValue:start(merge(config, {
                         from = value,
                         to = target,
                         onChange = function(newValue)
-                            style._setValue(newValue)
+                            control.setValue(newValue)
                         end
                     })):andThen(function()
                         resolve()
@@ -92,7 +96,7 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
         end,
     }
 
-    return styles.value, api
+    return styles.value.bindings, api
 end
 
 return useSpring

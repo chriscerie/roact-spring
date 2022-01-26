@@ -16,8 +16,8 @@ local function Button(props, hooks)
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = styles.position.value,
-		Size = styles.size.value,
+        Position = styles.position,
+		Size = styles.size,
 		BackgroundColor3 = Color3.fromRGB(99, 255, 130),
         Text = "Click me",
 

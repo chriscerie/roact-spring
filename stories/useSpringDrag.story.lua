@@ -12,7 +12,7 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, {
         from = {
-            size = UDim2.fromOffset(200, 200),
+            size = UDim2.fromOffset(150, 150),
             position = UDim2.fromScale(0.5, 0.5),
         },
     })
@@ -20,11 +20,10 @@ local function Button(props, hooks)
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = styles.position.value,
-		Size = styles.size.value,
+        Position = styles.position,
+		Size = styles.size,
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         AutoButtonColor = false,
-        Transparency = 0.2,
         Text = "",
 
         [Roact.Event.InputBegan] = function(button, input)
@@ -35,8 +34,8 @@ local function Button(props, hooks)
 
                         api.start({
                             position = UDim2.fromOffset(mousePos.X, mousePos.Y),
-                            size = UDim2.fromOffset(250, 250),
-                        }, { tension = 410, friction = 20 })
+                            size = UDim2.fromOffset(180, 180),
+                        }, { tension = 100, friction = 10 })
                     end)
                 end
             end
@@ -45,8 +44,8 @@ local function Button(props, hooks)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if connection.value then
                     api.start({
-                        size = UDim2.fromOffset(200, 200),
-                    }, ({ tension = 410, friction = 20 }))
+                        size = UDim2.fromOffset(150, 150),
+                    }, ({ tension = 100, friction = 10 }))
                     connection.value:Disconnect()
                     connection.value = nil
                 end
@@ -58,8 +57,8 @@ local function Button(props, hooks)
         }),
         UIGradient = e("UIGradient", {
             Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 255, 195)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 175, 254)),
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(110, 255, 183)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 119, 253)),
             }),
             Rotation = 25,
         }),

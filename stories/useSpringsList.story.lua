@@ -54,11 +54,11 @@ local function Button(props, hooks)
     for index, buttonProp in ipairs(buttonProps) do
         buttons[index] = e("ImageButton", {
             AnchorPoint = Vector2.new(0.5, 0.5),
-            Position = springs[index].Position.value,
-            Size = springs[index].Size.value,
+            Position = springs[index].Position,
+            Size = springs[index].Size,
             BackgroundColor3 = Color3.fromRGB(255, 255, 255),
             AutoButtonColor = false,
-            ZIndex = springs[index].ZIndex.value,
+            ZIndex = springs[index].ZIndex,
 
             [Roact.Event.InputBegan] = function(button, input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -164,7 +164,7 @@ local function Button(props, hooks)
                 Text = buttonProp.text,
                 TextSize = 22,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                ZIndex = springs[index].ZIndex.value,
+                ZIndex = springs[index].ZIndex,
             }),
         })
     end
