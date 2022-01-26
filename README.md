@@ -1,9 +1,17 @@
-<p align="center">
-  <img src="https://i.imgur.com/1Ta6WRv.png" width="200" />
-</p>
+<a href="https://www.chrisc.dev/roact-spring/">
+  <p align="center">
+    <img src="https://i.imgur.com/1Ta6WRv.png" width="200" />
+  </p>
+</a>
 
 <h1 align="center">roact-spring</h1>
 <h3 align="center">A modern spring-physics based </br> animation library for Roact inspired by react-spring</h3>
+
+<br>
+
+<div align="center">
+  <a href="https://github.com/chriscerie/roact-spring/actions/workflows/docs.yml"><img src="https://github.com/chriscerie/roact-spring/workflows/docs/badge.svg" alt="Deploy Docs Status"/></a>
+</div>
 
 <br>
 
@@ -13,7 +21,7 @@
 
 * Add the latest version of roact-spring to your wally.toml (e.g., `RoactSpring = "chriscerie/roact-spring@^0.0"`)
 
-## A Simple Example
+## Getting Started
 
 Getting started with roact-spring is as simple as:
 
@@ -40,6 +48,8 @@ return Roact.createElement("TextButton", {
     end,
 })
 ```
+
+More information can be found in roact-spring's official [documentation](https://www.chrisc.dev/roact-spring/).
 
 ## Demos
 
