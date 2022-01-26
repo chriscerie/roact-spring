@@ -1,0 +1,32 @@
+name: docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_docs:
+    name: deploy_docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install moonwave
+        run: npm install moonwave
+
+      - name: Build docs
+        run: npx moonwave build
+
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@^4.2
+        with:
+          branch: gh-pages
+          folder: build
