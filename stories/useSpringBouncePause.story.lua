@@ -9,12 +9,12 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
 
-local STOP_AFTER_SECONDS = 3
+local PAUSE_AFTER_SECONDS = 1.5
 
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, {
         from = {
-            position = UDim2.fromScale(0.5, 0.3),
+            position = UDim2.fromScale(0.5, 0.5),
         },
     })
 
@@ -30,10 +30,10 @@ local function Button(props, hooks)
             api.start({
                 position = UDim2.fromScale(0.5, 0.8),
             }, {
-                mass = 2.5, bounce = 1, tension = 180, friction = 0,
+                bounce = 1, tension = 180, friction = 0,
             })
-            task.wait(STOP_AFTER_SECONDS)
-            api.stop()
+            task.wait(PAUSE_AFTER_SECONDS)
+            api.pause()
         end
 	}, {
         UICorner = e("UICorner", {

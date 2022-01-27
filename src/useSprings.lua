@@ -14,32 +14,43 @@ local function useSprings(hooks, length: number, props: (index: number) -> ({[st
                 api: any,
             }
         },
-    } = hooks.useValue({})
+    } = hooks.useValue(nil)
 
-    for i = 1, length do
-        local style, api = useSpring(hooks, props(i))
-        table.insert(springs.value, {
-            style = style,
-            api = api,
-        })
+    if springs.value == nil then
+        local values = {}
+        for i = 1, length do
+            local style, api = useSpring(hooks, props(i))
+            table.insert(values, {
+                style = style,
+                api = api,
+            })
+        end
+        springs.value = values
     end
 
-    local api = {
-        start = function(startProps)
+    local api = {}
+    for apiName in pairs(springs.value[1].api) do
+        api[apiName] = function(apiProps: (index: number) -> any)
             local promises = {}
 
             for i = 1, length do
                 table.insert(promises, Promise.new(function(resolve)
-                    springs.value[i].api.start(startProps(i)):andThen(resolve)
+                    local result = springs.value[i].api[apiName](apiProps(i))
+
+                    -- Some results might be promises
+                    if result.await then
+                        result:await()
+                    end
+
+                    resolve()
                 end))
             end
 
             return Promise.all(promises)
-        end,
-    }
+        end
+    end
 
     local styles = {}
-
     for k, v in pairs(springs.value) do
         styles[k] = v.style
     end

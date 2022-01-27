@@ -90,4 +90,12 @@ function Animation:getValue()
     return getTypeFromValues(self.type, self.values)
 end
 
+function Animation:stop()
+    for i, v in ipairs(self.values) do
+        self.lastPosition[i] = v
+        self.lastVelocity[i] = 0
+        self.v0[i] = 0
+    end
+end
+
 return Animation

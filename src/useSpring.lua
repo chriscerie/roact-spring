@@ -97,6 +97,38 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
 
             return Promise.all(promises)
         end,
+
+        stop = function(keys: {string}?)
+            if keys then
+                for _, key in pairs(keys) do
+                    if styles.value.controls[key] then
+                        styles.value.controls[key].springValue:stop()                    
+                    else
+                        warn("Tried to stop animation at key `" .. key .. "`, but it doesn't exist.")
+                    end
+                end
+            else
+                for _, control in pairs(styles.value.controls) do
+                    control.springValue:stop()
+                end
+            end
+        end,
+
+        pause = function(keys: {string}?)
+            if keys then
+                for _, key in pairs(keys) do
+                    if styles.value.controls[key] then
+                        styles.value.controls[key].springValue:pause()                    
+                    else
+                        warn("Tried to pause animation at key `" .. key .. "`, but it doesn't exist.")
+                    end
+                end
+            else
+                for _, control in pairs(styles.value.controls) do
+                    control.springValue:pause()
+                end
+            end
+        end,
     }
 
     return styles.value.bindings, api

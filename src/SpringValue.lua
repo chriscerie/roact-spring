@@ -44,11 +44,12 @@ end
 function SpringValue:start(config)
     return Promise.new(function(resolve)
         local anim = self.animation
-        anim:setConfig(config)
 
+        anim:setConfig(config)
         self.onChange = config.onChange or self.onChange
 
         if not self._connection then
+
             self._connection = RunService.RenderStepped:Connect(function(dt)
                 self:advance(dt)
             end)
@@ -65,7 +66,15 @@ function SpringValue:stop()
         self._connection = nil
     end
 
+    self.animation:stop()
     self.onComplete:Fire()
+end
+
+function SpringValue:pause()
+    if self._connection then
+        self._connection:Disconnect()
+        self._connection = nil
+    end
 end
 
 function SpringValue:advance(dt: number)
@@ -152,6 +161,8 @@ function SpringValue:advance(dt: number)
         end
 
         if finished then
+            -- Set position to target value due to precision
+            position = to
             anim.done[i] = true
         else
             idle = false
