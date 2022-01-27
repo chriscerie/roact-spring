@@ -25,15 +25,17 @@ local function initStyles(hooks, useSpringProps: useSpringProps)
         controls = {},
     }
 
-    for k, v in pairs(useSpringProps.from) do
-        local style, setStyle = hooks.useBinding(v)
-        styles.bindings[k] = style
-        styles.controls[k] = {
+    for fromName, from in pairs(useSpringProps.from) do
+        local style, setStyle = hooks.useBinding(from)
+        local toValue = if useSpringProps.to and useSpringProps.to[fromName] then useSpringProps.to[fromName] else from
+
+        styles.bindings[fromName] = style
+        styles.controls[fromName] = {
             setValue = setStyle,
             springValue = SpringValue.new(
                 merge(useSpringProps, {
-                    from = v,
-                    to = v,
+                    from = from,
+                    to = toValue,
                 })
             ),
         }
@@ -54,13 +56,16 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
     assert(typeof(useSpringProps) == "table", "Props for `useSpring` is required.")
 
     local styles: {
-        bindings: { [string]: any },
-        controls: {
-            [string]: {
-                setValue: () -> (),
-                springValue: typeof(SpringValue.new({ from = 0, to = 0 })),
+        value: {
+            bindings: { [string]: any },
+            controls: {
+                [string]: {
+                    setValue: () -> (),
+                    springValue: typeof(SpringValue.new()),
+                }
             }
         }
+        
     } = hooks.useValue(initStyles(hooks, useSpringProps))
 
     useSpringProps.config = useSpringProps.config or {}
@@ -68,28 +73,26 @@ local function useSpring(hooks, useSpringProps: useSpringProps)
     local api = {
         start = function(startProps, config)
             if not startProps then
-                return Promise.new()
+                return Promise.new(function(resolve)
+                    resolve()
+                end)
             end
 
             config = if config then merge(useSpringProps.config, config) else useSpringProps.config
             local promises = {}
 
             for name, target in pairs(startProps) do
-                table.insert(promises, Promise.new(function(resolve)
-                    local binding = styles.value.bindings[name]
-                    local control = styles.value.controls[name]
-                    local value = binding:getValue()
+                local binding = styles.value.bindings[name]
+                local control = styles.value.controls[name]
+                local value = binding:getValue()
 
-                    control.springValue:start(merge(config, {
-                        from = value,
-                        to = target,
-                        onChange = function(newValue)
-                            control.setValue(newValue)
-                        end
-                    })):andThen(function()
-                        resolve()
-                    end)
-                end))
+                table.insert(promises, control.springValue:start(merge(config, {
+                    from = value,
+                    to = target,
+                    onChange = function(newValue)
+                        control.setValue(newValue)
+                    end
+                })))
             end
 
             return Promise.all(promises)

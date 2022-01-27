@@ -38,7 +38,7 @@ local buttonProps = {
 }
 
 local function Button(props, hooks)
-    local springs, api = RoactSpring.useSprings(hooks, 5, function(i)
+    local springs, api = RoactSpring.useSprings(hooks, 4, function(i)
         return {
             from = {
                 Position = UDim2.fromScale(0.5, i * 0.16),

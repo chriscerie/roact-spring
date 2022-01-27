@@ -1,4 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
 local Hooks = require(ReplicatedStorage.Packages.Hooks)
@@ -9,7 +12,6 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, {
         from = {
-            size = UDim2.fromOffset(30, 30),
             position = UDim2.fromScale(0.5, 0.5),
         },
     })
@@ -17,9 +19,10 @@ local function Button(props, hooks)
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = styles.position,
-		Size = styles.size,
-		BackgroundColor3 = Color3.fromRGB(99, 255, 130),
-        Text = "Click me",
+		Size = UDim2.fromOffset(150, 150),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        AutoButtonColor = false,
+        Text = "",
 
         [Roact.Event.Activated] = function()
             api.start({
@@ -31,9 +34,18 @@ local function Button(props, hooks)
             }):andThen(function()
                 print("Completed")
             end)
-        end,
+        end
 	}, {
-        UICorner = e("UICorner"),
+        UICorner = e("UICorner", {
+            CornerRadius = UDim.new(1, 0),
+        }),
+        UIGradient = e("UIGradient", {
+            Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(110, 255, 183)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 119, 253)),
+            }),
+            Rotation = 25,
+        }),
     })
 end
 
