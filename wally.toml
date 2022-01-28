@@ -6,7 +6,7 @@ license = "MIT"
 authors = ["chriscerie"]
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
-include = ["default.project.json", "src"]
+include = ["./default.project.json", "./src"]
 
 [dependencies]
 Roact = "roblox/roact@^1"
