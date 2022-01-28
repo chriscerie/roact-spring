@@ -1,5 +1,5 @@
 {
-	"name": "Roact-Spring-Story",
+	"name": "roact-spring-story",
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {

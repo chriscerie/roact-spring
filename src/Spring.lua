@@ -37,6 +37,7 @@ local function processProps(props, state)
 end
 
 function Spring.new(props)
+    assert(Roact, "Roact not found. It is required to be placed on the same level as roact-spring.")
     assert(typeof(props) == "table", "Props for `useSpring` is required.")
 
     local state = processProps(props)

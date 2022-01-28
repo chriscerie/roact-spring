@@ -83,7 +83,7 @@ local function Button(props, hooks)
                             if i == index then
                                 return {
                                     Size = UDim2.new(1, 15, 0.13, 15),
-                                }, RoactSpring.constants.config.stiff
+                                }, RoactSpring.config.stiff
                             end
                             return {}
                         end)

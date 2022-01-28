@@ -3,7 +3,7 @@ local RoactSpring = {
 	useSprings = require(script.useSprings),
 	Spring = require(script.Spring),
 	SpringValue = require(script.SpringValue),
-	constants = require(script.constants),
+	config = require(script.constants).config,
 }
 
 return RoactSpring
