@@ -15,4 +15,4 @@ All primitives inherit the following properties (though some of them may bring t
 | Property | Type | Description  |
 | ----------- | ----------- | ---- |
 | from | table | Starting values |
-| [Configs](config) | table | 	Spring config (contains mass, tension, friction, etc) |
+| [Configs](configs) | table | 	Spring config (contains mass, tension, friction, etc) |
