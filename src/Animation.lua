@@ -52,6 +52,7 @@ type animationConfig = {
 
 function Animation.new(config)
     assert(typeof(config.to) == typeof(config.from), "`to` and `from` must be the same type")
+    local length = #getValuesFromType(config.from)
 
 	return setmetatable({
         values = getValuesFromType(config.from),
@@ -59,10 +60,12 @@ function Animation.new(config)
         fromValues = getValuesFromType(config.from),
         type = typeof(config.to),
         config = AnimationConfig:applyDefaults(config),
-        v0 = table.create(#getValuesFromType(config.from), 0),
-        lastPosition = table.create(#getValuesFromType(config.from), 0),
-        lastVelocity = table.create(#getValuesFromType(config.from), 0),
-        done = table.create(#getValuesFromType(config.from), false),
+        v0 = table.create(length, 0),
+        lastPosition = table.create(length, 0),
+        lastVelocity = table.create(length, 0),
+        done = table.create(length, false),
+        elapsedTime = table.create(length, 0),
+        durationProgress = table.create(length, 0),
 	}, Animation)
 end
 
@@ -82,7 +85,9 @@ function Animation:setConfig(config)
         self.fromValues = if config.from then getValuesFromType(config.from) else self.fromValues
         self.lastPosition = if config.from then getValuesFromType(config.from) else self.lastPosition
         self.config = AnimationConfig:applyDefaults(config)
-        self.done = table.create(#getValuesFromType(#self.values), false)
+        self.done = table.create(#self.values, false)
+        self.elapsedTime = table.create(#self.values, 0)
+        self.durationProgress = table.create(#self.values, 0)
     end
 end
 
@@ -95,6 +100,8 @@ function Animation:stop()
         self.lastPosition[i] = v
         self.lastVelocity[i] = 0
         self.v0[i] = 0
+        self.elapsedTime = table.create(#self.values, 0)
+        self.durationProgress = table.create(#self.values, 0)
     end
 end
 

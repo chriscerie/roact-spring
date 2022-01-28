@@ -35,9 +35,9 @@ function SpringValue.new(config: SpringConfig)
 	return setmetatable({
         animation = Animation.new(config),
         onChange = config.onChange or function() end,
-
-        -- Events
         onComplete = Signal.new(),
+
+        _memoizedDuration = 0,
 	}, SpringValue)
 end
 
@@ -57,6 +57,9 @@ function SpringValue:start(config)
 
         self.onComplete:Wait()
         resolve()
+    end):catch(function(err)
+        self:stop()
+        error(err)
     end)
 end
 
@@ -104,18 +107,53 @@ function SpringValue:advance(dt: number)
                 continue
             end
     
+            anim.elapsedTime[i] += dt
+            local elapsed = anim.elapsedTime[i]
             local _v0 = anim.v0[i]
             local velocity
     
-            -- Duration easing
             if config.duration then
+                -- Duration easing
+                local p = 1
 
+                if config.duration > 0 then
+                    --[[
+                    * Here we check if the duration has changed in the config
+                    * and if so update the elapsed time to the percentage
+                    * of completition so there is no jank in the animation
+                    ]]
+                    if self._memoizedDuration ~= config.duration then
+                        -- Update the memoized version to the new duration
+                        self._memoizedDuration = config.duration
+            
+                        -- If the value has started animating we need to update it
+                        if anim.durationProgress[i] > 0 then
+                            -- Set elapsed time to be the same percentage of progress as the previous duration
+                            anim.elapsedTime[i] = config.duration * anim.durationProgress[i]
+                            -- Add the delta so the below updates work as expected
+                            anim.elapsedTime[i] += dt
+                            elapsed = anim.elapsedTime[i]
+                        end
+                    end
+
+                    -- Calculate the new progress
+                    p = (config.progress or 0) + elapsed / self._memoizedDuration
+                    -- p is clamped between 0-1
+                    p = if p > 1 then 1 elseif p < 0 then 0 else p
+                    -- Store our new progress
+                    anim.durationProgress[i] = p
+                end
+
+                position = from + config.easing(p) * (to - from)
+                velocity = (position - anim.lastPosition[i]) / dt
+
+                finished = p == 1
             else
                 -- Spring easing
                 velocity = anim.lastVelocity[i] or _v0
 
                 local precision = config.precision or (if from == to then 0.005 else math.min(1, math.abs(to - from) * 0.001))
-                
+
                 -- The velocity at which movement is essentially none
                 local restVelocity = config.restVelocity or precision / 10
     
