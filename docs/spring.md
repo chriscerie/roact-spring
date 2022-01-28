@@ -1,15 +1,15 @@
 ---
-sidebar_position: 5
+sidebar_position: 10
 ---
 
-# useSpring
+# Spring
 
 ## Overview
 
-Defines values into animated values. To get started, initialize the `useSpring` hook.
+Defines values into animated values. This should only be used with class components. If you are using hooks, use [useSpring](useSpring) instead.
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, {
+self.styles, self.api = RoactSpring.Spring.new({
     position = UDim2.fromScale(0.3, 0.3),
     rotation = 0,
 }, {
@@ -21,8 +21,8 @@ Apply styles to components.
 
 ```lua
 return Roact.createElement("Frame", {
-    Position = styles.position.value,
-    Rotation = styles.rotation.value,
+    Position = self.styles.position.value,
+    Rotation = self.styles.rotation.value,
     Size = UDim2.fromScale(0.3, 0.3),
 })
 ```
@@ -62,6 +62,6 @@ end)
 
 ### Draggable element
 
-<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/useSpringDrag.story.lua">
+<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/SpringDrag.story.lua">
   <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
 </a>

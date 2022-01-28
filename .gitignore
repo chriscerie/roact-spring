@@ -1,6 +1,7 @@
 /*.rbxlx.lock
 /*.rbxl.lock
 
-/packages
+/Packages
+/stories/Packages
 /build
 /roblox.toml
