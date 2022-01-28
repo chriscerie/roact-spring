@@ -41,7 +41,7 @@ end)
 
 ## Properties
 
-All properties documented in the [common props](props) apply.
+All properties documented in the [common props](/docs/common/props) apply.
 
 ## Demos
 

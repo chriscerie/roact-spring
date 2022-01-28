@@ -6,7 +6,7 @@ sidebar_position: 10
 
 ## Overview
 
-Defines values into animated values. This should only be used with class components. If you are using hooks, use [useSpring](useSpring) instead.
+Defines values into animated values. This should only be used with class components. If you are using hooks, use [useSpring](/docs/hooks/useSpring) instead.
 
 ```lua
 self.styles, self.api = RoactSpring.Spring.new({
