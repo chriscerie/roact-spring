@@ -27,8 +27,10 @@ Getting started with roact-spring is as simple as:
 
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, {
-    position = UDim2.fromScale(0.3, 0.3),
-    rotation = 0,
+    from = {
+        position = UDim2.fromScale(0.3, 0.3),
+        rotation = 0,
+    }
 })
 
 return Roact.createElement("TextButton", {
@@ -40,8 +42,7 @@ return Roact.createElement("TextButton", {
             position = UDim2.fromScale(0.5, 0.5),
             rotation = 45,
         }, {
-            tension = 170,
-            friction = 26,
+            tension = 170, friction = 26,
         }):andThen(function()
             print("Animation finished!")
         end)
@@ -55,13 +56,13 @@ More information can be found in roact-spring's official [documentation](https:/
 
 These demos are publicly available. Click on each gif to go to their source.
 
-### useSpring
+### Draggable element
 
 <a href="stories/useSpringDrag.story.lua">
   <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
 </a>
 
-### useSprings
+### Draggable list
 
 <a href="stories/useSpringsList.story.lua">
   <img src="https://media.giphy.com/media/4qOEZ93YjhfKtSlx7b/giphy.gif" width="400" />

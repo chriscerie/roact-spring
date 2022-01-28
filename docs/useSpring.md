@@ -1,8 +1,10 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
 # useSpring
+
+## Overview
 
 Defines values into animated values. To get started, initialize the `useSpring` hook.
 
@@ -55,3 +57,11 @@ api.start({
     print("Animation finished!")
 end)
 ```
+
+## Demos
+
+### Draggable element
+
+<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/useSpringDrag.story.lua">
+  <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
+</a>
