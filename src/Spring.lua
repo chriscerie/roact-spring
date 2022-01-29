@@ -103,7 +103,7 @@ function Spring.new(props)
         end,
 
         setProps = function(newProps)
-            state = processProps(newProps, props)
+            state = processProps(newProps, state)
         end,
     }
 
