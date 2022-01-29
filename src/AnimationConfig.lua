@@ -9,6 +9,7 @@ local defaults = table.freeze(merge(constants.config.default, {
     clamp = false,
     precision = 0.005,
     velocity = 0,
+    easing = constants.easings.linear,
 }))
 
 function AnimationConfig:applyDefaults(config)
