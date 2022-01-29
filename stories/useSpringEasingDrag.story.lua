@@ -1,3 +1,8 @@
+--[[
+    Note: Since this story uses performs mouse position calculations, this
+    must be viewed in the Roblox Studio window to work properly.
+]]
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")

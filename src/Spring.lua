@@ -5,8 +5,8 @@ local merge = require(script.Parent.util.merge)
 
 local Spring = {}
 
-local function processProps(props, state)
-    local newState = state or {
+local function processProps(props, currentState)
+    local newState = currentState or {
         bindings = {},
         controls = {},
         config = props.config or {}

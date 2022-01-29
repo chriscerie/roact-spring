@@ -1,3 +1,8 @@
+--[[
+    Note: Since this story uses performs mouse position calculations, this
+    must be viewed in the Roblox Studio window to work properly.
+]]
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -17,15 +22,6 @@ local function Button(props, hooks)
         },
     })
     local connection = hooks.useValue()
-    local hi, setHi = hooks.useState("Yes")
-
-    hooks.useEffect(function()
-        task.delay(3, function()
-            print(setHi)
-            print(styles)
-            setHi("No")
-        end)
-    end)
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
