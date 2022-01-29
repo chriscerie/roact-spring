@@ -16,3 +16,25 @@ local api = {
     pause: (keys) => void,
 }
 ```
+
+You can also specify configs for each animation.
+
+```lua
+api.start({
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 0,
+}, {
+    mass = 10, tension = 100, friction = 50,
+})
+```
+
+To run tasks after an animation has finished, chain the returned promise with `andThen`.
+
+```lua
+api.start({
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 0,
+}):andThen(function()
+    print("Animation finished!")
+end)
+```

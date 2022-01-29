@@ -100,3 +100,7 @@ api.start({
     easing = RoactSpring.easings.easeInSine,
 })
 ```
+
+:::caution ONLY UPDATE IMPERATIVELY
+Due to the way easings handle interuptions, it is recommended to only update the spring values imperatively. Setting the target value midway will cause the duration timer to reset.
+:::caution

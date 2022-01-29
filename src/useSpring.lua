@@ -43,13 +43,16 @@ local function useSpring(hooks, props: UseSpringProps)
     end
 
     hooks.useEffect(function()
-        if isMounted.value == false then
-            isMounted.value = true
-            return
-        end
-
         spring.value.api.setProps(props)
+        
+        if typeof(props.to) == "table" then
+            spring.value.api.start(props.to)
+        end
     end)
+
+    if props.to then
+        return spring.value.binding
+    end
 
     return spring.value.binding, spring.value.api
 end

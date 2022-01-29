@@ -5,8 +5,11 @@ local merge = require(script.Parent.util.merge)
 
 local Spring = {}
 
-local function processProps(props, currentState)
-    local newState = currentState or {
+function Spring.new(props)
+    assert(Roact, "Roact not found. It is required to be placed on the same level as roact-spring.")
+    assert(typeof(props) == "table", "Props for `useSpring` is required.")
+
+    local state = {
         bindings = {},
         controls = {},
         config = props.config or {}
@@ -14,33 +17,19 @@ local function processProps(props, currentState)
 
     for fromName, from in pairs(props.from) do
         local toValue = if props.to and props.to[fromName] then props.to[fromName] else from
+        local style, setStyle = Roact.createBinding(from)
 
-        if newState.bindings[fromName] then
-            -- TODO: Update controls' springValues with new props
-        else
-            local style, setStyle = Roact.createBinding(from)
-
-            newState.bindings[fromName] = style
-            newState.controls[fromName] = {
-                setValue = setStyle,
-                springValue = SpringValue.new(
-                    merge(props, {
-                        from = from,
-                        to = toValue,
-                    })
-                ),
-            }
-        end
+        state.bindings[fromName] = style
+        state.controls[fromName] = {
+            setValue = setStyle,
+            springValue = SpringValue.new(
+                merge(props, {
+                    from = from,
+                    to = toValue,
+                })
+            ),
+        }
     end
-
-    return newState
-end
-
-function Spring.new(props)
-    assert(Roact, "Roact not found. It is required to be placed on the same level as roact-spring.")
-    assert(typeof(props) == "table", "Props for `useSpring` is required.")
-
-    local state = processProps(props)
 
     local api = {
         start = function(startProps, config)
@@ -103,7 +92,9 @@ function Spring.new(props)
         end,
 
         setProps = function(newProps)
-            state = processProps(newProps, state)
+            if newProps then
+                state.config = newProps.config or {}
+            end
         end,
     }
 

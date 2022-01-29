@@ -17,30 +17,28 @@ for name, easing in pairs(RoactSpring.easings) do
 end
 
 local function Button(props, hooks)
-    local springs, api = RoactSpring.useSprings(hooks, #easingsArray, function(i)
+    local atTarget, setAtTarget = hooks.useState(false)
+    local springs = RoactSpring.useSprings(hooks, #easingsArray, function(i)
         return {
             from = { Position = UDim2.fromScale(0.2, 0.05 + i * 0.03) },
+            to = { Position = UDim2.fromScale(if atTarget then 0.2 else 0.8, 0.05 + i * 0.03) },
+            config = { easing = easingsArray[i].easing, duration = 2 },
         }
     end)
-    local target = hooks.useValue(false)
 
     hooks.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
-                api.start(function(i)
-                    return {
-                        Position = UDim2.fromScale(if target.value then 0.2 else 0.8, 0.05 + i * 0.03),
-                    }, { duration = 2, easing = easingsArray[i].easing }
+                setAtTarget(function(prevState)
+                    return not prevState
                 end)
-                target.value = not target.value
             end
         end)
 
         return function()
             conn:Disconnect()
         end
-    end)
+    end, {})
 
     local buttons = {}
 
