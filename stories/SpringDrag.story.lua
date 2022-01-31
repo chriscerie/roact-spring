@@ -40,9 +40,12 @@ function Example:render()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
 
                         self.api.start({
-                            position = UDim2.fromOffset(mousePos.X, mousePos.Y),
-                            size = UDim2.fromOffset(180, 180),
-                        }, { tension = 100, friction = 10 })
+                            to = {
+                                position = UDim2.fromOffset(mousePos.X, mousePos.Y),
+                                size = UDim2.fromOffset(180, 180)
+                            },
+                            config = { tension = 100, friction = 10 },
+                        })
                     end)
                 end
             end
@@ -51,8 +54,9 @@ function Example:render()
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if self.connection then
                     self.api.start({
-                        size = UDim2.fromOffset(150, 150),
-                    }, ({ tension = 100, friction = 10 }))
+                        to = { size = UDim2.fromOffset(150, 150) },
+                        config = { tension = 100, friction = 10 },
+                    })
                     self.connection:Disconnect()
                     self.connection = nil
                 end

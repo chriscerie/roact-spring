@@ -1,18 +1,29 @@
 local Roact = require(script.Parent.Parent.Roact)
 local Promise = require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
-local merge = require(script.Parent.util.merge)
+local AnimationConfig = require(script.Parent.AnimationConfig)
+local util = require(script.Parent.util)
 
 local Spring = {}
 
-function Spring.new(props)
-    assert(Roact, "Roact not found. It is required to be placed on the same level as roact-spring.")
+export type SpringProps = { 
+    [string]: any? 
+} | {
+    from: { [string]: any }?,
+    to: { [string]: any }?,
+    immediate: boolean?,
+    config: AnimationConfig.SpringConfigs?,
+}
+
+function Spring.new(props: SpringProps)
+    -- TODO: Merge all unrecognized props into `to`
+    assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props for `useSpring` is required.")
 
     local state = {
         bindings = {},
         controls = {},
-        config = props.config or {}
+        config = props.config or {},
     }
 
     for fromName, from in pairs(props.from) do
@@ -23,7 +34,7 @@ function Spring.new(props)
         state.controls[fromName] = {
             setValue = setStyle,
             springValue = SpringValue.new(
-                merge(props, {
+                util.merge(props, {
                     from = from,
                     to = toValue,
                 })
@@ -32,27 +43,29 @@ function Spring.new(props)
     end
 
     local api = {
-        start = function(startProps, config)
+        start = function(startProps: SpringProps?)
             if not startProps then
                 return Promise.new(function(resolve)
                     resolve()
                 end)
             end
 
-            config = if config then merge(state.config, config) else state.config
+            local config = if startProps.config then util.merge(state.config, startProps.config) else state.config
+            local toValues = startProps.to or startProps
             local promises = {}
 
-            for name, target in pairs(startProps) do
+            for name, target in pairs(toValues) do
                 local binding = state.bindings[name]
                 local control = state.controls[name]
                 local value = binding:getValue()
 
-                table.insert(promises, control.springValue:start(merge(config, {
+                table.insert(promises, control.springValue:start(util.merge(config, {
                     from = value,
                     to = target,
+                    immediate = startProps.immediate,
                     onChange = function(newValue)
                         control.setValue(newValue)
-                    end
+                    end,
                 })))
             end
 
@@ -92,6 +105,7 @@ function Spring.new(props)
         end,
 
         setProps = function(newProps)
+            -- TODO: handle new default props
             if newProps then
                 state.config = newProps.config or {}
             end

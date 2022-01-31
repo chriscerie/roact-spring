@@ -18,13 +18,16 @@ end
 
 local function Button(props, hooks)
     local atTarget, setAtTarget = hooks.useState(false)
-    local springs = RoactSpring.useSprings(hooks, #easingsArray, function(i)
-        return {
+
+    local springProps = {}
+    for i in ipairs(easingsArray) do
+        table.insert(springProps, {
             from = { Position = UDim2.fromScale(0.2, 0.05 + i * 0.03) },
             to = { Position = UDim2.fromScale(if atTarget then 0.2 else 0.8, 0.05 + i * 0.03) },
             config = { easing = easingsArray[i].easing, duration = 2 },
-        }
-    end)
+        })
+    end
+    local springs = RoactSpring.useSprings(hooks, #easingsArray, springProps)
 
     hooks.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)

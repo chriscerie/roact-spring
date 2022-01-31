@@ -10,7 +10,7 @@ Defines values into animated values.
 
 ### Either: declaratively overwrite values to change the animation
 
-If you pass a `to` table, roact-spring will animate to `to` on mount and on every re-render. If you don't want the animation to run on mount, ensure `to` = `from` on the first render.
+If you re-render the component with changed props, the animation will update. If you don't want the animation to run on mount, ensure `to` equals `from` or `nil` on the first render.
 
 ```lua
 local styles = RoactSpring.useSpring(hooks, {
@@ -19,26 +19,20 @@ local styles = RoactSpring.useSpring(hooks, {
 })
 ```
 
-### Or: imperatively update using the api
+### Or: pass a function that returns values, and imperatively update using the api
 
-If you don't pass a `to` table, you will get an api table back. It will not automatically animate on mount and re-render, but you can call `api.start` to start the animation. Handling updates like this is generally preferred as it's more powerful. Further documentation can be found in [Imperatives](/docs/common/imperatives).
+You will get an API table back. It will not automatically animate on mount and re-render, but you can call `api.start` to start the animation. Handling updates like this is generally preferred as it's more powerful. Further documentation can be found in [Imperatives](/docs/common/imperatives).
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, {
-    from = {
-        position = UDim2.fromScale(0.3, 0.3),
-        rotation = 0,
-    },
-    config = { mass = 10, tension = 100, friction = 50 }
+local styles, api = RoactSpring.useSpring(hooks, function()
+    return {
+        from = { transparency = 0 },
+    }
 })
 
 -- Update spring with new props
-api.start({
-    position = UDim2.fromScale(0.5, 0.5),
-    rotation = 0,
-})
-task.wait(1)
--- Stop animation after 1 second
+api.start({ transparency = if toggle 1 else 0 })
+-- Stop animation
 api.stop()
 ```
 
@@ -46,10 +40,25 @@ api.stop()
 
 ```lua
 return Roact.createElement("Frame", {
-    Position = styles.position.value,
-    Rotation = styles.rotation.value,
+    Transparency = styles.transparency,
     Size = UDim2.fromScale(0.3, 0.3),
 })
+```
+
+## Properties
+
+All properties documented in the [common props](/docs/common/props) apply.
+
+## Additional notes
+
+### To-prop shortcut
+If the only props in an update are `to`, then you can just pass the `to` table directly.
+
+```lua
+-- This...
+api.start({ transparency = 1 })
+-- is a shortcut for this...
+api.start({ to = { transparency = 0 } })
 ```
 
 ## Demos

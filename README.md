@@ -21,15 +21,28 @@
 
 * Add the latest version of roact-spring to your wally.toml (e.g., `RoactSpring = "chriscerie/roact-spring@^0.0"`)
 
+## Why react-spring
+
+### Declarative and imperative
+`react-spring` is the perfect bridge between declarative and imperative animations. It takes the best of both worlds and packs them into one flexible library.
+
+### Fluid, powerful, painless
+`react-spring` is designed to make animations fluid, powerful, and painless to build and maintain. Animation becomes easy and approachable, and everything you do looks and feel natural by default.
+
+### Versatile
+`react-spring` works with most data types and provides extensible configurations that makes it painless to create advanced animations.
+
 ## Getting Started
 
 Getting started with roact-spring is as simple as:
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, {
-    from = {
-        position = UDim2.fromScale(0.3, 0.3),
-        rotation = 0,
+local styles, api = RoactSpring.useSpring(hooks, function()
+    return {
+        from = {
+            position = UDim2.fromScale(0.3, 0.3),
+            rotation = 0,
+        }
     }
 })
 
@@ -39,10 +52,11 @@ return Roact.createElement("TextButton", {
     Size = UDim2.fromScale(0.3, 0.3),
     [Roact.Event.Activated] = function()
         api.start({
-            position = UDim2.fromScale(0.5, 0.5),
-            rotation = 45,
-        }, {
-            tension = 170, friction = 26,
+            to = {
+                position = UDim2.fromScale(0.5, 0.5),
+                rotation = 45,
+            },
+            config = { tension = 170, friction = 26 },
         }):andThen(function()
             print("Animation finished!")
         end)

@@ -35,7 +35,6 @@ The following configs are available:
 | friction | 26 | spring resistence |
 | clamp | false | when true, stops the spring once it overshoots its boundaries |
 | precision | 0.005 | how close to the end result the animated value gets before we consider it to be "there" |
-| velocity | 0 | initial velocity |
 | easing | t => t | linear by default, there is a multitude of easings available here |
 | duration | nil | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
 | bounce | nil | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |

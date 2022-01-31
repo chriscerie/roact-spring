@@ -15,12 +15,14 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local e = Roact.createElement
 
 local function Button(props, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, {
-        from = {
-            size = UDim2.fromOffset(150, 150),
-            position = UDim2.fromScale(0.5, 0.5),
-        },
-    })
+    local styles, api = RoactSpring.useSpring(hooks, function()
+        return {
+            from = {
+                size = UDim2.fromOffset(150, 150),
+                position = UDim2.fromScale(0.5, 0.5),
+            },
+        }
+    end)
     local connection = hooks.useValue()
 
 	return e("TextButton", {
