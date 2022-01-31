@@ -15,12 +15,14 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local e = Roact.createElement
 
 local function Button(props, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, {
-        from = {
-            size = UDim2.fromOffset(150, 150),
-            position = UDim2.fromScale(0.5, 0.5),
-        },
-    })
+    local styles, api = RoactSpring.useSpring(hooks, function()
+        return {
+            from = {
+                size = UDim2.fromOffset(150, 150),
+                position = UDim2.fromScale(0.5, 0.5),
+            },
+        }
+    end)
     local connection = hooks.useValue()
 
     hooks.useEffect(function()
@@ -28,8 +30,9 @@ local function Button(props, hooks)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
                 api.start({
-                    position = UDim2.fromOffset(mousePos.X, mousePos.Y),
-                }, ({ duration = 3, easing = RoactSpring.easings.easeInElastic }))
+                    to = { position = UDim2.fromOffset(mousePos.X, mousePos.Y) },
+                    config = { duration = 3, easing = RoactSpring.easings.easeInElastic },
+                })
             end
         end)
 

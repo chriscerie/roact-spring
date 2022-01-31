@@ -24,10 +24,7 @@ function Example:render()
         [Roact.Event.Activated] = function()
             self.api.start({
                 position = UDim2.fromScale(0.5, 0.8),
-            }, {
-            }):andThen(function()
-                print("Completed")
-            end)
+            })
         end,
 	}, {
         UICorner = e("UICorner"),

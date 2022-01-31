@@ -12,11 +12,13 @@ local e = Roact.createElement
 local PAUSE_AFTER_SECONDS = 1.5
 
 local function Button(props, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, {
-        from = {
-            position = UDim2.fromScale(0.5, 0.5),
-        },
-    })
+    local styles, api = RoactSpring.useSpring(hooks, function()
+        return {
+            from = {
+                position = UDim2.fromScale(0.5, 0.5),
+            },
+        }
+    end)
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -28,9 +30,8 @@ local function Button(props, hooks)
 
         [Roact.Event.Activated] = function()
             api.start({
-                position = UDim2.fromScale(0.5, 0.8),
-            }, {
-                bounce = 1, tension = 180, friction = 0,
+                to = { position = UDim2.fromScale(0.5, 0.8) },
+                config = { bounce = 1, tension = 180, friction = 0 },
             })
             task.wait(PAUSE_AFTER_SECONDS)
             api.pause()

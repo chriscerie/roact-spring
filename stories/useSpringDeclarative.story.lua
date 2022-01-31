@@ -7,8 +7,10 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local e = Roact.createElement
 
 local function Button(props, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, {
+    local toggle, setToggle = hooks.useState(false)
+    local styles = RoactSpring.useSpring(hooks, {
         from = { position = UDim2.fromScale(0.5, 0.5) },
+        to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) }
     })
 
 	return e("TextButton", {
@@ -19,11 +21,8 @@ local function Button(props, hooks)
         Text = "Click me",
 
         [Roact.Event.Activated] = function()
-            api.start({
-                position = UDim2.fromScale(0.5, 0.8),
-            }, {
-            }):andThen(function()
-                print("Completed")
+            setToggle(function(prevState)
+                return not prevState
             end)
         end,
 	}, {
