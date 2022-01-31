@@ -8,17 +8,43 @@ sidebar_position: 6
 
 Creates multiple springs, each with its own config. Use it for static lists, etc.
 
-Pass in the length as well as a function that returns the props for each spring.
+### Either: declaratively overwrite values to change the animation
+
+If you re-render the component with changed props, the animation will update. If you don't want the animation to run on mount, ensure `to` equals `from` or `nil` on the first render.
 
 ```lua
-local springs, api = RoactSpring.useSprings(hooks, 4, function(index)
-    return {
-        from = { Position = UDim2.fromScale(0.5, index * 0.16) },
-    }
-end)
+local springProps = {}
+local length = #items
+for index, item in ipairs(items) do
+    table.insert(springProps, {
+        from = { transparency = item.transparency },
+        to = { transparency = if toggles[i] then 1 else 0 },
+    })
+end
+local springs = RoactSpring.useSprings(hooks, length, springProps)
 ```
 
-Apply styles to components.
+### Or: pass a function that returns values, and imperatively update using the api
+
+You will get an API table back. It will not automatically animate on mount and re-render, but you can call `api.start` to start the animation. Handling updates like this is generally preferred as it's more powerful. Further documentation can be found in [Imperatives](/docs/common/imperatives).
+
+```lua
+local length = #items
+local springs, api = RoactSpring.useSprings(hooks, length, function(index)
+    return {
+        from = { transparency = items[index].transparency },
+    }
+end)
+
+-- Start animations
+api.start(function(index)
+    return { Position = UDim2.fromScale(0.5 * index, 0.16) }
+end)
+-- Stop all springs
+api.stop()
+```
+
+### Finally: apply styles to components
 
 ```lua
 local contents = {}
@@ -29,14 +55,6 @@ for i = 1, 4 do
     })
 end
 return contents
-```
-
-Start animations.
-
-```lua
-api.start(function(index)
-    return { Position = UDim2.fromScale(0.5 * index, 0.16) }
-end)
 ```
 
 ## Properties
