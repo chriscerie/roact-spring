@@ -19,7 +19,7 @@ All primitives inherit the following properties (though some of them may bring t
 | from | table | Starting values |
 | to | table | Animates to ... |
 | immediate | boolean | Prevents animation if true. |
-| [Configs](configs) | table | 	Spring config (contains mass, tension, friction, etc) |
+| [config](configs) | table | 	Spring config (contains mass, tension, friction, etc) |
 
 ## Default props
 

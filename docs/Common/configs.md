@@ -7,11 +7,14 @@ sidebar_position: 3
 Springs are configurable and can be tuned. If you want to adjust these settings, you can provide a default `config` table to `useSpring`:
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, {
-    position = UDim2.fromScale(0.5, 0.5),
-    rotation = 0,
-}, { 
-    mass = 10, tension = 100, friction = 50,
+local styles, api = RoactSpring.useSpring(hooks, function()
+    return {
+        from = {
+            position = UDim2.fromScale(0.5, 0.5),
+            rotation = 0,
+        },
+        config = { mass = 10, tension = 100, friction = 50 },
+    }
 })
 ```
 
@@ -19,10 +22,11 @@ Configs can also be adjusted when animating the spring. If there isn't any confi
 
 ```lua
 api.start({
-    position = UDim2.fromScale(0.5, 0.5),
-    rotation = 0,
-}, { 
-    mass = 10, tension = 100, friction = 50,
+    to = {
+        position = UDim2.fromScale(0.5, 0.5),
+        rotation = 0,
+    },
+    config = { mass = 10, tension = 100, friction = 50 },
 })
 ```
 
@@ -35,7 +39,7 @@ The following configs are available:
 | friction | 26 | spring resistence |
 | clamp | false | when true, stops the spring once it overshoots its boundaries |
 | precision | 0.005 | how close to the end result the animated value gets before we consider it to be "there" |
-| easing | t => t | linear by default, there is a multitude of easings available here |
+| easing | t => t | linear by default, there is a multitude of easings available [here](/docs/common/configs#easings) |
 | duration | nil | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
 | bounce | nil | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |
 | restVelocity | nil | The smallest velocity before the animation is considered to be "not moving". When undefined, precision is used instead. |
@@ -92,11 +96,11 @@ The following easing functions are supported when `duration` is set.
 
 ```lua
 api.start({
-    position = UDim2.fromScale(0.5, 0.5),
-    rotation = 0,
-}, {
-    duration = 2,
-    easing = RoactSpring.easings.easeInSine,
+    to = {
+        position = UDim2.fromScale(0.5, 0.5),
+        rotation = 0,
+    },
+    config = { mass: 10, tension: 100, friction: 50 },
 })
 ```
 
