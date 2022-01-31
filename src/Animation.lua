@@ -27,7 +27,7 @@ local function getValuesFromType(data)
     error("Unsupported type: " .. dataType)
 end
 
-local function getTypeFromValues(type: string, values: { [number]: number })
+local function getTypeFromValues(type: string, values: { number })
     if type == "number" then
         return values[1]
     elseif type == "UDim" then
@@ -45,21 +45,18 @@ local function getTypeFromValues(type: string, values: { [number]: number })
     error("Unsupported type: " .. type)
 end
 
-type animationConfig = {
-    to: animationType,
-    from: animationType,
-}
-
-function Animation.new(config)
-    assert(typeof(config.to) == typeof(config.from), "`to` and `from` must be the same type")
-    local length = #getValuesFromType(config.from)
+function Animation.new(props)
+    assert(typeof(props.to) == typeof(props.from), "`to` and `from` must be the same type")
+    local length = #getValuesFromType(props.from)
 
 	return setmetatable({
-        values = getValuesFromType(config.from),
-        toValues = getValuesFromType(config.to),
-        fromValues = getValuesFromType(config.from),
-        type = typeof(config.to),
-        config = AnimationConfig:applyDefaults(config),
+        values = getValuesFromType(props.from),
+        toValues = getValuesFromType(props.to),
+        fromValues = getValuesFromType(props.from),
+        type = typeof(props.to),
+        config = AnimationConfig:mergeConfig(props.config or {}),
+        immediate = props.immediate,
+
         v0 = table.create(length, 0),
         lastPosition = table.create(length, 0),
         lastVelocity = table.create(length, 0),
@@ -70,7 +67,7 @@ function Animation.new(config)
 end
 
 -- Set the current value. Returns `true` if the value changed
-function Animation:setValue(index, value)
+function Animation:setValue(index: number, value)
     self.lastPosition[index] = value
     if self.values[index] == value then
         return false
@@ -79,12 +76,14 @@ function Animation:setValue(index, value)
     return true
 end
 
-function Animation:setConfig(config)
-    if config then
-        self.toValues = if config.to then getValuesFromType(config.to) else self.toValues
-        self.fromValues = if config.from then getValuesFromType(config.from) else self.fromValues
-        self.lastPosition = if config.from then getValuesFromType(config.from) else self.lastPosition
-        self.config = AnimationConfig:applyDefaults(config)
+function Animation:setProps(props)
+    if props then
+        self.toValues = if props.to then getValuesFromType(props.to) else self.toValues
+        self.fromValues = if props.from then getValuesFromType(props.from) else self.fromValues
+        self.lastPosition = if props.from then getValuesFromType(props.from) else self.lastPosition
+        self.config = AnimationConfig:mergeConfig(props or {})
+        self.immediate = if props.immediate ~= nil then props.immediate else self.immediate
+
         self.done = table.create(#self.values, false)
         self.elapsedTime = table.create(#self.values, 0)
         self.durationProgress = table.create(#self.values, 0)

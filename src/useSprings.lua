@@ -6,10 +6,11 @@
 local Promise = require(script.Parent.Parent.Promise)
 local useSpring = require(script.Parent.useSpring)
 
-local function useSprings(hooks, length: number, props: (index: number) -> ({[string]: any}))
+local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}))
+    local isImperative = hooks.useValue(nil)
     local springs: {
         value: {
-            [number]: {
+            {
                 style: any,
                 api: any?,
             }
@@ -18,6 +19,16 @@ local function useSprings(hooks, length: number, props: (index: number) -> ({[st
     local stylesList = hooks.useValue(nil)
     local apiList = hooks.useValue(nil)
 
+    if typeof(props) == "table" then
+        assert(isImperative.value == nil or isImperative.value == false, "useSprings detected a change from imperative to declarative. This is not supported.")
+        isImperative.value = false
+    elseif typeof(props) == "function" then
+        assert(isImperative.value == nil or isImperative.value == true, "useSprings detected a change from declarative to imperative. This is not supported.")
+        isImperative.value = true
+    else
+        error("Expected table or function for useSprings, got " .. typeof(props))
+    end
+
     if springs.value then
         assert(#springs.value == length, "Length of useSprings changed from " .. #springs.value .. " to " .. length .. ". This is not supported.")
     else
@@ -25,7 +36,14 @@ local function useSprings(hooks, length: number, props: (index: number) -> ({[st
     end
 
     for i = 1, length do
-        local style, api = useSpring(hooks, props(i))
+        local style, api
+        if isImperative.value then
+            style, api = useSpring(hooks, function()
+                return props(i)
+            end)
+        else
+            style = useSpring(hooks, props[i])
+        end
         springs.value[i] = {
             style = style,
             api = api,
@@ -40,7 +58,7 @@ local function useSprings(hooks, length: number, props: (index: number) -> ({[st
             stylesList.value[springName] = spring.style
         end
 
-        if springs.value[1].api then
+        if isImperative.value and springs.value[1].api then
             for apiName in pairs(springs.value[1].api) do
                 apiList.value[apiName] = function(apiProps: (index: number) -> any)
                     local promises = {}
@@ -57,14 +75,17 @@ local function useSprings(hooks, length: number, props: (index: number) -> ({[st
                             resolve()
                         end))
                     end
-        
+
                     return Promise.all(promises)
                 end
             end
         end
     end
 
-    return stylesList.value, apiList.value
+    if isImperative.value then
+        return stylesList.value, apiList.value
+    end
+    return stylesList.value
 end
 
 return useSprings

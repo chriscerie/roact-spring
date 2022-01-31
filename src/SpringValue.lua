@@ -3,24 +3,18 @@ local RunService = game:GetService("RunService")
 local Promise = require(script.Parent.Parent.Promise)
 local Signal = require(script.Parent.Signal)
 local Animation = require(script.Parent.Animation)
+local AnimationConfig = require(script.Parent.AnimationConfig)
+local util = require(script.Parent.util)
 
 local SpringValue = {}
 SpringValue.__index = SpringValue
 
-export type SpringConfig = {
+export type SpringValueProps = {
     from: number,
     to: number,
-    onChange: (position: number) -> ()?,
-
     immediate: boolean?,
-    mass: number?,
-    tension: number?,
-    friction: number?,
-    clamp: boolean?,
-    precision: number?,
-    velocity: number?,
-    bounce: number?,
-    restVelocity: number?,
+    config: AnimationConfig.SpringConfigs?,
+    onChange: (position: number) -> ()?,
 }
 
 --[=[
@@ -28,28 +22,38 @@ export type SpringConfig = {
 
     Spring values. Generally, you should use the `useSpring` hook instead.
 ]=]
-function SpringValue.new(config: SpringConfig)
-    assert(config.from, "Spring.new: from is required")
-    assert(config.to, "Spring.new: to is required")
+function SpringValue.new(props: SpringValueProps)
+    assert(props.from, "Spring.new: from is required")
+    assert(props.to, "Spring.new: to is required")
 
 	return setmetatable({
-        animation = Animation.new(config),
-        onChange = config.onChange or function() end,
+        -- The animation state
+        animation = Animation.new(props),
+
+        -- Some props have customizable default values
+        defaultProps = {
+            immediate = if props.immediate ~= nil then props.immediate else false,
+        },
+
+        onChange = props.onChange or function() end,
         onComplete = Signal.new(),
 
         _memoizedDuration = 0,
 	}, SpringValue)
 end
 
-function SpringValue:start(config)
+function SpringValue:start(props)
     return Promise.new(function(resolve)
         local anim = self.animation
 
-        anim:setConfig(config)
-        self.onChange = config.onChange or self.onChange
+        if props.default then
+            self.defaultProps = props.default
+        end
+
+        anim:setProps(util.merge(self.defaultProps, props))
+        self.onChange = props.onChange or self.onChange
 
         if not self._connection then
-
             self._connection = RunService.RenderStepped:Connect(function(dt)
                 self:advance(dt)
             end)
@@ -93,7 +97,7 @@ function SpringValue:advance(dt: number)
             continue
         end
 
-        local finished = config.immediate
+        local finished = anim.immediate
         local position = toValues[i]
         local from = anim.fromValues[i]
         local to = anim.toValues[i]
@@ -118,9 +122,9 @@ function SpringValue:advance(dt: number)
 
                 if config.duration > 0 then
                     --[[
-                    * Here we check if the duration has changed in the config
-                    * and if so update the elapsed time to the percentage
-                    * of completition so there is no jank in the animation
+                        Here we check if the duration has changed in the config
+                        and if so update the elapsed time to the percentage
+                        of completition so there is no jank in the animation
                     ]]
                     if self._memoizedDuration ~= config.duration then
                         -- Update the memoized version to the new duration
