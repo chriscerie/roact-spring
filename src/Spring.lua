@@ -40,7 +40,6 @@ function Spring.new(props: SpringProps)
     local state = {
         bindings = {},
         controls = {},
-        config = props.config or {},
     }
 
     for fromName, from in pairs(props.from) do
@@ -68,7 +67,6 @@ function Spring.new(props: SpringProps)
             end
             startProps = prepareKeys(startProps)
 
-            local config = if startProps.config then util.merge(state.config, startProps.config) else state.config
             local promises = {}
 
             for name, target in pairs(startProps.to) do
@@ -80,7 +78,7 @@ function Spring.new(props: SpringProps)
                     from = value,
                     to = target,
                     immediate = startProps.immediate,
-                    config = config,
+                    config = startProps.config,
                     onChange = function(newValue)
                         control.setValue(newValue)
                     end,
@@ -119,13 +117,6 @@ function Spring.new(props: SpringProps)
                 for _, control in pairs(state.controls) do
                     control.springValue:pause()
                 end
-            end
-        end,
-
-        setProps = function(newProps)
-            -- TODO: handle new default props
-            if newProps then
-                state.config = newProps.config or {}
             end
         end,
     }

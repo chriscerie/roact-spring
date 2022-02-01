@@ -8,7 +8,6 @@ local defaults = table.freeze(util.merge(constants.config.default, {
     mass = 1,
     damping = 1,
     clamp = false,
-    precision = 0.005,
     velocity = 0,
     easing = constants.easings.linear,
 }))
@@ -49,7 +48,7 @@ export type SpringConfigs = {
     --[[
         The initial velocity of one or more values.
     ]]
-    velocity: number?,
+    velocity: number | { number }?,
 
     --[[
         The animation curve. Only used when `duration` is defined.

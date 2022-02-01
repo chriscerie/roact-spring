@@ -4,6 +4,8 @@ sidebar_position: 3
 
 # Configs
 
+## Overview
+
 Springs are configurable and can be tuned. If you want to adjust these settings, you can provide a default `config` table to `useSpring`:
 
 ```lua
@@ -36,13 +38,14 @@ The following configs are available:
 | tension | 170 | spring energetic load |
 | friction | 26 | spring resistence |
 | clamp | false | when true, stops the spring once it overshoots its boundaries |
-| precision | 0.005 | how close to the end result the animated value gets before we consider it to be "there" |
+| velocity | 0 | initial velocity, see [velocity config](/docs/common/configs#velocity-config) for more detais |
 | easing | t => t | linear by default, there is a multitude of easings available [here](/docs/common/configs#easings) |
 | damping | 1 | The damping ratio, which dictates how the spring slows down. Only works when `frequency` is defined. Defaults to `1`. |
-| duration | nil | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
-| frequency | nil | The natural frequency (in seconds), which dictates the number of bounces per second when no damping exists. When defined, `tension` is derived from this, and `friction` is derived from `tension` and `damping`. |
-| bounce | nil | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |
-| restVelocity | nil | The smallest velocity before the animation is considered to be "not moving". When undefined, precision is used instead. |
+| duration | undefined | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
+| frequency | undefined | The frequency response (in seconds), which dictates the duration of one period in a frictionless environment. When defined, `tension` is derived from this, and `friction` is derived from this and `damping`. |
+| bounce | undefined | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |
+| precision | undefined | How close to the end result the animated value gets before we consider it to be "there". When undefined, ideal precision will be calculated by the distance from `from` to `to` |
+| restVelocity | undefined | The smallest velocity before the animation is considered to be "not moving". When undefined, precision is used instead. |
 
 <iframe src="https://codesandbox.io/embed/react-spring-config-x1vjb?fontsize=14&hidenavigation=1&theme=dark&view=preview"
     width="100%"
@@ -105,3 +108,47 @@ api.start({
 :::caution ONLY UPDATE IMPERATIVELY
 Due to the way easings handle interuptions, it is recommended to only update the spring values imperatively. Setting the target value midway will cause the duration timer to reset.
 :::caution
+
+## Advanced Configs
+
+### Velocity Config
+
+When a number, the `velocity` config applies initial velocity towards or away from the target.
+
+```lua
+-- Start with initial velocity away from `to`
+local styles = RoactSpring.useSpring(hooks, {
+    from = { position = UDim2.fromScale(0.5, 0.5) },
+    to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) },
+    config = { velocity = -0.01 },
+})
+```
+
+For further customization on the direction of the velocity, you can pass a table of values, one for each element.
+
+```lua
+-- Start with initial velocity pointed towards the top-left corner
+local styles = RoactSpring.useSpring(hooks, {
+    from = { position = UDim2.fromScale(0.5, 0.5) },
+    to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) },
+    config = { velocity = {-0.01, 0, -0.01, 0} },
+})
+```
+
+Passing in a single number where `to` equals `from` will not move the spring at all. This is because `react-spring` can't determine the direction of the velocity from one point alone. To apply a velocity, you must indicate which axes to apply it to by passing in a table of values.
+
+```lua
+-- Will not do anything
+local styles = RoactSpring.useSpring(hooks, {
+    from = { position = UDim2.fromScale(0.5, 0.5) },
+    to = { position = UDim2.fromScale(0.5, 0.5) },
+    config = { velocity = -0.01 },
+})
+
+-- Will apply velocity towards the top-left corner and then return back to original position
+local styles = RoactSpring.useSpring(hooks, {
+    from = { position = UDim2.fromScale(0.5, 0.5) },
+    to = { position = UDim2.fromScale(0.5, 0.5) },
+    config = { velocity = {-0.01, 0, -0.01, 0} },
+})
+```

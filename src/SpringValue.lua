@@ -33,6 +33,7 @@ function SpringValue.new(props: SpringValueProps)
         -- Some props have customizable default values
         defaultProps = {
             immediate = if props.immediate ~= nil then props.immediate else false,
+            config = props.config,
         },
 
         onChange = props.onChange or function() end,
@@ -113,7 +114,17 @@ function SpringValue:advance(dt: number)
     
             anim.elapsedTime[i] += dt
             local elapsed = anim.elapsedTime[i]
+
+            if anim.v0[i] == nil then
+                if typeof(config.velocity) == "table" then
+                    anim.v0[i] = config.velocity[i]
+                else
+                    -- If a number, set velocity towards the target
+                    anim.v0[i] = if to - from > 0 then config.velocity elseif to - from < 0 then -config.velocity else 0
+                end
+            end
             local _v0 = anim.v0[i]
+        
             local velocity
     
             if config.duration then

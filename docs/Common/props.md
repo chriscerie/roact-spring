@@ -46,5 +46,6 @@ end)
 
 The following props can have default values:
 
+* `config`
 * `immediate`
 

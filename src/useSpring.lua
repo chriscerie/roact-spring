@@ -55,8 +55,6 @@ local function useSpring(hooks, props: UseSpringProps)
 
     hooks.useEffect(function()
         if isImperative.value == false then
-            spring.value.api.setProps(props)
-
             if typeof(props.to) == "table" then
                 spring.value.api.start(props.to)
             end

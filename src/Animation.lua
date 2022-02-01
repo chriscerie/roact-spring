@@ -57,9 +57,9 @@ function Animation.new(props)
         config = AnimationConfig:mergeConfig(props.config or {}),
         immediate = props.immediate,
 
-        v0 = table.create(length, 0),
+        v0 = table.create(length, nil),
         lastPosition = table.create(length, 0),
-        lastVelocity = table.create(length, 0),
+        lastVelocity = table.create(length, nil),
         done = table.create(length, false),
         elapsedTime = table.create(length, 0),
         durationProgress = table.create(length, 0),
@@ -97,8 +97,8 @@ end
 function Animation:stop()
     for i, v in ipairs(self.values) do
         self.lastPosition[i] = v
-        self.lastVelocity[i] = 0
-        self.v0[i] = 0
+        self.lastVelocity[i] = nil
+        self.v0[i] = nil
         self.elapsedTime = table.create(#self.values, 0)
         self.durationProgress = table.create(#self.values, 0)
     end
