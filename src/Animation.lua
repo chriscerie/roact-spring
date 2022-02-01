@@ -81,7 +81,7 @@ function Animation:setProps(props)
         self.toValues = if props.to then getValuesFromType(props.to) else self.toValues
         self.fromValues = if props.from then getValuesFromType(props.from) else self.fromValues
         self.lastPosition = if props.from then getValuesFromType(props.from) else self.lastPosition
-        self.config = AnimationConfig:mergeConfig(props or {})
+        self.config = AnimationConfig:mergeConfig(props.config or {})
         self.immediate = if props.immediate ~= nil then props.immediate else self.immediate
 
         self.done = table.create(#self.values, false)

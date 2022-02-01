@@ -43,10 +43,8 @@ You can also specify configs for each animation update.
 
 ```lua
 api.start({
-    to = {
-        position = UDim2.fromScale(0.5, 0.5),
-        rotation = 0,
-    },
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 0,
     config = { mass = 10, tension = 100, friction = 50 },
 })
 ```

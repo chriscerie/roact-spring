@@ -3,6 +3,7 @@ local Promise = require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local util = require(script.Parent.util)
+local constants = require(script.Parent.constants)
 
 local Spring = {}
 
@@ -13,7 +14,23 @@ export type SpringProps = {
     to: { [string]: any }?,
     immediate: boolean?,
     config: AnimationConfig.SpringConfigs?,
+    [string]: any?,
 }
+
+-- Merge unrecognized props to the `to` table
+local function prepareKeys(props: SpringProps)
+    local newProps = util.copy(props)
+    newProps.to = newProps.to or {}
+
+    for key, value in pairs(newProps) do
+        if not constants.propsList[key] then
+            newProps.to[key] = value
+            newProps[key] = nil
+        end
+    end
+
+    return newProps
+end
 
 function Spring.new(props: SpringProps)
     -- TODO: Merge all unrecognized props into `to`
@@ -49,24 +66,25 @@ function Spring.new(props: SpringProps)
                     resolve()
                 end)
             end
+            startProps = prepareKeys(startProps)
 
             local config = if startProps.config then util.merge(state.config, startProps.config) else state.config
-            local toValues = startProps.to or startProps
             local promises = {}
 
-            for name, target in pairs(toValues) do
+            for name, target in pairs(startProps.to) do
                 local binding = state.bindings[name]
                 local control = state.controls[name]
                 local value = binding:getValue()
 
-                table.insert(promises, control.springValue:start(util.merge(config, {
+                table.insert(promises, control.springValue:start({
                     from = value,
                     to = target,
                     immediate = startProps.immediate,
+                    config = config,
                     onChange = function(newValue)
                         control.setValue(newValue)
                     end,
-                })))
+                }))
             end
 
             return Promise.all(promises)

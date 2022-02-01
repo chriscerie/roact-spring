@@ -40,10 +40,8 @@ function Example:render()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
 
                         self.api.start({
-                            to = {
-                                position = UDim2.fromOffset(mousePos.X, mousePos.Y),
-                                size = UDim2.fromOffset(180, 180)
-                            },
+                            position = UDim2.fromOffset(mousePos.X, mousePos.Y),
+                            size = UDim2.fromOffset(180, 180),
                             config = { tension = 100, friction = 10 },
                         })
                     end)

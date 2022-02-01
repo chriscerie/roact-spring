@@ -92,4 +92,12 @@ constants.easings = table.freeze({
     end,
 })
 
+-- Used to defined list of props so we can merge unrecognized props to `to` table
+constants.propsList = {
+    from = true,
+    to = true,
+    immediate = true,
+    config = true,
+}
+
 return constants

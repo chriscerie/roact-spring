@@ -22,17 +22,15 @@ Configs can also be adjusted when animating the spring. If there isn't any confi
 
 ```lua
 api.start({
-    to = {
-        position = UDim2.fromScale(0.5, 0.5),
-        rotation = 0,
-    },
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 0,
     config = { mass = 10, tension = 100, friction = 50 },
 })
 ```
 
 The following configs are available:
 
-| Property      | Default | Description  |
+| Property | Default | Description  |
 | ----------- | ----------- | ---- |
 | mass | 1 | spring mass |
 | tension | 170 | spring energetic load |
@@ -96,10 +94,8 @@ The following easing functions are supported when `duration` is set.
 
 ```lua
 api.start({
-    to = {
-        position = UDim2.fromScale(0.5, 0.5),
-        rotation = 0,
-    },
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 0,
     config = { mass: 10, tension: 100, friction: 50 },
 })
 ```

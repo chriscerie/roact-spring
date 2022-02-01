@@ -75,17 +75,13 @@ local function Button(props, hooks)
                         api.start(function(i)
                             if i == index then
                                 return {
-                                    to = {
-                                        Position = UDim2.fromScale(0.5, (yPos - frame.AbsolutePosition.Y) / frame.AbsoluteSize.Y),
-                                        ZIndex = 10,
-                                    },
+                                    Position = UDim2.fromScale(0.5, (yPos - frame.AbsolutePosition.Y) / frame.AbsoluteSize.Y),
+                                    ZIndex = 10,
                                     immediate = true,
                                 }
                             end
                             return {
-                                to = {
-                                    ZIndex = 1,
-                                },
+                                ZIndex = 1,
                                 immediate = true,
                             }
                         end)
@@ -94,7 +90,7 @@ local function Button(props, hooks)
                             if i == index then
                                 return {
                                     Size = UDim2.new(1, 15, 0.13, 15),
-                                }, RoactSpring.config.stiff
+                                }
                             end
                             return {}
                         end)

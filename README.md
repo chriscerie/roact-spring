@@ -52,10 +52,8 @@ return Roact.createElement("TextButton", {
     Size = UDim2.fromScale(0.3, 0.3),
     [Roact.Event.Activated] = function()
         api.start({
-            to = {
-                position = UDim2.fromScale(0.5, 0.5),
-                rotation = 45,
-            },
+            position = UDim2.fromScale(0.5, 0.5),
+            rotation = 45,
             config = { tension = 170, friction = 26 },
         }):andThen(function()
             print("Animation finished!")

@@ -26,7 +26,7 @@ local function Button(props, hooks)
 
         [Roact.Event.Activated] = function()
             api.start({
-                to = { Position = UDim2.fromScale(0.5, 0.8) },
+                Position = UDim2.fromScale(0.5, 0.8),
                 immediate = true,
             })
         end,

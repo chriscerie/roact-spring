@@ -52,7 +52,7 @@ All properties documented in the [common props](/docs/common/props) apply.
 ## Additional notes
 
 ### To-prop shortcut
-If the only props in an update are `to`, then you can just pass the `to` table directly.
+Any property from api methods that useSpring does not recognize will be combined into "to", for instance `transparency = 1` will become `to = { transparency = 1 }`.
 
 ```lua
 -- This...
