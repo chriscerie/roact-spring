@@ -15,22 +15,22 @@
 
 <br>
 
+## Why roact-spring
+
+### Declarative and imperative
+`roact-spring` is the perfect bridge between declarative and imperative animations. It takes the best of both worlds and packs them into one flexible library.
+
+### Fluid, powerful, painless
+`roact-spring` is designed to make animations fluid, powerful, and painless to build and maintain. Animation becomes easy and approachable, and everything you do looks and feel natural by default.
+
+### Versatile
+`roact-spring` works with most data types and provides extensible configurations that makes it painless to create advanced animations.
+
 ## Installation
 
 ### Wally
 
 * Add the latest version of roact-spring to your wally.toml (e.g., `RoactSpring = "chriscerie/roact-spring@^0.0"`)
-
-## Why react-spring
-
-### Declarative and imperative
-`react-spring` is the perfect bridge between declarative and imperative animations. It takes the best of both worlds and packs them into one flexible library.
-
-### Fluid, powerful, painless
-`react-spring` is designed to make animations fluid, powerful, and painless to build and maintain. Animation becomes easy and approachable, and everything you do looks and feel natural by default.
-
-### Versatile
-`react-spring` works with most data types and provides extensible configurations that makes it painless to create advanced animations.
 
 ## Getting Started
 

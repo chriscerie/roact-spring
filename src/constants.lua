@@ -6,6 +6,15 @@ local c3 = c1 + 1
 local c4 = (2 * math.pi) / 3
 local c5 = (2 * math.pi) / 4.5
 
+constants.config = table.freeze({
+    default = table.freeze({ tension = 170, friction = 26 }),
+    gentle = table.freeze({ tension = 120, friction = 14 }),
+    wobbly = table.freeze({ tension = 180, friction = 12 }),
+    stiff = table.freeze({ tension = 210, friction = 20 }),
+    slow = table.freeze({ tension = 280, friction = 60 }),
+    molasses = table.freeze({ tension = 280, friction = 120 }),
+})
+
 local bounceOut = function(x)
     local n1 = 7.5625
     local d1 = 2.75
@@ -23,15 +32,6 @@ local bounceOut = function(x)
         return n1 * x^2 + 0.984375
     end
 end
-
-constants.config = table.freeze({
-    default = table.freeze({ tension = 170, friction = 26 }),
-    gentle = table.freeze({ tension = 120, friction = 14 }),
-    wobbly = table.freeze({ tension = 180, friction = 12 }),
-    stiff = table.freeze({ tension = 210, friction = 20 }),
-    slow = table.freeze({ tension = 280, friction = 60 }),
-    molasses = table.freeze({ tension = 280, friction = 120 }),
-})
 
 constants.easings = table.freeze({
     linear = function(x) return x end,

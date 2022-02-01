@@ -38,7 +38,9 @@ The following configs are available:
 | clamp | false | when true, stops the spring once it overshoots its boundaries |
 | precision | 0.005 | how close to the end result the animated value gets before we consider it to be "there" |
 | easing | t => t | linear by default, there is a multitude of easings available [here](/docs/common/configs#easings) |
+| damping | 1 | The damping ratio, which dictates how the spring slows down. Only works when `frequency` is defined. Defaults to `1`. |
 | duration | nil | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
+| frequency | nil | The natural frequency (in seconds), which dictates the number of bounces per second when no damping exists. When defined, `tension` is derived from this, and `friction` is derived from `tension` and `damping`. |
 | bounce | nil | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |
 | restVelocity | nil | The smallest velocity before the animation is considered to be "not moving". When undefined, precision is used instead. |
 

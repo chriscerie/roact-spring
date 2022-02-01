@@ -6,6 +6,7 @@ local AnimationConfig = {}
 local defaults = table.freeze(util.merge(constants.config.default, {
     --immediate = false,
     mass = 1,
+    damping = 1,
     clamp = false,
     precision = 0.005,
     velocity = 0,
@@ -52,14 +53,32 @@ export type SpringConfigs = {
 
     --[[
         The animation curve. Only used when `duration` is defined.
-        TODO: Define default easing
     ]]
     easing: (t: number) -> number?,
+
+    --[[
+        The damping ratio, which dictates how the spring slows down.
+        
+        Set to `0` to never slow down. Set to `1` to slow down without bouncing.
+        Between `0` and `1` is for you to explore.
+        
+        Only works when `frequency` is defined.
+    ]]
+    damping: number?,
 
     --[[
         Animation length in number of seconds.
     ]]
     duration: number?,
+
+    --[[
+        The natural frequency (in seconds), which dictates the number of bounces
+        per second when no damping exists.
+        
+        When defined, `tension` is derived from this, and `friction` is derived
+        from `tension` and `damping`.
+    ]]
+    frequency: number?,
 
     --[[
         When above zero, the spring will bounce instead of overshooting when
@@ -86,6 +105,19 @@ function AnimationConfig:mergeConfig(config: any, newConfig: any?): SpringConfig
         if config[k] == nil then
             config[k] = v
         end
+    end
+
+    if config.frequency ~= nil then
+        local frequency = config.frequency
+        local damping = config.damping
+        if frequency < 0.01 then
+            frequency = 0.01
+        end
+        if damping < 0 then
+            damping = 0
+        end
+        config.tension = ((2 * math.pi / frequency) ^ 2) * config.mass
+        config.friction = (4 * math.pi * damping * config.mass) / frequency
     end
 
     return config
