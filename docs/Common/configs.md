@@ -118,8 +118,7 @@ When a number, the `velocity` config applies initial velocity towards or away fr
 ```lua
 -- Start with initial velocity away from `to`
 local styles = RoactSpring.useSpring(hooks, {
-    from = { position = UDim2.fromScale(0.5, 0.5) },
-    to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) },
+    position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5),
     config = { velocity = -0.01 },
 })
 ```
@@ -129,8 +128,7 @@ For further customization on the direction of the velocity, you can pass a table
 ```lua
 -- Start with initial velocity pointed towards the top-left corner
 local styles = RoactSpring.useSpring(hooks, {
-    from = { position = UDim2.fromScale(0.5, 0.5) },
-    to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) },
+    position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5),
     config = { velocity = {-0.01, 0, -0.01, 0} },
 })
 ```
@@ -140,15 +138,13 @@ Passing in a single number where `to` equals `from` will not move the spring at 
 ```lua
 -- Will not do anything
 local styles = RoactSpring.useSpring(hooks, {
-    from = { position = UDim2.fromScale(0.5, 0.5) },
-    to = { position = UDim2.fromScale(0.5, 0.5) },
+    position = UDim2.fromScale(0.5, 0.5),
     config = { velocity = -0.01 },
 })
 
 -- Will apply velocity towards the top-left corner and then return back to original position
 local styles = RoactSpring.useSpring(hooks, {
-    from = { position = UDim2.fromScale(0.5, 0.5) },
-    to = { position = UDim2.fromScale(0.5, 0.5) },
+    position = UDim2.fromScale(0.5, 0.5),
     config = { velocity = {-0.01, 0, -0.01, 0} },
 })
 ```

@@ -19,13 +19,16 @@ export type SpringProps = {
 
 -- Merge unrecognized props to the `to` table
 local function prepareKeys(props: SpringProps)
-    local newProps = util.copy(props)
-    newProps.to = newProps.to or {}
+    local newProps = {}
 
-    for key, value in pairs(newProps) do
-        if not constants.propsList[key] then
+    for key, value in pairs(props) do
+        if constants.propsList[key] ~= nil then
+            newProps[key] = value
+        else
+            if newProps.to == nil then
+                newProps.to = {}
+            end
             newProps.to[key] = value
-            newProps[key] = nil
         end
     end
 
@@ -37,22 +40,24 @@ function Spring.new(props: SpringProps)
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props for `useSpring` is required.")
 
+    props = prepareKeys(props)
+
     local state = {
         bindings = {},
         controls = {},
     }
 
-    for fromName, from in pairs(props.from) do
-        local toValue = if props.to and props.to[fromName] then props.to[fromName] else from
+    for toName, to in pairs(props.to or props.from) do
+        local from = if props.from and props.from[toName] then props.from[toName] else to
         local style, setStyle = Roact.createBinding(from)
 
-        state.bindings[fromName] = style
-        state.controls[fromName] = {
+        state.bindings[toName] = style
+        state.controls[toName] = {
             setValue = setStyle,
             springValue = SpringValue.new(
                 util.merge(props, {
                     from = from,
-                    to = toValue,
+                    to = to,
                 })
             ),
         }
@@ -68,8 +73,8 @@ function Spring.new(props: SpringProps)
             startProps = prepareKeys(startProps)
 
             local promises = {}
-
-            for name, target in pairs(startProps.to) do
+    
+            for name, target in pairs(startProps.to or {}) do
                 local binding = state.bindings[name]
                 local control = state.controls[name]
                 local value = binding:getValue()

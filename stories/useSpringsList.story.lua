@@ -45,11 +45,9 @@ local buttonProps = {
 local function Button(props, hooks)
     local springs, api = RoactSpring.useSprings(hooks, #buttonProps, function(i)
         return {
-            from = {
-                Position = UDim2.fromScale(0.5, i * 0.16),
-                Size = UDim2.fromScale(1, 0.13), 
-                ZIndex = 1,
-            },
+            Position = UDim2.fromScale(0.5, i * 0.16),
+            Size = UDim2.fromScale(1, 0.13), 
+            ZIndex = 1,
         }
     end)
     local connection = hooks.useValue()

@@ -43,7 +43,6 @@ local function useSpring(hooks, props: UseSpringProps)
     else
         error("Expected table or function for useSpring, got " .. typeof(props))
     end
-    assert(props.from, "From prop is required for useSpring")
 
     if spring.value == nil then
         local binding, api = Spring.new(props)
@@ -55,9 +54,7 @@ local function useSpring(hooks, props: UseSpringProps)
 
     hooks.useEffect(function()
         if isImperative.value == false then
-            if typeof(props.to) == "table" then
-                spring.value.api.start(props.to)
-            end
+            spring.value.api.start(props)
         end
     end)
 

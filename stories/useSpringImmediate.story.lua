@@ -9,10 +9,8 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
-            from = {
-                Rotation = 0,
-                Position = UDim2.fromScale(0.5, 0.5),
-            },
+            Rotation = 0,
+            Position = UDim2.fromScale(0.5, 0.5),
         }
     end)
 

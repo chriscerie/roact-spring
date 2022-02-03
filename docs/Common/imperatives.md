@@ -14,8 +14,7 @@ Passing a function to `useSpring` or `useSprings` will return an imperative API 
 ]]
 local toggle, setToggle = useState(false)
 local styles = RoactSpring.useSpring(hooks, {
-    from = { transparency = 1 },
-    to = { transparency = if toggle then 0 else 1 },
+    transparency = if toggle then 0 else 1,
 })
 
 -- Later
@@ -28,9 +27,7 @@ end)
     Using imperative API
 ]]
 local styles, api = RoactSpring.useSpring(hooks, function()
-    return {
-        from = { transparency = 1 },
-    }
+    return { transparency = 1 }
 end)
 
 -- Later

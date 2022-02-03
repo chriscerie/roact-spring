@@ -9,8 +9,7 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local toggle, setToggle = hooks.useState(false)
     local styles = RoactSpring.useSpring(hooks, {
-        from = { position = UDim2.fromScale(0.5, 0.5) },
-        to = { position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5) }
+        position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5),
     })
 
 	return e("TextButton", {

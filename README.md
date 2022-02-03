@@ -36,29 +36,34 @@
 
 Getting started with roact-spring is as simple as:
 
+### Declarative
+```lua
+local toggle, setToggle = hooks.useState(false)
+local styles = RoactSpring.useSpring(hooks, {
+    transparency = if toggle then 1 else 0,
+})
+
+-- Later
+setToggle(function(prevState)
+    return not prevState
+end)
+```
+
+### Imperative
+
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, function()
     return {
-        from = {
-            position = UDim2.fromScale(0.3, 0.3),
-            rotation = 0,
-        }
+        position = UDim2.fromScale(0.3, 0.3),
+        rotation = 0,
     }
 })
 
-return Roact.createElement("TextButton", {
-    Position = styles.position,
-    Rotation = styles.rotation,
-    Size = UDim2.fromScale(0.3, 0.3),
-    [Roact.Event.Activated] = function()
-        api.start({
-            position = UDim2.fromScale(0.5, 0.5),
-            rotation = 45,
-            config = { tension = 170, friction = 26 },
-        }):andThen(function()
-            print("Animation finished!")
-        end)
-    end,
+-- Later
+api.start({
+    position = UDim2.fromScale(0.5, 0.5),
+    rotation = 45,
+    config = { tension = 170, friction = 26 },
 })
 ```
 

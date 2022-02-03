@@ -17,10 +17,8 @@ local Example = Roact.Component:extend("Example")
 
 function Example:init()
     self.styles, self.api = RoactSpring.Spring.new({
-        from = {
-            size = UDim2.fromOffset(150, 150),
-            position = UDim2.fromScale(0.5, 0.5),
-        },
+        size = UDim2.fromOffset(150, 150),
+        position = UDim2.fromScale(0.5, 0.5),
     })
 end
 

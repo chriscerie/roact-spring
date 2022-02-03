@@ -10,7 +10,20 @@ Creates multiple springs, each with its own config. Use it for static lists, etc
 
 ### Either: declaratively overwrite values to change the animation
 
-If you re-render the component with changed props, the animation will update. If you don't want the animation to run on mount, ensure `to` equals `from` or `nil` on the first render.
+If you re-render the component with changed props, the animation will update.
+
+```lua
+local springProps = {}
+local length = #items
+for index, item in ipairs(items) do
+    table.insert(springProps, {
+        transparency = if toggles[i] then 1 else 0,
+    })
+end
+local springs = RoactSpring.useSprings(hooks, length, springProps)
+```
+
+If you want the animation to run on mount, you can use `from` to set the initial value.
 
 ```lua
 local springProps = {}

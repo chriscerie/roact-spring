@@ -9,7 +9,7 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
-            from = { position = UDim2.fromScale(0.5, 0.5) },
+            to = { position = UDim2.fromScale(0.5, 0.5) },
         }
     end)
 

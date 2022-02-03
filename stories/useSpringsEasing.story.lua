@@ -17,13 +17,12 @@ for name, easing in pairs(RoactSpring.easings) do
 end
 
 local function Button(props, hooks)
-    local atTarget, setAtTarget = hooks.useState(false)
+    local toggle, setToggle = hooks.useState(false)
 
     local springProps = {}
     for i in ipairs(easingsArray) do
         table.insert(springProps, {
-            from = { Position = UDim2.fromScale(0.2, 0.05 + i * 0.03) },
-            to = { Position = UDim2.fromScale(if atTarget then 0.2 else 0.8, 0.05 + i * 0.03) },
+            position = UDim2.fromScale(if toggle then 0.8 else 0.2, 0.05 + i * 0.03),
             config = { easing = easingsArray[i].easing, duration = 2 },
         })
     end
@@ -32,7 +31,7 @@ local function Button(props, hooks)
     hooks.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                setAtTarget(function(prevState)
+                setToggle(function(prevState)
                     return not prevState
                 end)
             end
@@ -49,7 +48,7 @@ local function Button(props, hooks)
         buttons[easing.name] = Roact.createFragment({
             Button = e("TextButton", {
                 AnchorPoint = Vector2.new(0.5, 0.5),
-                Position = springs[index].Position,
+                Position = springs[index].position,
                 Size = UDim2.fromOffset(15, 15),
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                 Text = "",

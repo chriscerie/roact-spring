@@ -14,9 +14,7 @@ local PAUSE_AFTER_SECONDS = 1.5
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
-            from = {
-                position = UDim2.fromScale(0.5, 0.5),
-            },
+            position = UDim2.fromScale(0.5, 0.5),
         }
     end)
 

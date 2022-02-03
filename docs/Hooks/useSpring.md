@@ -10,7 +10,15 @@ Defines values into animated values.
 
 ### Either: declaratively overwrite values to change the animation
 
-If you re-render the component with changed props, the animation will update. If you don't want the animation to run on mount, ensure `to` equals `from` or `nil` on the first render.
+If you re-render the component, the animation will update.
+
+```lua
+local styles = RoactSpring.useSpring(hooks, {
+    transparency = if toggle then 1 else 0,
+})
+```
+
+If you want the animation to run on mount, you can use `from` to set the initial value.
 
 ```lua
 local styles = RoactSpring.useSpring(hooks, {
@@ -25,9 +33,7 @@ You will get an API table back. It will not automatically animate on mount and r
 
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, function()
-    return {
-        from = { transparency = 0 },
-    }
+    return { transparency = 0 }
 })
 
 -- Update spring with new props
@@ -52,13 +58,13 @@ All properties documented in the [common props](/docs/common/props) apply.
 ## Additional notes
 
 ### To-prop shortcut
-Any property from api methods that useSpring does not recognize will be combined into "to", for instance `transparency = 1` will become `to = { transparency = 1 }`.
+Any property that useSpring does not recognize will be combined into "to", for instance `transparency = 1` will become `to = { transparency = 1 }`.
 
 ```lua
 -- This...
-api.start({ transparency = 1 })
+local styles = RoactSpring.useSpring({ transparency = 1 })
 -- is a shortcut for this...
-api.start({ to = { transparency = 0 } })
+local styles = RoactSpring.useSpring({ to = { transparency = 1 } })
 ```
 
 ## Demos

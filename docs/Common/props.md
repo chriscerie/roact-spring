@@ -30,15 +30,15 @@ Imperative updates inherit default props declared from passing props to `useSpri
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, function()
     return {
-        from = { Position = UDim2.fromScale(0.5, 0.5) },
-        config = { immediate = true },
+        position = UDim2.fromScale(0.5, 0.5) ,
+        config = { tension = 100 },
     }
 end)
 
 hooks.useEffect(function()
     -- The `config` prop is inherited by the animation
-    -- Animation will jump immediately to the parent
-    api.start({ Position = UDim2.fromScale(0.3, 0.3) })
+    -- Spring will animate with tension at 100
+    api.start({ position = UDim2.fromScale(0.3, 0.3) })
 end)
 ```
 

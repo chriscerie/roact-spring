@@ -9,7 +9,7 @@ local Example = Roact.Component:extend("Example")
 
 function Example:init()
     self.styles, self.api = RoactSpring.Spring.new({
-        from = { position = UDim2.fromScale(0.5, 0.5) },
+        position = UDim2.fromScale(0.5, 0.5),
     })
 end
 

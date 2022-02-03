@@ -17,10 +17,9 @@ local e = Roact.createElement
 local function Button(props, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
-            from = {
-                size = UDim2.fromOffset(150, 150),
-                position = UDim2.fromScale(0.5, 0.5),
-            },
+            size = UDim2.fromOffset(150, 150),
+            position = UDim2.fromScale(0.5, 0.5),
+            config = { tension = 100, friction = 10 },
         }
     end)
     local connection = hooks.useValue()
@@ -42,7 +41,7 @@ local function Button(props, hooks)
                         api.start({
                             position = UDim2.fromOffset(mousePos.X, mousePos.Y),
                             size = UDim2.fromOffset(180, 180),
-                        }, { tension = 100, friction = 10 })
+                        })
                     end)
                 end
             end
@@ -50,9 +49,7 @@ local function Button(props, hooks)
         [Roact.Event.InputEnded] = function(_,input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if connection.value then
-                    api.start({
-                        size = UDim2.fromOffset(150, 150),
-                    }, ({ tension = 100, friction = 10 }))
+                    api.start({ size = UDim2.fromOffset(150, 150) })
                     connection.value:Disconnect()
                     connection.value = nil
                 end
