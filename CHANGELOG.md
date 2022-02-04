@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 0.1.0 (February 3, 2022)
+## 0.1.1 (February 3, 2022)
 
 * Added `useSpring`
 * Added `useSprings`
