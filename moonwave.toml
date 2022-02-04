@@ -1,10 +1,5 @@
 gitRepoUrl = "https://github.com/chriscerie/roact-spring"
 
-classOrder = [
-	"useSpring",
-    "SpringValue",
-]
-
 [docusaurus]
 tagline = "A spring-physics based animation library for Roact"
 
@@ -41,7 +36,7 @@ href = "/docs/Hooks/useSpring"
 
 [[footer.links.items]]
 label = "Additional Classes"
-href = "/docs/Additional%20Classes/spring"
+href = "/docs/Additional%20Classes/controller"
 
 [[footer.links.items]]
 label = "API Reference"

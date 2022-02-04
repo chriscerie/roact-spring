@@ -1,7 +1,7 @@
 local RoactSpring = {
 	useSpring = require(script.useSpring),
 	useSprings = require(script.useSprings),
-	Spring = require(script.Spring),
+	Controller = require(script.Controller),
 	SpringValue = require(script.SpringValue),
 	config = require(script.constants).config,
 	easings = require(script.constants).easings,

@@ -1,8 +1,3 @@
---[=[
-    @class useSprings
-    Creates multiple springs, each with its own config. Use it for static lists, etc.
-]=]
-
 local Promise = require(script.Parent.Parent.Promise)
 local useSpring = require(script.Parent.useSpring)
 
@@ -68,10 +63,10 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
                             local result = springs.value[i].api[apiName](apiProps(i))
         
                             -- Some results might be promises
-                            if result.await then
+                            if result and result.await then
                                 result:await()
                             end
-        
+
                             resolve()
                         end))
                     end

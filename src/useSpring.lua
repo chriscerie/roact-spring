@@ -1,34 +1,15 @@
---[=[
-    @class useSpring
-    Turns values into animated-values.
-]=]
-
 local RunService = game:GetService("RunService")
 
 local Promise = require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
-local Spring = require(script.Parent.Spring)
+local Controller = require(script.Parent.Controller)
 local merge = require(script.Parent.util.merge)
 
-type UseSpringProps = Spring.SpringProps | () -> {
+type UseSpringProps = Controller.SpringProps | () -> {
     from: { [string]: any },
     config: { [string]: any }?
 }
 
---[=[
-    @interface api
-    @within useSpring
-    .start () -> Promise
-]=]
-
---[=[
-    @within useSpring
-
-    @param hooks Hook
-    @param props UseSpringProps
-
-    @return ({[string]: RoactBinding}, api)
-]=]
 local function useSpring(hooks, props: UseSpringProps)
     local isImperative = hooks.useValue(nil)
     local spring = hooks.useValue(nil)
@@ -45,24 +26,29 @@ local function useSpring(hooks, props: UseSpringProps)
     end
 
     if spring.value == nil then
-        local binding, api = Spring.new(props)
-        spring.value = {
-            binding = binding,
-            api = api,
-        }
+        local styles, api = Controller.new(props)
+        spring.value = api
     end
 
     hooks.useEffect(function()
         if isImperative.value == false then
-            spring.value.api.start(props)
+            spring.value:start(props)
         end
     end)
 
     if isImperative.value then
-        return spring.value.binding, spring.value.api
+        local api = {}
+        for key, value in pairs(getmetatable(spring.value)) do
+            if typeof(value) == "function" and key ~= "new" then
+                api[key] = function(...)
+                    value(spring.value, ...)
+                end
+            end
+        end
+        return spring.value.bindings, api
     end
 
-    return spring.value.binding
+    return spring.value.bindings
 end
 
 return useSpring

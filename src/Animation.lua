@@ -46,14 +46,16 @@ local function getTypeFromValues(type: string, values: { number })
 end
 
 function Animation.new(props)
-    assert(typeof(props.to) == typeof(props.from), "`to` and `from` must be the same type")
-    local length = #getValuesFromType(props.from)
+    if props.to and props.from then
+        assert(typeof(props.to) == typeof(props.from), "`to` and `from` must be the same type")
+    end
+    local length = #getValuesFromType(props.from or props.to)
 
 	return setmetatable({
-        values = getValuesFromType(props.from),
-        toValues = getValuesFromType(props.to),
-        fromValues = getValuesFromType(props.from),
-        type = typeof(props.to),
+        values = getValuesFromType(props.from or props.to),
+        toValues = getValuesFromType(props.to or props.from),
+        fromValues = getValuesFromType(props.from or props.to),
+        type = typeof(props.from or props.to),
         config = AnimationConfig:mergeConfig(props.config or {}),
         immediate = props.immediate,
 

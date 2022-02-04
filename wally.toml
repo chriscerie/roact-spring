@@ -11,3 +11,6 @@ realm = "shared"
 Roact = "roblox/roact@^1"
 Promise = "evaera/promise@^3.2"
 Hooks = "kampfkarren/roact-hooks@^0.3"
+
+[dev-dependencies]
+TestEZ = "roblox/testez@^0.4"

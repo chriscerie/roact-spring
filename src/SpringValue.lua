@@ -17,14 +17,8 @@ export type SpringValueProps = {
     onChange: (position: number) -> ()?,
 }
 
---[=[
-    @class SpringValue
-
-    Spring values. Generally, you should use the `useSpring` hook instead.
-]=]
 function SpringValue.new(props: SpringValueProps)
-    assert(props.from, "Spring.new: from is required")
-    assert(props.to, "Spring.new: to is required")
+    assert(props.from or props.to, "`to` or `from` expected, none passed.")
 
 	return setmetatable({
         -- The animation state

@@ -16,7 +16,7 @@ local e = Roact.createElement
 local Example = Roact.Component:extend("Example")
 
 function Example:init()
-    self.styles, self.api = RoactSpring.Spring.new({
+    self.styles, self.api = RoactSpring.Controller.new({
         size = UDim2.fromOffset(150, 150),
         position = UDim2.fromScale(0.5, 0.5),
     })
@@ -37,7 +37,7 @@ function Example:render()
                     self.connection = RunService.Heartbeat:Connect(function()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
 
-                        self.api.start({
+                        self.api:start({
                             position = UDim2.fromOffset(mousePos.X, mousePos.Y),
                             size = UDim2.fromOffset(180, 180),
                             config = { tension = 100, friction = 10 },
@@ -49,8 +49,8 @@ function Example:render()
         [Roact.Event.InputEnded] = function(_,input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if self.connection then
-                    self.api.start({
-                        to = { size = UDim2.fromOffset(150, 150) },
+                    self.api:start({
+                        size = UDim2.fromOffset(150, 150),
                         config = { tension = 100, friction = 10 },
                     })
                     self.connection:Disconnect()

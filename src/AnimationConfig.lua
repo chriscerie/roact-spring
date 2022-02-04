@@ -98,6 +98,8 @@ export type SpringConfigs = {
 function AnimationConfig:mergeConfig(config: any, newConfig: any?): SpringConfigs
     if newConfig then
         config = util.merge(config, newConfig)
+    else
+        config = util.copy(config)
     end
 
     for k, v in pairs(defaults) do
@@ -107,16 +109,14 @@ function AnimationConfig:mergeConfig(config: any, newConfig: any?): SpringConfig
     end
 
     if config.frequency ~= nil then
-        local frequency = config.frequency
-        local damping = config.damping
-        if frequency < 0.01 then
-            frequency = 0.01
+        if config.frequency < 0.01 then
+            config.frequency = 0.01
         end
-        if damping < 0 then
-            damping = 0
+        if config.damping < 0 then
+            config.damping = 0
         end
-        config.tension = ((2 * math.pi / frequency) ^ 2) * config.mass
-        config.friction = (4 * math.pi * damping * config.mass) / frequency
+        config.tension = ((2 * math.pi / config.frequency) ^ 2) * config.mass
+        config.friction = (4 * math.pi * config.damping * config.mass) / config.frequency
     end
 
     return config

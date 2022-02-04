@@ -8,7 +8,7 @@ local e = Roact.createElement
 local Example = Roact.Component:extend("Example")
 
 function Example:init()
-    self.styles, self.api = RoactSpring.Spring.new({
+    self.styles, self.api = RoactSpring.Controller.new({
         position = UDim2.fromScale(0.5, 0.5),
     })
 end
@@ -22,7 +22,7 @@ function Example:render()
         Text = "Click me",
 
         [Roact.Event.Activated] = function()
-            self.api.start({
+            self.api:start({
                 position = UDim2.fromScale(0.5, 0.8),
             })
         end,
