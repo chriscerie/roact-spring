@@ -44,14 +44,12 @@ You will get an API table back. It will not automatically animate on mount and r
 ```lua
 local length = #items
 local springs, api = RoactSpring.useSprings(hooks, length, function(index)
-    return {
-        from = { transparency = items[index].transparency },
-    }
+    return { transparency = items[index].transparency }
 end)
 
 -- Start animations
 api.start(function(index)
-    return { Position = UDim2.fromScale(0.5 * index, 0.16) }
+    return { position = UDim2.fromScale(0.5 * index, 0.16) }
 end)
 -- Stop all springs
 api.stop()
@@ -63,7 +61,7 @@ api.stop()
 local contents = {}
 for i = 1, 4 do
     contents[i] = Roact.createElement("Frame", {
-        Position = springs[i].Position,
+        Position = springs[i].position,
         Size = UDim2.fromScale(0.3, 0.3),
     })
 end
