@@ -39,7 +39,7 @@ local function getTypeFromValues(type: string, values: { number })
     elseif type == "Vector3" then
         return Vector3.new(values[1], values[2], values[3])
     elseif type == "Color3" then
-        return Color3.fromRGB(values[1], values[2], values[3])
+        return Color3.new(values[1], values[2], values[3])
     end
 
     error("Unsupported type: " .. type)
