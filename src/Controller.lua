@@ -50,6 +50,10 @@ function Controller.new(props: ControllerProps)
 
     for toName, to in pairs(props.to or props.from or error("`to` or `from` expected, none passed.")) do
         local from = if props.from and props.from[toName] then props.from[toName] else to
+
+        to = if typeof(to) == "string" then Color3.fromHex(to) else to
+        from = if typeof(from) == "string" then Color3.fromHex(from) else from
+
         local style, setStyle = Roact.createBinding(from)
 
         self.bindings[toName] = style
@@ -81,6 +85,10 @@ function Controller:start(startProps: ControllerProps?)
         local binding = self.bindings[name]
         local control = self.controls[name]
         local value = binding:getValue()
+
+        if typeof(target) == "string" then
+            target = Color3.fromHex(target)
+        end
 
         table.insert(promises, control.springValue:start({
             from = value,
