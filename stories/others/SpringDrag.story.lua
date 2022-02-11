@@ -10,6 +10,7 @@ local GuiService = game:GetService("GuiService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
+local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 
@@ -23,13 +24,9 @@ function Example:init()
 end
 
 function Example:render()
-	return e("TextButton", {
-        AnchorPoint = Vector2.new(0.5, 0.5),
+	return e(CircleButton, {
         Position = self.styles.position,
 		Size = self.styles.size,
-        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-        AutoButtonColor = false,
-        Text = "",
 
         [Roact.Event.InputBegan] = function(button, input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -58,32 +55,7 @@ function Example:render()
                 end
             end
         end
-	}, {
-        UICorner = e("UICorner", {
-            CornerRadius = UDim.new(1, 0),
-        }),
-        UIGradient = e("UIGradient", {
-            Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(110, 255, 183)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 119, 253)),
-            }),
-            Rotation = 25,
-        }),
-        UIStroke = e("UIStroke", {
-            ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-            Color = Color3.fromRGB(29, 237, 255),
-            Thickness = 5.3,
-            Transparency = 0.7,
-        }, {
-            UIGradient = e("UIGradient", {
-                Rotation = -90,
-                Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0),
-                    NumberSequenceKeypoint.new(1, 1),
-                }),
-            }),
-        }),
-    })
+	})
 end
 
 return function(target)

@@ -7,26 +7,23 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local e = Roact.createElement
 
 local function Button(props, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
-        return {
-            Rotation = 0,
-            Position = UDim2.fromScale(0.5, 0.5),
-        }
-    end)
+    local toggle, setToggle = hooks.useState(false)
+    local styles = RoactSpring.useSpring(hooks, {
+        color = if toggle then Color3.fromRGB(0, 0, 0) else Color3.fromRGB(255, 255, 255),
+    })
 
 	return e("TextButton", {
         AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = styles.Position,
-		Size = UDim2.fromScale(0.3, 0.3),
-		BackgroundColor3 = Color3.fromRGB(99, 255, 130),
-        Rotation = styles.Rotation,
-        Text = "Click me",
+        Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromOffset(200, 200),
+		BackgroundColor3 = styles.color,
+        AutoButtonColor = false,
+        Text = "",
 
         [Roact.Event.Activated] = function()
-            api.start({
-                Position = UDim2.fromScale(0.5, 0.8),
-                immediate = true,
-            })
+            setToggle(function(prevState)
+                return not prevState
+            end)
         end,
 	}, {
         UICorner = e("UICorner"),
