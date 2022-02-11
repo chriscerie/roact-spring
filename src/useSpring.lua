@@ -41,7 +41,7 @@ local function useSpring(hooks, props: UseSpringProps)
         for key, value in pairs(getmetatable(spring.value)) do
             if typeof(value) == "function" and key ~= "new" then
                 api[key] = function(...)
-                    value(spring.value, ...)
+                    return value(spring.value, ...)
                 end
             end
         end
