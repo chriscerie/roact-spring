@@ -15,7 +15,7 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
             size = UDim2.fromOffset(150, 150),
@@ -29,7 +29,7 @@ local function Button(props, hooks)
         Position = styles.position,
 		Size = styles.size,
 
-        [Roact.Event.InputBegan] = function(button, input)
+        [Roact.Event.InputBegan] = function(_, input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if not connection.value then
                     connection.value = RunService.Heartbeat:Connect(function()

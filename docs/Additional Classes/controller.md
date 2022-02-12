@@ -37,6 +37,6 @@ end
 
 ### Draggable element
 
-<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/SpringDrag.story.lua">
+<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/components/SpringDrag.story.lua">
   <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
 </a>

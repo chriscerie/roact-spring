@@ -21,7 +21,7 @@
 `roact-spring` is the perfect bridge between declarative and imperative animations. It takes the best of both worlds and packs them into one flexible library.
 
 ### Fluid, powerful, painless
-`roact-spring` is designed to make animations fluid, powerful, and painless to build and maintain. Animation becomes easy and approachable, and everything you do looks and feel natural by default.
+`roact-spring` is designed to make animations fluid, powerful, and painless to build and maintain. Animation becomes easy and approachable, and everything you do look and feel natural by default.
 
 ### Versatile
 `roact-spring` works with most data types and provides extensible configurations that makes it painless to create advanced animations.
@@ -75,14 +75,25 @@ These demos are publicly available. Click on each gif to go to their source.
 
 ### Draggable element
 
-<a href="stories/useSpringDrag.story.lua">
-  <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
+<a href="stories/hooks/useSpringDrag.story.lua">
+  <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="300" />
 </a>
 
 ### Draggable list
 
-<a href="stories/useSpringsList.story.lua">
-  <img src="https://media.giphy.com/media/4qOEZ93YjhfKtSlx7b/giphy.gif" width="400" />
+<a href="stories/hooks/useSpringsList.story.lua">
+  <img src="https://media.giphy.com/media/4qOEZ93YjhfKtSlx7b/giphy.gif" width="300" />
+</a>
+
+### Staggered list
+
+<a href="stories/hooks/useTrailList.story.lua">
+  <img src="https://media.giphy.com/media/XfG0GNKGCKang91lLN/giphy.gif" width="300" />
+</a>
+
+### Trailing elements
+<a href="stories/hooks/useTrailFollow.story.lua">
+  <img src="https://media.giphy.com/media/BS20XRr522AJgkCyZR/giphy.gif" width="300" />
 </a>
 
 ## License

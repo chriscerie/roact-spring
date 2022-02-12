@@ -18,8 +18,9 @@ All primitives inherit the following properties (though some of them may bring t
 | ----------- | ----------- | ---- |
 | from | table | Starting values |
 | to | table | Animates to ... |
+| delay | number | Delay in seconds before the animation starts |
 | immediate | boolean | Prevents animation if true. |
-| [config](configs) | table | 	Spring config (contains mass, tension, friction, etc) |
+| [config](configs) | table | Spring config (contains mass, tension, friction, etc) |
 
 ## Default props
 

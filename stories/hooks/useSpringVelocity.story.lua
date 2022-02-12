@@ -1,7 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local GuiService = game:GetService("GuiService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
 local Hooks = require(ReplicatedStorage.Packages.Hooks)
@@ -10,7 +7,7 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
             position = UDim2.fromScale(0.5, 0.6),

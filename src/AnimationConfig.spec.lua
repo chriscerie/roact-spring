@@ -1,6 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 
 local function expo(t: number)

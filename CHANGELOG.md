@@ -2,10 +2,15 @@
 
 ## Unreleased
 
-* Fix color3 animating with wrong values
-* Clean up all stories to use circle button component
-* Add support for hex color strings ([@chriscerie](https://github.com/chriscerie) in [#6](https://github.com/chriscerie/roact-spring/pull/6))
+## 0.2.0 (Feburary 11, 2022)
+
+* Fixed color3 animating with wrong values
+* Cleaned up all stories to use circle button component
+* Added support for hex color strings ([@chriscerie](https://github.com/chriscerie) in [#6](https://github.com/chriscerie/roact-spring/pull/6))
 * Added motivation in docs
+* Added `delay` prop
+* Added `useTrail`
+* Added optional dependency array to hooks
 
 ## 0.1.1 (February 3, 2022)
 

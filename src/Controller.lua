@@ -13,6 +13,7 @@ export type ControllerProps = {
 } | {
     from: { [string]: any }?,
     to: { [string]: any }?,
+    delay: number?,
     immediate: boolean?,
     config: AnimationConfig.SpringConfigs?,
     [string]: any?,
@@ -39,7 +40,7 @@ end
 function Controller.new(props: ControllerProps)
     -- TODO: Merge all unrecognized props into `to`
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
-    assert(typeof(props) == "table", "Props for `useSpring` is required.")
+    assert(typeof(props) == "table", "Props are required.")
 
     props = prepareKeys(props)
 
@@ -82,17 +83,15 @@ function Controller:start(startProps: ControllerProps?)
     local promises = {}
 
     for name, target in pairs(startProps.to or {}) do
-        local binding = self.bindings[name]
         local control = self.controls[name]
-        local value = binding:getValue()
 
         if typeof(target) == "string" then
             target = Color3.fromHex(target)
         end
 
         table.insert(promises, control.springValue:start({
-            from = value,
             to = target,
+            delay = startProps.delay,
             immediate = startProps.immediate,
             config = startProps.config,
             onChange = function(newValue)

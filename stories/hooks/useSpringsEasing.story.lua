@@ -1,5 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GuiService = game:GetService("GuiService")
 local UserInputService = game:GetService("UserInputService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
@@ -16,7 +15,7 @@ for name, easing in pairs(RoactSpring.easings) do
     })
 end
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local toggle, setToggle = hooks.useState(false)
 
     local springProps = {}

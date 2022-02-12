@@ -7,11 +7,12 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local toggle, setToggle = hooks.useState(false)
     local styles = RoactSpring.useSpring(hooks, {
         position = if toggle then UDim2.fromScale(0.7, 0.5) else UDim2.fromScale(0.3, 0.5),
-    })
+        config = if toggle then { tension = 200 } else { tension = 50 },
+    }, { toggle })
 
 	return e(CircleButton, {
         Position = styles.position,

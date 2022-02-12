@@ -1,18 +1,11 @@
 local Promise = require(script.Parent.Parent.Promise)
-local useSpring = require(script.Parent.useSpring)
+local Controller = require(script.Parent.Controller)
 
-local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}))
+local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
     local isImperative = hooks.useValue(nil)
-    local springs: {
-        value: {
-            {
-                style: any,
-                api: any?,
-            }
-        },
-    } = hooks.useValue(nil)
-    local stylesList = hooks.useValue(nil)
-    local apiList = hooks.useValue(nil)
+    local springs = hooks.useValue({})
+    local stylesList = hooks.useValue({})
+    local apiList = hooks.useValue({})
 
     if typeof(props) == "table" then
         assert(isImperative.value == nil or isImperative.value == false, "useSprings detected a change from imperative to declarative. This is not supported.")
@@ -24,62 +17,62 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
         error("Expected table or function for useSprings, got " .. typeof(props))
     end
 
-    if springs.value then
-        assert(#springs.value == length, "Length of useSprings changed from " .. #springs.value .. " to " .. length .. ". This is not supported.")
-    else
-        springs.value = {}
-    end
+    hooks.useEffect(function()
+        if isImperative.value == false then
+            for i, spring in ipairs(springs.value) do
+                spring:start(props[i])
+            end
+        end
+    end, deps)
 
-    for i = 1, length do
-        local style, api
-        if isImperative.value then
-            style, api = useSpring(hooks, function()
-                return props(i)
-            end)
+    hooks.useMemo(function()
+        if length > #springs then
+            for i = #springs + 1, length do
+                local styles, api = Controller.new(if typeof(props) == "table" then props[i] else props(i))
+                springs.value[i] = api
+                stylesList.value[i] = styles
+            end
         else
-            style = useSpring(hooks, props[i])
+            for i = length + 1, #springs do
+                springs.value[i]:stop()
+                springs.value[i] = nil
+                stylesList.value[i] = nil
+                apiList.value[i] = nil
+            end
         end
-        springs.value[i] = {
-            style = style,
-            api = api,
-        }
-    end
+    end, { length })
 
-    if stylesList.value == nil then
-        stylesList.value = {}
-        apiList.value = {}
+    hooks.useMemo(function()
+        if isImperative.value then
+            for apiName, value in pairs(getmetatable(springs.value[1])) do
+                if typeof(value) == "function" and apiName ~= "new" then
+                    apiList.value[apiName] = function(apiProps: (index: number) -> any | any)
+                        local promises = {}
+                        for i, spring in ipairs(springs.value) do
+                            table.insert(promises, Promise.new(function(resolve)
+                                local result = spring[apiName](spring, if typeof(apiProps) == "function" then apiProps(i) else apiProps)
 
-        for springName, spring in pairs(springs.value) do
-            stylesList.value[springName] = spring.style
-        end
+                                -- Some results might be promises
+                                if result and result.await then
+                                    result:await()
+                                end
 
-        if isImperative.value and springs.value[1].api then
-            for apiName in pairs(springs.value[1].api) do
-                apiList.value[apiName] = function(apiProps: (index: number) -> any)
-                    local promises = {}
-        
-                    for i = 1, length do
-                        table.insert(promises, Promise.new(function(resolve)
-                            local result = springs.value[i].api[apiName](apiProps(i))
-        
-                            -- Some results might be promises
-                            if result and result.await then
-                                result:await()
-                            end
+                                resolve()
+                            end))
+                        end
 
-                            resolve()
-                        end))
+                        return Promise.all(promises)
                     end
-
-                    return Promise.all(promises)
                 end
             end
         end
-    end
+        -- Need to pass {{}} because useMemo doesn't support nil dependency yet
+    end, deps or {{}})
 
     if isImperative.value then
         return stylesList.value, apiList.value
     end
+
     return stylesList.value
 end
 

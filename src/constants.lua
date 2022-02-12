@@ -96,6 +96,7 @@ constants.easings = table.freeze({
 constants.propsList = {
     from = true,
     to = true,
+    delay = true,
     immediate = true,
     config = true,
 }

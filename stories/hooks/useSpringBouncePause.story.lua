@@ -11,7 +11,7 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 local e = Roact.createElement
 local PAUSE_AFTER_SECONDS = 1.5
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
             position = UDim2.fromScale(0.5, 0.5),

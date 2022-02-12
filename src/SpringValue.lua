@@ -12,6 +12,7 @@ SpringValue.__index = SpringValue
 export type SpringValueProps = {
     from: number,
     to: number,
+    delay: number?,
     immediate: boolean?,
     config: AnimationConfig.SpringConfigs?,
     onChange: (position: number) -> ()?,
@@ -38,12 +39,18 @@ function SpringValue.new(props: SpringValueProps)
 end
 
 function SpringValue:start(props)
-    return Promise.new(function(resolve)
-        local anim = self.animation
+    if props.default then
+        self.defaultProps = props.default
+    end
 
-        if props.default then
-            self.defaultProps = props.default
+    return Promise.new(function(resolve, _, onCancel)
+        if props.delay then
+            task.wait(props.delay)
         end
+
+        if onCancel() then return end
+
+        local anim = self.animation
 
         anim:setProps(util.merge(self.defaultProps, props))
         self.onChange = props.onChange or self.onChange
@@ -56,27 +63,22 @@ function SpringValue:start(props)
 
         self.onComplete:Wait()
         resolve()
-    end):catch(function(err)
-        self:stop()
-        error(err)
     end)
 end
 
 function SpringValue:stop()
-    if self._connection then
-        self._connection:Disconnect()
-        self._connection = nil
-    end
+    self:_disconnect()
+
+    -- TODO: Cancel delayed updates
 
     self.animation:stop()
     self.onComplete:Fire()
 end
 
 function SpringValue:pause()
-    if self._connection then
-        self._connection:Disconnect()
-        self._connection = nil
-    end
+    self:_disconnect()
+
+    -- TODO: Pause delayed updates in time
 end
 
 function SpringValue:advance(dt: number)
@@ -222,9 +224,18 @@ function SpringValue:advance(dt: number)
 
     if idle then
         self.onChange(anim:getValue())
-        self:stop()
+        self:_disconnect()
+        self.animation:stop()
+        self.onComplete:Fire()
     elseif changed then
         self.onChange(anim:getValue())
+    end
+end
+
+function SpringValue:_disconnect()
+    if self._connection then
+        self._connection:Disconnect()
+        self._connection = nil
     end
 end
 

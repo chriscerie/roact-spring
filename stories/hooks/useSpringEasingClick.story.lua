@@ -4,7 +4,6 @@
 ]]
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
@@ -15,21 +14,19 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local styles, api = RoactSpring.useSpring(hooks, function()
         return {
-            size = UDim2.fromOffset(150, 150),
             position = UDim2.fromScale(0.5, 0.5),
         }
     end)
-    local connection = hooks.useValue()
 
     hooks.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
                 api.start({
-                    to = { position = UDim2.fromOffset(mousePos.X, mousePos.Y) },
+                    position = UDim2.fromOffset(mousePos.X, mousePos.Y),
                     config = { duration = 3, easing = RoactSpring.easings.easeInElastic },
                 })
             end
@@ -42,7 +39,6 @@ local function Button(props, hooks)
 
 	return e(CircleButton, {
         Position = styles.position,
-		Size = styles.size,
 	})
 end
 

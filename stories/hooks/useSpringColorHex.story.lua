@@ -6,7 +6,7 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
 
-local function Button(props, hooks)
+local function Button(_, hooks)
     local toggle, setToggle = hooks.useState(false)
     local styles = RoactSpring.useSpring(hooks, {
         color = if toggle then "#000" else "#fff",

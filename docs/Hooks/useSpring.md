@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 1
 ---
 
 # useSpring
@@ -71,6 +71,6 @@ local styles = RoactSpring.useSpring({ to = { transparency = 1 } })
 
 ### Draggable element
 
-<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/useSpringDrag.story.lua">
+<a href="https://github.com/chriscerie/roact-spring/blob/main/stories/hooks/useSpringDrag.story.lua">
   <img src="https://media.giphy.com/media/R2bJ57MNTdP7vmP6Ez/giphy.gif" width="400" />
 </a>

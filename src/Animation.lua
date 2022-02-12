@@ -1,6 +1,5 @@
-local Promise = require(script.Parent.Parent.Promise)
-local Signal = require(script.Parent.Signal)
 local AnimationConfig = require(script.Parent.AnimationConfig)
+local util = require(script.Parent.util)
 
 local Animation = {}
 Animation.__index = Animation
@@ -60,7 +59,7 @@ function Animation.new(props)
         immediate = props.immediate,
 
         v0 = table.create(length, nil),
-        lastPosition = table.create(length, 0),
+        lastPosition = getValuesFromType(props.from or props.to),
         lastVelocity = table.create(length, nil),
         done = table.create(length, false),
         elapsedTime = table.create(length, 0),
@@ -81,8 +80,8 @@ end
 function Animation:setProps(props)
     if props then
         self.toValues = if props.to then getValuesFromType(props.to) else self.toValues
-        self.fromValues = if props.from then getValuesFromType(props.from) else self.fromValues
         self.lastPosition = if props.from then getValuesFromType(props.from) else self.lastPosition
+        self.fromValues = if props.from then getValuesFromType(props.from) else util.copy(self.lastPosition)
         self.config = AnimationConfig:mergeConfig(props.config or {})
         self.immediate = if props.immediate ~= nil then props.immediate else self.immediate
 
