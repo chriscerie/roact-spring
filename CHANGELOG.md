@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.2.1 (Feburary 17, 2022)
+
+* Fixed `useTrail` delaying the wrong amount for varying delay times
+* Fixed typo in docs
+
 ## 0.2.0 (Feburary 11, 2022)
 
 * Fixed color3 animating with wrong values

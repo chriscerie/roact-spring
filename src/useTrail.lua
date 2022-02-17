@@ -10,9 +10,12 @@ local function useTrail(hooks, length: number, propsArg, deps: {any}?)
         end
 
         local newProps = table.create(length)
+        local currentDelay = 0
         for i, v in ipairs(propsArg) do
             local prop = util.merge({ delay = 0.1 }, v)
-            prop.delay = (i - 1) * prop.delay
+            local delayAmount = prop.delay
+            prop.delay = currentDelay
+            currentDelay += delayAmount
             newProps[i] = prop
         end
         return newProps
@@ -34,9 +37,12 @@ local function useTrail(hooks, length: number, propsArg, deps: {any}?)
         end
 
         modifiedApi.value.start = function(startFn)
+            local currentDelay = 0
             api.start(function(i)
                 local startProps = util.merge({ delay = 0.1 }, startFn(i))
-                startProps.delay = (i - 1) * startProps.delay
+                local delayAmount = startProps.delay
+                startProps.delay = currentDelay
+                currentDelay += delayAmount
                 return startProps
             end)
         end

@@ -37,7 +37,7 @@ local styles, api = RoactSpring.useSpring(hooks, function()
 })
 
 -- Update spring with new props
-api.start({ transparency = if toggle 1 else 0 })
+api.start({ transparency = if toggle then 1 else 0 })
 -- Stop animation
 api.stop()
 ```
