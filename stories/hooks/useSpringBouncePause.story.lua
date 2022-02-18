@@ -1,7 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local GuiService = game:GetService("GuiService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
 local Hooks = require(ReplicatedStorage.Packages.Hooks)

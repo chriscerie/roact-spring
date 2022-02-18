@@ -38,7 +38,6 @@ local function prepareKeys(props: ControllerProps)
 end
 
 function Controller.new(props: ControllerProps)
-    -- TODO: Merge all unrecognized props into `to`
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props are required.")
 
