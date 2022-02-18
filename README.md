@@ -91,6 +91,12 @@ These demos are publicly available. Click on each gif to go to their source.
   <img src="https://media.giphy.com/media/XfG0GNKGCKang91lLN/giphy.gif" width="300" />
 </a>
 
+### Staggered text
+
+<a href="stories/hooks/useTrailText.story.lua">
+  <img src="https://media.giphy.com/media/9llkynmhlsUvZCupPz/giphy.gif" width="300" />
+</a>
+
 ### Trailing elements
 <a href="stories/hooks/useTrailFollow.story.lua">
   <img src="https://media.giphy.com/media/BS20XRr522AJgkCyZR/giphy.gif" width="300" />
