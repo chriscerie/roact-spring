@@ -6,6 +6,7 @@
 
 * Fixed `useTrail` delaying the wrong amount for varying delay times
 * Fixed typo in docs
+* Added `progress` config for easing animations ([@chriscerie](https://github.com/chriscerie) in [#13](https://github.com/chriscerie/roact-spring/pull/13))
 
 ## 0.2.0 (Feburary 11, 2022)
 

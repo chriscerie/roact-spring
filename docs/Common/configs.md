@@ -41,6 +41,7 @@ The following configs are available:
 | velocity | 0 | initial velocity, see [velocity config](/docs/common/configs#velocity-config) for more detais |
 | easing | t => t | linear by default, there is a multitude of easings available [here](/docs/common/configs#easings) |
 | damping | 1 | The damping ratio, which dictates how the spring slows down. Only works when `frequency` is defined. Defaults to `1`. |
+| progress | 0 | When used with `duration`, it decides how far into the easing function to start from. The duration itself is unaffected. |
 | duration | undefined | if > than 0, will switch to a duration-based animation instead of spring physics, value should be indicated in seconds (e.g. duration: 2 for a duration of 2s) |
 | frequency | undefined | The frequency response (in seconds), which dictates the duration of one period in a frictionless environment. When defined, `tension` is derived from this, and `friction` is derived from this and `damping`. |
 | bounce | undefined | When above zero, the spring will bounce instead of overshooting when exceeding its goal value. |

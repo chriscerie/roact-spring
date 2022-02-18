@@ -46,6 +46,20 @@ export type SpringConfigs = {
     precision: number?,
 
     --[[
+        For `duration` animations only. Note: The `duration` is not affected
+        by this property.
+        
+        Defaults to `0`, which means "start from the beginning".
+        
+        Setting to `1+` makes an immediate animation.
+        
+        Setting to `0.5` means "start from the middle of the easing function".
+    
+        Any number `>= 0` and `<= 1` makes sense here.
+    ]]
+    progress: number?,
+
+    --[[
         The initial velocity of one or more values.
     ]]
     velocity: number | { number }?,
