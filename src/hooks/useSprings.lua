@@ -1,9 +1,9 @@
-local Promise = require(script.Parent.Parent.Promise)
-local Controller = require(script.Parent.Controller)
+local Promise = require(script.Parent.Parent.Parent.Promise)
+local Controller = require(script.Parent.Parent.Controller)
 
 local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
     local isImperative = hooks.useValue(nil)
-    local springs = hooks.useValue({})
+    local ctrls = hooks.useValue({})
     local stylesList = hooks.useValue({})
     local apiList = hooks.useValue({})
 
@@ -19,23 +19,26 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
 
     hooks.useEffect(function()
         if isImperative.value == false then
-            for i, spring in ipairs(springs.value) do
+            for i, spring in ipairs(ctrls.value) do
                 spring:start(props[i])
             end
         end
     end, deps)
 
+    -- Create new controllers when "length" increases, and destroy
+    -- the affected controllers when "length" decreases
     hooks.useMemo(function()
-        if length > #springs then
-            for i = #springs + 1, length do
+        if length > #ctrls then
+            for i = #ctrls + 1, length do
                 local styles, api = Controller.new(if typeof(props) == "table" then props[i] else props(i))
-                springs.value[i] = api
+                ctrls.value[i] = api
                 stylesList.value[i] = styles
             end
         else
-            for i = length + 1, #springs do
-                springs.value[i]:stop()
-                springs.value[i] = nil
+            -- Clean up any unused controllers
+            for i = length + 1, #ctrls do
+                ctrls.value[i]:stop()
+                ctrls.value[i] = nil
                 stylesList.value[i] = nil
                 apiList.value[i] = nil
             end
@@ -44,11 +47,11 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
 
     hooks.useMemo(function()
         if isImperative.value then
-            for apiName, value in pairs(getmetatable(springs.value[1])) do
+            for apiName, value in pairs(getmetatable(ctrls.value[1])) do
                 if typeof(value) == "function" and apiName ~= "new" then
                     apiList.value[apiName] = function(apiProps: (index: number) -> any | any)
                         local promises = {}
-                        for i, spring in ipairs(springs.value) do
+                        for i, spring in ipairs(ctrls.value) do
                             table.insert(promises, Promise.new(function(resolve)
                                 local result = spring[apiName](spring, if typeof(apiProps) == "function" then apiProps(i) else apiProps)
 
@@ -68,6 +71,15 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
         end
         -- Need to pass {{}} because useMemo doesn't support nil dependency yet
     end, deps or {{}})
+
+    -- Cancel the animations of all controllers on unmount
+    hooks.useEffect(function()
+        return function()
+            for _, ctrl in ipairs(ctrls.value) do
+                ctrl:stop()
+            end
+        end
+    end, {})
 
     if isImperative.value then
         return stylesList.value, apiList.value

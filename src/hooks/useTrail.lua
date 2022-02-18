@@ -1,5 +1,5 @@
 local useSprings = require(script.Parent.useSprings)
-local util = require(script.Parent.util)
+local util = require(script.Parent.Parent.util)
 
 local function useTrail(hooks, length: number, propsArg, deps: {any}?)
     local isFn = type(propsArg) == "function"
