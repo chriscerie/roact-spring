@@ -6,6 +6,7 @@
 * Hooks now cancel animations when they are unmounted
 * Added staggered text story to demos
 * Fixed useSprings not removing unused springs when length arg decreases
+* Added tests for `useSpring` and `useSprings`
 
 ## 0.2.1 (Feburary 17, 2022)
 
