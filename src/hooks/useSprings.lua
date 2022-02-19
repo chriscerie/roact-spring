@@ -28,15 +28,15 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     -- Create new controllers when "length" increases, and destroy
     -- the affected controllers when "length" decreases
     hooks.useMemo(function()
-        if length > #ctrls then
-            for i = #ctrls + 1, length do
+        if length > #ctrls.value then
+            for i = #ctrls.value + 1, length do
                 local styles, api = Controller.new(if typeof(props) == "table" then props[i] else props(i))
                 ctrls.value[i] = api
                 stylesList.value[i] = styles
             end
         else
             -- Clean up any unused controllers
-            for i = length + 1, #ctrls do
+            for i = length + 1, #ctrls.value do
                 ctrls.value[i]:stop()
                 ctrls.value[i] = nil
                 stylesList.value[i] = nil
@@ -47,24 +47,27 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
 
     hooks.useMemo(function()
         if isImperative.value then
-            for apiName, value in pairs(getmetatable(ctrls.value[1])) do
-                if typeof(value) == "function" and apiName ~= "new" then
-                    apiList.value[apiName] = function(apiProps: (index: number) -> any | any)
-                        local promises = {}
-                        for i, spring in ipairs(ctrls.value) do
-                            table.insert(promises, Promise.new(function(resolve)
-                                local result = spring[apiName](spring, if typeof(apiProps) == "function" then apiProps(i) else apiProps)
+            
+            if #ctrls.value > 0 then
+                for apiName, value in pairs(getmetatable(ctrls.value[1])) do
+                    if typeof(value) == "function" and apiName ~= "new" then
+                        apiList.value[apiName] = function(apiProps: (index: number) -> any | any)
+                            local promises = {}
+                            for i, spring in ipairs(ctrls.value) do
+                                table.insert(promises, Promise.new(function(resolve)
+                                    local result = spring[apiName](spring, if typeof(apiProps) == "function" then apiProps(i) else apiProps)
 
-                                -- Some results might be promises
-                                if result and result.await then
-                                    result:await()
-                                end
+                                    -- Some results might be promises
+                                    if result and result.await then
+                                        result:await()
+                                    end
 
-                                resolve()
-                            end))
+                                    resolve()
+                                end))
+                            end
+
+                            return Promise.all(promises)
                         end
-
-                        return Promise.all(promises)
                     end
                 end
             end
