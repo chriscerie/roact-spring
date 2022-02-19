@@ -30,7 +30,14 @@
 
 ### Wally
 
-* Add the latest version of roact-spring to your wally.toml (e.g., `RoactSpring = "chriscerie/roact-spring@^0.0"`)
+Add the latest version of roact-spring to your wally.toml (e.g., `RoactSpring = "chriscerie/roact-spring@^0.0"`)
+
+### roblox-ts
+
+`roact-spring` is also available for roblox-ts projects. Install it with [npm](https://www.npmjs.com/package/@rbxts/roact-spring):
+```console
+npm i @rbxts/roact-spring
+```
 
 ## Getting Started
 

@@ -2,11 +2,14 @@
 
 ## Unreleased
 
+## 0.2.2 (Feburary 19, 2022)
+
 * Added `progress` config for easing animations ([@chriscerie](https://github.com/chriscerie) in [#13](https://github.com/chriscerie/roact-spring/pull/13))
 * Hooks now cancel animations when they are unmounted
 * Added staggered text story to demos
 * Fixed useSprings not removing unused springs when length arg decreases
 * Added tests for `useSpring` and `useSprings`
+* Added rbxts typings
 
 ## 0.2.1 (Feburary 17, 2022)
 
