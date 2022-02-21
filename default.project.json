@@ -1,6 +1,12 @@
 {
 	"name": "roact-spring",
 	"tree": {
-		"$path": "src"
+		"$path": "src",
+		"Promise": {
+			"$path": "Promise"
+		},
+		"Roact": {
+			"$path": "Roact"
+		}
 	}
 }
