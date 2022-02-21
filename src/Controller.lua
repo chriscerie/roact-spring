@@ -1,5 +1,10 @@
-local Roact = require(script.Parent.Parent.Roact)
-local Promise = require(script.Parent.Parent.Promise)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
+local TS = rbxts_include and require(rbxts_include.RuntimeLib)
+
+local Roact = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Roact)
+local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local util = require(script.Parent.util)

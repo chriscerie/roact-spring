@@ -1,4 +1,9 @@
-local Promise = require(script.Parent.Parent.Parent.Promise)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
+local TS = rbxts_include and require(rbxts_include.RuntimeLib)
+
+local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
 
 local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)

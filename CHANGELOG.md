@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 0.2.3 (Feburary 20, 2022)
+
+* Updated npm metadata
+* Fixed library requires from packages
+
 ## 0.2.2 (Feburary 19, 2022)
 
 * Added `progress` config for easing animations ([@chriscerie](https://github.com/chriscerie) in [#13](https://github.com/chriscerie/roact-spring/pull/13))

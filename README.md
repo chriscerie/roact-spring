@@ -10,7 +10,12 @@
 <br>
 
 <div align="center">
-  <a href="https://github.com/chriscerie/roact-spring/actions/workflows/docs.yml"><img src="https://github.com/chriscerie/roact-spring/workflows/docs/badge.svg" alt="Deploy Docs Status"/></a>
+  <a href="https://github.com/chriscerie/roact-spring/actions/workflows/docs.yml">
+    <img src="https://github.com/chriscerie/roact-spring/workflows/docs/badge.svg" alt="Deploy Docs Status"/>
+  </a>
+  <a href="https://badge.fury.io/js/@rbxts%2Froact-spring">
+    <img src="https://badge.fury.io/js/@rbxts%2Froact-spring.svg" alt="npm version" height="18">
+  </a>
 </div>
 
 <br>

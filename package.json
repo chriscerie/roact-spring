@@ -1,16 +1,24 @@
 {
   "name": "@rbxts/roact-spring",
-  "version": "0.2.2",
+  "version": "0.2.3-ts.0",
   "description": "A modern spring-physics based animation library for Roact inspired by react-spring",
   "main": "src/init.lua",
   "typings": "src/index.d.ts",
   "scripts": {
     "format": "prettier --single-quote --write src/"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chriscerie/roact-spring.git"
+  },
+  "keywords": [
+    "roblox",
+    "typescript",
+    "roact",
+    "spring"
+  ],
+  "author": "chriscerie",
   "license": "MIT",
-  "types": "typings/index.d.ts",
   "files": [
     "src",
     "!src/**/*.spec.lua"
@@ -20,8 +28,6 @@
   },
   "devDependencies": {
     "@rbxts/compiler-types": "^1.2.9-types.0",
-    "@rbxts/roact": "*",
-    "@rbxts/roact-hooks": "*",
     "@rbxts/types": "^1.0.571",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
@@ -31,5 +37,9 @@
     "eslint-plugin-roblox-ts": "^0.0.32",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
+  },
+  "peerDependencies": {
+    "@rbxts/roact": "^1.4.0-ts.2",
+    "@rbxts/roact-hooks": "^0.3.0-ts.2"
   }
 }
