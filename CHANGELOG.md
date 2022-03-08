@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Removed implementation detail from return table
+
 ## 0.2.3 (Feburary 20, 2022)
 
 * Updated npm metadata
