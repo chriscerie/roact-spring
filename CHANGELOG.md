@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Removed implementation detail from return table
+* Add `getting started` page to docs
 
 ## 0.2.3 (Feburary 20, 2022)
 
