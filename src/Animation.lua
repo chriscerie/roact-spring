@@ -40,10 +40,9 @@ function Animation:setValue(index: number, value)
     return true
 end
 
-function Animation:setProps(props)
+function Animation:mergeProps(props)
     if props then
         self.toValues = if props.to then helpers.getValuesFromType(props.to) else self.toValues
-        self.lastPosition = if props.from then helpers.getValuesFromType(props.from) else self.lastPosition
         self.fromValues = if props.from then helpers.getValuesFromType(props.from) else util.copy(self.lastPosition)
         self.config = AnimationConfig:mergeConfig(props.config or {})
         self.immediate = if props.immediate ~= nil then props.immediate else self.immediate

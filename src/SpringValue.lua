@@ -56,8 +56,25 @@ function SpringValue:start(props)
 
         local anim = self.animation
 
-        anim:setProps(util.merge(self.defaultProps, props))
+        anim:mergeProps(util.merge(self.defaultProps, props))
+        if props.reverse then
+            anim.toValues, anim.fromValues = anim.fromValues, anim.toValues
+        end
         self.onChange = props.onChange or self.onChange
+
+        --[[
+            When `reset` is undefined, the `from` prop implies `reset: true`,
+            except for declarative updates. When `reset` is defined, there
+            must exist a value to animate from.
+        ]]
+        local reset = if props.reset == nil 
+            then props.from ~= nil
+            else anim.fromValues ~= nil and props.reset
+
+        if reset then
+            anim.values = util.copy(anim.fromValues)
+            anim.lastPosition = util.copy(anim.fromValues)
+        end
 
         if not self._connection then
             self._connection = RunService.RenderStepped:Connect(function(dt)
@@ -93,7 +110,7 @@ function SpringValue:advance(dt: number)
     local config = anim.config
     local toValues = anim.toValues
 
-    for i, node in ipairs(anim.values) do
+    for i, _ in ipairs(anim.values) do
         if anim.done[i] then
             continue
         end
@@ -181,7 +198,7 @@ function SpringValue:advance(dt: number)
                 
                 local step = 1 -- 1ms
                 local numSteps = math.ceil(dt / step) * 10
-                for n = 0, numSteps do
+                for _ = 0, numSteps do
                     local isMoving = math.abs(velocity) > restVelocity
     
                     if not isMoving then

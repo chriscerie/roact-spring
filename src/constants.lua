@@ -99,6 +99,7 @@ constants.propsList = {
     delay = true,
     immediate = true,
     config = true,
+    reset = true,
 }
 
 return constants
