@@ -31,20 +31,20 @@ Use the `reset` prop to start the animation from scratch. When undefined in impe
 
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, function()
-    return { position = UDim2.fromScale(0.5, 0.5) }
+    return { transparency = 0.5 }
 end)
 
--- The spring will start from `from`
+-- The spring will start from 0
 api.start({
-    from = { position = UDim2.fromScale(0.2, 0.2) },
-    to = { position = UDim2.fromScale(0.5, 0.8) },
+    from = { transparency = 0 },
+    to = { transparency = 1 },
 })
 
 -- The spring will ignore `from` and start from its current position
 api.start({
     reset = false,
-    from = { position = UDim2.fromScale(0.2, 0.2) },
-    to = { position = UDim2.fromScale(0.5, 0.8) },
+    from = { transparency = 0 },
+    to = { transparency = 1 },
 })
 ```
 
