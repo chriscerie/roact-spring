@@ -9,6 +9,7 @@
 
 * Updated npm metadata
 * Fixed library requires from packages
+* Added `reset` prop
 
 ## 0.2.2 (Feburary 19, 2022)
 
