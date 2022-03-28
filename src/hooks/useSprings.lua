@@ -5,6 +5,7 @@ local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
+local util = require(script.Parent.Parent.util)
 
 local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
     local isImperative = hooks.useValue(nil)
@@ -25,7 +26,10 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     hooks.useEffect(function()
         if isImperative.value == false then
             for i, spring in ipairs(ctrls.value) do
-                spring:start(props[i])
+                local startProps = util.merge(props[i], {
+                    reset = if props[i].reset then props[i].reset else false,
+                })
+                spring:start(startProps)
             end
         end
     end, deps)

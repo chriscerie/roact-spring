@@ -9,6 +9,7 @@
 
 * Updated npm metadata
 * Fixed library requires from packages
+* Added `reset` prop ([@chriscerie](https://github.com/chriscerie) in [#17](https://github.com/chriscerie/roact-spring/pull/17)
 
 ## 0.2.2 (Feburary 19, 2022)
 

@@ -21,8 +21,51 @@ All primitives inherit the following properties (though some of them may bring t
 | delay | number | Delay in seconds before the animation starts |
 | immediate | boolean | Prevents animation if true. |
 | [config](configs) | table | Spring config (contains mass, tension, friction, etc) |
+| reset | bool | The spring starts to animate from scratch (from -> to) if set true |
 
-## Default props
+## Advanced Props
+
+### Reset prop
+
+Use the `reset` prop to start the animation from scratch. When undefined in imperative updates, the spring will assume `reset` is true if `from` is passed. 
+
+```lua
+local styles, api = RoactSpring.useSpring(hooks, function()
+    return { transparency = 0.5 }
+end)
+
+-- The spring will start from 0
+api.start({
+    from = { transparency = 0 },
+    to = { transparency = 1 },
+})
+
+-- The spring will ignore `from` and start from its current position
+api.start({
+    reset = false,
+    from = { transparency = 0 },
+    to = { transparency = 1 },
+})
+```
+
+In declarative updates, the spring will assume reset is false if reset is not passed in.
+
+```lua
+-- The spring will start from 0.2 on mount and ignore `from` on future updates
+local styles = RoactSpring.useSpring(hooks, {
+    from = { transparency = 0.2 },
+    to = { transparency = if toggle then 0 else 1 },
+}, { toggle })
+
+-- The spring will always start from scratch from 0.2
+local styles = RoactSpring.useSpring(hooks, {
+    reset = true,
+    from = { transparency = 0.2 },
+    to = { transparency = if toggle then 0 else 1 },
+}, { togge })
+```
+
+## Default Props
 
 ### Imperative updates
 
@@ -49,4 +92,3 @@ The following props can have default values:
 
 * `config`
 * `immediate`
-

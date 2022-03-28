@@ -95,9 +95,11 @@ function Controller:start(startProps: ControllerProps?)
 
         table.insert(promises, control.springValue:start({
             to = target,
+            from = startProps.from and startProps.from[name],
             delay = startProps.delay,
             immediate = startProps.immediate,
             config = startProps.config,
+            reset = startProps.reset,
             onChange = function(newValue)
                 control.setValue(newValue)
             end,
