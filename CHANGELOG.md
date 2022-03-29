@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+# 0.3.1 (March 29, 2022)
+* Fixed an issue where duration-based anims would always start from the same position
+
 ## 0.3.0 (March 29, 2022)
 
 * Removed implementation detail from return table

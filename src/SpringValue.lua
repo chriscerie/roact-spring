@@ -97,6 +97,7 @@ function SpringValue:_update(props)
         end
 
         anim.toValues = helpers.getValuesFromType(to)
+        anim.fromValues = table.clone(anim.lastPosition)
 
         if not self._connection then
             self._connection = RunService.RenderStepped:Connect(function(dt)
