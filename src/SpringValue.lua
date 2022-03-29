@@ -9,6 +9,7 @@ local Signal = require(script.Parent.Signal)
 local Animation = require(script.Parent.Animation)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local util = require(script.Parent.util)
+local helpers = require(script.Parent.helpers)
 
 local SpringValue = {}
 SpringValue.__index = SpringValue
@@ -22,12 +23,12 @@ export type SpringValueProps = {
     onChange: (position: number) -> ()?,
 }
 
-function SpringValue.new(props: SpringValueProps)
+function SpringValue.new(props: SpringValueProps, key: string)
     assert(props.from or props.to, "`to` or `from` expected, none passed.")
 
 	return setmetatable({
         -- The animation state
-        animation = Animation.new(props),
+        animation = Animation.new(props, key),
 
         -- Some props have customizable default values
         defaultProps = {
@@ -39,12 +40,20 @@ function SpringValue.new(props: SpringValueProps)
         onComplete = Signal.new(),
 
         _memoizedDuration = 0,
+
+        -- When true, this spring has been animated at least once
+        hasAnimated = false,
 	}, SpringValue)
 end
 
 function SpringValue:start(props)
+    self.hasAnimated = true
+    return self:_update(props)
+end
+
+function SpringValue:_update(props)
     if props.default then
-        self.defaultProps = props.default
+        self.defaultProps = util.merge(self.defaultProps, helpers.getDefaultProps(props))
     end
 
     return Promise.new(function(resolve, _, onCancel)
@@ -54,9 +63,20 @@ function SpringValue:start(props)
 
         if onCancel() then return end
 
-        local anim = self.animation
+        local range = self:_prepareNode(props)
+        local from = range.from
+        local to = range.to
 
-        anim:mergeProps(util.merge(self.defaultProps, props))
+        -- Focus the "from" value if changing without a "to" value
+        if from and not to then
+            to = from
+        end
+
+        local anim = self.animation
+        local defaultProps = self.defaultProps
+
+        anim:mergeProps(util.merge(defaultProps, props))
+        
         if props.reverse then
             anim.toValues, anim.fromValues = anim.fromValues, anim.toValues
         end
@@ -72,9 +92,11 @@ function SpringValue:start(props)
             else anim.fromValues ~= nil and props.reset
 
         if reset then
-            anim.values = util.copy(anim.fromValues)
-            anim.lastPosition = util.copy(anim.fromValues)
+            anim.values = table.clone(anim.fromValues)
+            anim.lastPosition = table.clone(anim.fromValues)
         end
+
+        anim.toValues = helpers.getValuesFromType(to)
 
         if not self._connection then
             self._connection = RunService.RenderStepped:Connect(function(dt)
@@ -93,7 +115,6 @@ function SpringValue:stop()
     -- TODO: Cancel delayed updates
 
     self.animation:stop()
-    self.onComplete:Fire()
 end
 
 function SpringValue:pause()
@@ -251,6 +272,45 @@ function SpringValue:advance(dt: number)
     elseif changed then
         self.onChange(anim:getValue())
     end
+end
+
+--[[
+    Parse the `to` and `from` range from the given `props` object.
+
+    This also ensures the initial value is available to animated components
+    during the render phase.
+]]
+function SpringValue:_prepareNode(props)
+    local key = self.key or ""
+
+    local to = props.to
+    local from = props.from
+
+    if typeof(to) == "table" then
+        to = to[key]
+    end
+    if typeof(from) == "table" then
+        from = from[key]
+    end
+
+    local range = {
+        to = to,
+        from = from,
+    }
+
+    if not self.hasAnimated then
+        if props.reverse then
+            to, from = from, to
+        end
+
+        local values = helpers.getValuesFromType(from or to)
+        self.animation = self.animation or Animation.new(#values)
+        self.animation.values = table.clone(values)
+        self.animation.lastPosition = table.clone(values)
+        self.onChange(from or to)
+    end
+
+    return range
 end
 
 function SpringValue:_disconnect()

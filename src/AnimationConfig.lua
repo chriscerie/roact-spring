@@ -4,7 +4,6 @@ local util = require(script.Parent.util)
 local AnimationConfig = {}
 
 local defaults = table.freeze(util.merge(constants.config.default, {
-    --immediate = false,
     mass = 1,
     damping = 1,
     clamp = false,
@@ -113,7 +112,7 @@ function AnimationConfig:mergeConfig(config: any, newConfig: any?): SpringConfig
     if newConfig then
         config = util.merge(config, newConfig)
     else
-        config = util.copy(config)
+        config = table.clone(config)
     end
 
     for k, v in pairs(defaults) do

@@ -1,5 +1,4 @@
 local AnimationConfig = require(script.Parent.AnimationConfig)
-local util = require(script.Parent.util)
 local helpers = require(script.Parent.helpers)
 
 local Animation = {}
@@ -7,22 +6,19 @@ Animation.__index = Animation
 
 type animationType = number | UDim | UDim2 | Vector2 | Vector3 | Color3
 
-function Animation.new(props)
-    if props.to and props.from then
-        assert(typeof(props.to) == typeof(props.from), "`to` and `from` must be the same type")
-    end
-    local length = #helpers.getValuesFromType(props.from or props.to)
+function Animation.new(props, key: string)
+    local length = #helpers.getValuesFromType(if props.from then props.from[key] else props.to[key])
 
 	return setmetatable({
-        values = helpers.getValuesFromType(props.from or props.to),
-        toValues = helpers.getValuesFromType(props.to or props.from),
-        fromValues = helpers.getValuesFromType(props.from or props.to),
-        type = typeof(props.from or props.to),
+        values = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
+        toValues = helpers.getValuesFromType(if props.to then props.to[key] else props.from[key]),
+        fromValues = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
+        type = typeof(if props.from then props.from[key] else props.to[key]),
         config = AnimationConfig:mergeConfig(props.config or {}),
         immediate = props.immediate,
 
         v0 = table.create(length, nil),
-        lastPosition = helpers.getValuesFromType(props.from or props.to),
+        lastPosition = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
         lastVelocity = table.create(length, nil),
         done = table.create(length, false),
         elapsedTime = table.create(length, 0),
@@ -42,8 +38,6 @@ end
 
 function Animation:mergeProps(props)
     if props then
-        self.toValues = if props.to then helpers.getValuesFromType(props.to) else self.toValues
-        self.fromValues = if props.from then helpers.getValuesFromType(props.from) else util.copy(self.lastPosition)
         self.config = AnimationConfig:mergeConfig(props.config or {})
         self.immediate = if props.immediate ~= nil then props.immediate else self.immediate
 

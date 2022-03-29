@@ -29,7 +29,7 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
                 local startProps = util.merge(props[i], {
                     reset = if props[i].reset then props[i].reset else false,
                 })
-                spring:start(startProps)
+                spring:start(util.merge({ default = true }, startProps))
             end
         end
     end, deps)
@@ -56,7 +56,6 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
 
     hooks.useMemo(function()
         if isImperative.value then
-            
             if #ctrls.value > 0 then
                 for apiName, value in pairs(getmetatable(ctrls.value[1])) do
                     if typeof(value) == "function" and apiName ~= "new" then

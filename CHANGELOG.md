@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## 0.3.0 (March 29, 2022)
+
 * Removed implementation detail from return table
 * Added `getting started` page to documentation
 * Added `reset` prop ([@chriscerie](https://github.com/chriscerie) in [#17](https://github.com/chriscerie/roact-spring/pull/17))
+* Added `loop` and `default` props ([@chriscerie](https://github.com/chriscerie) in [#18](https://github.com/chriscerie/roact-spring/pull/18))
 
 ## 0.2.3 (Feburary 20, 2022)
 
