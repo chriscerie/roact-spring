@@ -18,12 +18,12 @@ All primitives inherit the following properties (though some of them may bring t
 | ----------- | ----------- | ---- |
 | from | table | Starting values |
 | to | table | Animates to ... |
-| loop | table/fn/bool | Looping settings, see loop prop for more details |
+| loop | table/fn/bool | Looping settings, see [loop prop](props#loop-prop) for more details |
 | delay | number | Delay in seconds before the animation starts |
 | immediate | boolean | Prevents animation if true |
 | [config](configs) | table | Spring config (contains mass, tension, friction, etc) |
 | reset | bool | The spring starts to animate from scratch (from -> to) if set true |
-| default | bool | Sets default value of compatible props if true |
+| default | bool | Sets default value of compatible props if true. See [default props](props#default-props) for more details |
 
 ## Advanced Props
 
@@ -153,15 +153,22 @@ local styles = RoactSpring.useSpring(hooks, {
 
 ## Default Props
 
+The default prop lets you set the default value of certain props defined in the same update.
+
+### Declarative updates
+
+For the declarative API, this prop is `true` by default.
+
 ### Imperative updates
 
-Imperative updates inherit default props declared from passing props to `useSprings` or `useSpring`.
+Imperative updates can use `default: true` to set default props.
 
 ```lua
 local styles, api = RoactSpring.useSpring(hooks, function()
     return {
-        position = UDim2.fromScale(0.5, 0.5) ,
+        position = UDim2.fromScale(0.5, 0.5),
         config = { tension = 100 },
+        default = true,
     }
 end)
 
