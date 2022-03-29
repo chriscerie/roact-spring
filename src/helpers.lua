@@ -40,7 +40,12 @@ function helpers.getTypeFromValues(type: string, values: { number })
     error("Unsupported type: " .. type)
 end
 
-local RESERVED_PROPS = {
+local DEFAULT_PROPS = table.freeze({
+    "config",
+    "immediate",
+})
+
+local RESERVED_PROPS = table.freeze({
     config = 1,
     from = 1,
     to = 1,
@@ -52,7 +57,17 @@ local RESERVED_PROPS = {
 
     -- Internal props
     keys = 1,
-}
+})
+
+function helpers.getDefaultProps(props)
+    local defaults = {}
+    for _, key in ipairs(DEFAULT_PROPS) do
+        if props[key] then
+            defaults[key] = props[key]
+        end
+    end
+    return defaults
+end
 
 --[[
     Extract any properties whose keys are *not* reserved for customizing your

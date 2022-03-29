@@ -32,12 +32,6 @@ return function()
             expect(styles.x:getValue()).to.equal(100)
         end)
 
-        it("should error when neither from nor to is passed to constructor", function()
-            expect(function()
-                RoactSpring.Controller.new({})
-            end).to.throw()
-        end)
-
         it("should set the initial value of `from` if one is passed to constructor", function()
             local styles, api = RoactSpring.Controller.new({ from = { x = 0 } })
             expect(styles.x:getValue()).to.equal(0)

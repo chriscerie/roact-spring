@@ -7,8 +7,8 @@ local Roact = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
 local AnimationConfig = require(script.Parent.AnimationConfig)
-local util = require(script.Parent.util)
 local helpers = require(script.Parent.helpers)
+local util = require(script.Parent.util)
 
 local Controller = {}
 Controller.__index = Controller
@@ -28,35 +28,39 @@ function Controller.new(props: ControllerProps)
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props are required.")
 
-    props = helpers.inferTo(props)
-
-    local self = {
+    local self = setmetatable({
         bindings = {},
         controls = {},
         queue = {},
-    }
+    }, Controller)
 
-    for toName, to in pairs(props.to or props.from or error("`to` or `from` expected, none passed.")) do
-        local from = if props.from and props.from[toName] then props.from[toName] else to
+    self:start(util.merge({ default = true }, props))
 
-        to = if typeof(to) == "string" then Color3.fromHex(to) else to
-        from = if typeof(from) == "string" then Color3.fromHex(from) else from
+    return self.bindings, self
+end
 
-        local style, setStyle = Roact.createBinding(from)
-
-        self.bindings[toName] = style
-        self.controls[toName] = {
-            setValue = setStyle,
-            springValue = SpringValue.new(
-                util.merge(props, {
-                    from = from,
-                    to = to,
-                })
-            ),
-        }
+local function createSpring(props, key: string)
+    local spring = SpringValue.new(props, key)
+    local binding, setBinding = Roact.createBinding()
+    spring.key = key
+    spring.onChange = function(newValue)
+        setBinding(newValue)
     end
+    return spring, binding
+end
 
-    return self.bindings, setmetatable(self, Controller)
+--Ensure spring objects exist for each defined key, and attach the `ctrl` to them for observation
+local function prepareKeys(ctrl, props)
+    if props.keys then
+        for _, key in ipairs(props.keys) do
+            local spring = ctrl.controls[key]
+            if not spring then
+                ctrl.controls[key], ctrl.bindings[key] = createSpring(props, key)
+                spring = ctrl.controls[key]
+            end
+            spring:_prepareNode(props)
+        end
+    end
 end
 
 --[[
@@ -71,27 +75,16 @@ local function flushUpdate(ctrl, props, isLoop: boolean?)
     props.loop = false
 
     local promises = {}
-    for key, target in pairs(props.to or {}) do
+    for _, key in pairs(props.keys or {}) do
         local control = ctrl.controls[key]
-
-        table.insert(promises, control.springValue:start({
-            to = target,
-            from = props.from and props.from[key],
-            loop = props.loop,
-            delay = props.delay,
-            immediate = props.immediate,
-            config = props.config,
-            reset = props.reset,
-            onChange = function(newValue)
-                control.setValue(newValue)
-            end,
-        }))
+        table.insert(promises, control:start(props))
     end
 
     return Promise.all(promises):andThen(function()
         if loop then
             local nextProps = helpers.createLoopUpdate(props, loop)
             if nextProps then
+                prepareKeys(ctrl, nextProps)
                 return flushUpdate(ctrl, nextProps, true)
             end
         end
@@ -105,23 +98,24 @@ function Controller:start(startProps: ControllerProps?)
         end)
     end
 
-    local queue = helpers.createUpdate(startProps)
+    local props = helpers.createUpdate(startProps)
 
-    return flushUpdate(self, queue)
+    prepareKeys(self, props)
+    return flushUpdate(self, props)
 end
 
 function Controller:stop(keys: {string}?)
     if keys then
         for _, key in pairs(keys) do
             if self.controls[key] then
-                self.controls[key].springValue:stop()                    
+                self.controls[key]:stop()                    
             else
                 warn("Tried to stop animation at key `" .. key .. "`, but it doesn't exist.")
             end
         end
     else
         for _, control in pairs(self.controls) do
-            control.springValue:stop()
+            control:stop()
         end
     end
 end
@@ -130,14 +124,14 @@ function Controller:pause(keys: {string}?)
     if keys then
         for _, key in pairs(keys) do
             if self.controls[key] then
-                self.controls[key].springValue:pause()                    
+                self.controls[key]:pause()                    
             else
                 warn("Tried to pause animation at key `" .. key .. "`, but it doesn't exist.")
             end
         end
     else
         for _, control in pairs(self.controls) do
-            control.springValue:pause()
+            control:pause()
         end
     end
 end
