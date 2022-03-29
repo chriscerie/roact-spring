@@ -8,7 +8,7 @@ local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local util = require(script.Parent.util)
-local constants = require(script.Parent.constants)
+local helpers = require(script.Parent.helpers)
 
 local Controller = {}
 Controller.__index = Controller
@@ -24,33 +24,16 @@ export type ControllerProps = {
     [string]: any?,
 }
 
--- Merge unrecognized props to the `to` table
-local function prepareKeys(props: ControllerProps)
-    local newProps = {}
-
-    for key, value in pairs(props) do
-        if constants.propsList[key] ~= nil then
-            newProps[key] = value
-        else
-            if newProps.to == nil then
-                newProps.to = {}
-            end
-            newProps.to[key] = value
-        end
-    end
-
-    return newProps
-end
-
 function Controller.new(props: ControllerProps)
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props are required.")
 
-    props = prepareKeys(props)
+    props = helpers.inferTo(props)
 
     local self = {
         bindings = {},
         controls = {},
+        queue = {},
     }
 
     for toName, to in pairs(props.to or props.from or error("`to` or `from` expected, none passed.")) do
@@ -76,37 +59,55 @@ function Controller.new(props: ControllerProps)
     return self.bindings, setmetatable(self, Controller)
 end
 
-function Controller:start(startProps: ControllerProps?)
-    if not startProps then
-        return Promise.new(function(resolve)
-            resolve()
-        end)
-    end
-    startProps = prepareKeys(startProps)
+--[[
+    Warning: Props might be mutated.
+
+    Process a single set of props using the given controller.
+]]
+local function flushUpdate(ctrl, props, isLoop: boolean?)
+    -- Looping must be handled in this function, or else the values
+    -- would end up looping out-of-sync in many common cases.
+    local loop = props.loop
+    props.loop = false
 
     local promises = {}
-
-    for name, target in pairs(startProps.to or {}) do
-        local control = self.controls[name]
-
-        if typeof(target) == "string" then
-            target = Color3.fromHex(target)
-        end
+    for key, target in pairs(props.to or {}) do
+        local control = ctrl.controls[key]
 
         table.insert(promises, control.springValue:start({
             to = target,
-            from = startProps.from and startProps.from[name],
-            delay = startProps.delay,
-            immediate = startProps.immediate,
-            config = startProps.config,
-            reset = startProps.reset,
+            from = props.from and props.from[key],
+            loop = props.loop,
+            delay = props.delay,
+            immediate = props.immediate,
+            config = props.config,
+            reset = props.reset,
             onChange = function(newValue)
                 control.setValue(newValue)
             end,
         }))
     end
 
-    return Promise.all(promises)
+    return Promise.all(promises):andThen(function()
+        if loop then
+            local nextProps = helpers.createLoopUpdate(props, loop)
+            if nextProps then
+                return flushUpdate(ctrl, nextProps, true)
+            end
+        end
+    end)
+end
+
+function Controller:start(startProps: ControllerProps?)
+    if not startProps then
+        return Promise.new(function(resolve)
+            resolve()
+        end)
+    end
+
+    local queue = helpers.createUpdate(startProps)
+
+    return flushUpdate(self, queue)
 end
 
 function Controller:stop(keys: {string}?)

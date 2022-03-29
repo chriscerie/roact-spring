@@ -62,7 +62,7 @@ local styles = RoactSpring.useSpring(hooks, {
     reset = true,
     from = { transparency = 0.2 },
     to = { transparency = if toggle then 0 else 1 },
-}, { togge })
+}, { toggle })
 ```
 
 ## Default Props

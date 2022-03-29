@@ -1,5 +1,4 @@
 local AnimationConfig = require(script.Parent.AnimationConfig)
-local util = require(script.Parent.util)
 local helpers = require(script.Parent.helpers)
 
 local Animation = {}
@@ -43,7 +42,7 @@ end
 function Animation:mergeProps(props)
     if props then
         self.toValues = if props.to then helpers.getValuesFromType(props.to) else self.toValues
-        self.fromValues = if props.from then helpers.getValuesFromType(props.from) else util.copy(self.lastPosition)
+        self.fromValues = if props.from then helpers.getValuesFromType(props.from) else table.clone(self.lastPosition)
         self.config = AnimationConfig:mergeConfig(props.config or {})
         self.immediate = if props.immediate ~= nil then props.immediate else self.immediate
 

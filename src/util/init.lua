@@ -1,6 +1,6 @@
 local util = {
     merge = require(script.merge),
-    copy = require(script.copy),
+    map = require(script.map),
 }
 
 return util

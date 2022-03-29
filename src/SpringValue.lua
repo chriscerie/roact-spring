@@ -43,6 +43,10 @@ function SpringValue.new(props: SpringValueProps)
 end
 
 function SpringValue:start(props)
+    return self:_update(props)
+end
+
+function SpringValue:_update(props)
     if props.default then
         self.defaultProps = props.default
     end
@@ -72,8 +76,8 @@ function SpringValue:start(props)
             else anim.fromValues ~= nil and props.reset
 
         if reset then
-            anim.values = util.copy(anim.fromValues)
-            anim.lastPosition = util.copy(anim.fromValues)
+            anim.values = table.clone(anim.fromValues)
+            anim.lastPosition = table.clone(anim.fromValues)
         end
 
         if not self._connection then
@@ -93,7 +97,6 @@ function SpringValue:stop()
     -- TODO: Cancel delayed updates
 
     self.animation:stop()
-    self.onComplete:Fire()
 end
 
 function SpringValue:pause()
