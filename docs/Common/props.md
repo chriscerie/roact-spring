@@ -37,7 +37,7 @@ local styles = RoactSpring.useSpring(hooks, {
     from = { transparency = 0 },
     to = { transparency = 1 },
     loop = true,
-}, { toggle })
+})
 ```
 
 ### The `loop` function
@@ -54,7 +54,7 @@ local styles = RoactSpring.useSpring(hooks, {
         count += 1
         return 3 > count.value
     end,
-}, { toggle })
+})
 ```
 
 ### The `loop` table
@@ -67,8 +67,8 @@ local count = hooks.useValue(0)
 local styles = RoactSpring.useSpring(hooks, {
     from = { transparency = 0 },
     to = { transparency = 1 },
-    loop = { reset = 1 },
-}, { toggle })
+    loop = { delay = 1, reset = true },
+})
 ```
 
 #### Inherited props
@@ -79,9 +79,7 @@ The `loop` object is always merged into a copy of the props object it was define
 -- The loop doesn't run more than once
 local styles = RoactSpring.useSpring(hooks, {
     from = { transparency = 0 },
-    loop = {
-        transparency = 1,
-    },
+    loop = { transparency = 1 },
 })
 ```
 
@@ -89,7 +87,7 @@ local styles = RoactSpring.useSpring(hooks, {
 
 **To loop the animation,** try adding `reset = true` to the loop prop in the above example. Alternatively, you could add `from = { transparency: 1 }` to get the same effect.
 
-Lastly, try adding `config = { friction: 5 }` to the loop object. This overrides the inherited config.duration with a springy animation.
+Lastly, try adding `config = { friction: 5 }` to the loop object. This overrides the inherited config with a springy animation.
 
 ```lua
 -- Transparency repeatedly animates from 0 to 1
