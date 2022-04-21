@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-# 0.3.1 (March 29, 2022)
+## 1.0.0 (April 21, 2022)
+* Bumped promise version to v4.0 ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/20))
+* Bumped roact-hooks version to v0.4 ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/20))
+* Fixed calculations not responding to fps differences ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/20))
+
+## 0.3.1 (March 29, 2022)
 * Fixed an issue where duration-based anims would always start from the same position
 
 ## 0.3.0 (March 29, 2022)
