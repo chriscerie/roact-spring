@@ -218,8 +218,7 @@ function SpringValue:advance(dt: number)
                 -- When `true`, the value is increasing over time
                 local isGrowing = if from == to then _v0 > 0 else from < to
                 
-                local step = 1 -- 1ms
-                local numSteps = math.ceil(dt / step) * 10
+                local numSteps = math.ceil(dt * 1000 / 2)
                 for _ = 0, numSteps do
                     local isMoving = math.abs(velocity) > restVelocity
     
@@ -229,7 +228,7 @@ function SpringValue:advance(dt: number)
                             break
                         end
                     end
-    
+
                     if canBounce then
                         local isBouncing = position == to or position > to == isGrowing
     
@@ -244,8 +243,8 @@ function SpringValue:advance(dt: number)
                     local dampingForce = -config.friction * 0.001 * velocity
                     local acceleration = (springForce + dampingForce) / config.mass -- pt/ms^2
     
-                    velocity = velocity + acceleration * step -- pt/ms
-                    position = position + velocity * step
+                    velocity = velocity + acceleration -- pt/ms
+                    position = position + velocity
                 end
             end
     
