@@ -52,7 +52,7 @@ function App:render()
         Size = UDim2.fromScale(0.5, 0.5),
         Transparency = self.styles.transparency,
         [Roact.Event.Activated] = function()
-            api.start({ transparency = 0 })
+            self.api:start({ transparency = 0 })
         end,
     })
 end

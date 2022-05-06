@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed documentation incorrectly using dot operator for controllers
 
 ## 1.0.0 (April 21, 2022)
 * Bumped promise version to v4.0 ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/20))
