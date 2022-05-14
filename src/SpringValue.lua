@@ -93,7 +93,7 @@ function SpringValue:_update(props)
 
         if reset then
             anim.values = table.clone(anim.fromValues)
-            anim.lastPosition = table.clone(anim.fromValues)
+            anim.lastPosition = helpers.getValuesFromType(from)
         end
 
         anim.toValues = helpers.getValuesFromType(to)
