@@ -67,6 +67,29 @@ local styles = RoactSpring.useSpring({ transparency = 1 })
 local styles = RoactSpring.useSpring({ to = { transparency = 1 } })
 ```
 
+### `Styles` is a table of bindings
+
+The `styles` table is just a table of bindings. This means you can map them to props as you could for any other bindings if you wanted to achieve custom behavior. Animating with [alpha values](/docs/Additional%20Notes#thinking-in-alpha-values) is a common use case for this.
+
+```lua
+local function Example(_, hooks)
+    local styles = RoactSpring.useSpring(hooks, {
+        alpha = 0,
+    })
+
+    hooks.useEffect(function()
+        api.start({ alpha = 1 })
+    end, {})
+
+	return Roact.createElement("Frame", {
+        Transparency = styes.alpha,
+        Position = styles.alpha:map(function(alpha)
+            return UDim2.fromScale(0.2, 0.2):Lerp(UDim2.fromScale(0.8, 0.2), alpha)
+        end),
+    })
+end
+```
+
 ## Demos
 
 ### Draggable element
