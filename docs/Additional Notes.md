@@ -24,7 +24,7 @@ local function Example(_, hooks)
     end)
 
     hooks.useEffect(function()
-        -- We need to call `api.start` many times
+        -- We need to call `api.start` for each value
         api.start({ position1 = UDim2.fromScale(0.8, 0.2) })
         api.start({ position2 = UDim2.fromScale(0.2, 0.6) })
         api.start({ position3 = UDim2.fromScale(0.5, 0.9) })
