@@ -5,9 +5,10 @@ local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
+local SpringValue = require(script.Parent.Parent.SpringValue)
 local util = require(script.Parent.Parent.util)
 
-local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
+local function useSprings(hooks, length: number, props: { [number]: SpringValue.SpringValueProps } | (index: number) -> SpringValue.SpringValueProps, deps: { [number]: any }?)
     local isImperative = hooks.useValue(nil)
     local ctrls = hooks.useValue({})
     local stylesList = hooks.useValue({})

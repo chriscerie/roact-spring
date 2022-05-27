@@ -6,25 +6,13 @@ local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 local Roact = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Roact)
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
-local AnimationConfig = require(script.Parent.AnimationConfig)
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
 
 local Controller = {}
 Controller.__index = Controller
 
-export type ControllerProps = { 
-    [string]: any? 
-} | {
-    from: { [string]: any }?,
-    to: { [string]: any }?,
-    delay: number?,
-    immediate: boolean?,
-    config: AnimationConfig.SpringConfigs?,
-    [string]: any?,
-}
-
-function Controller.new(props: ControllerProps)
+function Controller.new(props: SpringValue.SpringValueProps)
     assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props are required.")
 
@@ -91,7 +79,7 @@ local function flushUpdate(ctrl, props, isLoop: boolean?)
     end)
 end
 
-function Controller:start(startProps: ControllerProps?)
+function Controller:start(startProps: SpringValue.SpringValueProps?)
     if not startProps then
         return Promise.new(function(resolve)
             resolve()

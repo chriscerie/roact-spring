@@ -4,7 +4,7 @@ local helpers = require(script.Parent.helpers)
 local Animation = {}
 Animation.__index = Animation
 
-type animationType = number | UDim | UDim2 | Vector2 | Vector3 | Color3
+export type Animatable = number | UDim | UDim2 | Vector2 | Vector3 | Color3
 
 function Animation.new(props, key: string)
     local length = #helpers.getValuesFromType(if props.from then props.from[key] else props.to[key])

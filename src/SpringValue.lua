@@ -15,12 +15,15 @@ local SpringValue = {}
 SpringValue.__index = SpringValue
 
 export type SpringValueProps = {
-    from: number,
-    to: number,
-    delay: number?,
-    immediate: boolean?,
     config: AnimationConfig.SpringConfigs?,
-    onChange: (position: number) -> ()?,
+    from: { [string]: Animation.Animatable }?,
+    to: { [string]: Animation.Animatable }?,
+    loop: { any } | (number) -> () | boolean?,
+    reset: boolean?,
+    immediate: boolean?,
+    default: boolean?,
+    delay: number?,
+    [string]: Animation.Animatable?,
 }
 
 function SpringValue.new(props: SpringValueProps, key: string)
