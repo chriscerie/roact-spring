@@ -2,11 +2,22 @@ import { EasingFunction } from '../constants';
 
 export type AnimatableType = number | UDim | UDim2 | Vector2 | Vector3 | Color3;
 
-export type AnimationProps = {
-  from?: AnimatableType;
-  to?: AnimatableType;
-  delay?: number;
+type AnimationStyle = {
+  [key: string]: AnimatableType;
+};
+
+export type AnimationProps<T extends AnimationStyle> = {
+  from?: T;
+  to?: T;
+};
+
+export type SharedAnimationProps = {
+  loop?: boolean;
+  reset?: boolean;
+  default?: boolean;
+  config?: AnimationConfigs;
   immediate?: boolean;
+  delay?: number;
 };
 
 export interface AnimationConfigs {
