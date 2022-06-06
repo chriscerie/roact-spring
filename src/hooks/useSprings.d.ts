@@ -4,9 +4,9 @@ import { AnimationStyle } from '../../src/types/common';
 import { ControllerProps } from '../Controller';
 
 export type UseSpringsApi<T extends AnimationStyle> = {
-  start(fn?: (i: number) => ControllerProps<T>): Promise<void>;
-  stop(keys?: [string]): Promise<void>;
-  pause(keys?: [string]): Promise<void>;
+  start(this: void, fn?: (i: number) => ControllerProps<T>): Promise<void>;
+  stop(this: void, keys?: [string]): Promise<void>;
+  pause(this: void, keys?: [string]): Promise<void>;
 };
 
 declare interface UseSprings {

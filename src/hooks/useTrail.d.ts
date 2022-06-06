@@ -18,7 +18,7 @@ declare interface UseTrail {
     length: number,
     props: (i: number) => ControllerProps<T>,
     dependencies?: Array<unknown>
-  ): LuaTuple<[Array<{ [key in keyof T]: Binding<T[key]> }>, UseSpringsApi]>;
+  ): LuaTuple<[Array<{ [key in keyof T]: Binding<T[key]> }>, UseSpringsApi<T>]>;
 }
 
 declare const useTrail: UseTrail;
