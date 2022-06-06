@@ -1,10 +1,12 @@
 import { Binding } from '@rbxts/roact';
 import { CoreHooks } from '@rbxts/roact-hooks';
 import { AnimationStyle } from '../../src/types/common';
-import { ControllerApi, ControllerProps } from '../Controller';
+import { ControllerProps } from '../Controller';
 
-export type UseSpringsApi = {
-  [K in keyof ControllerApi]: (fn: (i: number) => Parameters<ControllerApi[K]>[0]) => ReturnType<ControllerApi[K]>;
+export type UseSpringsApi<T extends AnimationStyle> = {
+  start(fn?: (i: number) => ControllerProps<T>): Promise<void>;
+  stop(keys?: [string]): Promise<void>;
+  pause(keys?: [string]): Promise<void>;
 };
 
 declare interface UseSprings {
@@ -21,7 +23,7 @@ declare interface UseSprings {
     length: number,
     props: (i: number) => ControllerProps<T>,
     dependencies?: Array<unknown>
-  ): LuaTuple<[Array<{ [key in keyof T]: Binding<T[key]> }>, UseSpringsApi]>;
+  ): LuaTuple<[Array<{ [key in keyof T]: Binding<T[key]> }>, UseSpringsApi<T>]>;
 }
 
 declare const useSprings: UseSprings;

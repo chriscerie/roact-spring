@@ -1,5 +1,5 @@
 import { Binding } from '@rbxts/roact';
-import { AnimatableType, AnimationProps, AnimationStyle, SharedAnimationProps } from './types/common';
+import { AnimationProps, AnimationStyle, SharedAnimationProps } from './types/common';
 
 export type ControllerProps<T extends AnimationStyle> = (AnimationProps<T> | T) & SharedAnimationProps;
 
@@ -10,7 +10,9 @@ export interface ControllerApi {
 }
 
 declare interface Constructor {
-  new (props: ControllerProps<AnimationStyle>): LuaTuple<[{ [key: string]: Binding<AnimatableType> }, ControllerApi]>;
+  new <T extends AnimationStyle>(props: ControllerProps<T>): LuaTuple<
+    [{ [key in keyof T]: Binding<T[key]> }, ControllerApi]
+  >;
 }
 
 declare const Controller: Constructor;
