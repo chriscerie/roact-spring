@@ -7,18 +7,20 @@ Animation.__index = Animation
 type animationType = number | UDim | UDim2 | Vector2 | Vector3 | Color3
 
 function Animation.new(props, key: string)
-    local length = #helpers.getValuesFromType(if props.from then props.from[key] else props.to[key])
+    local to = props.to and props.to[key]
+    local from = props.from and props.from[key]
+    local length = #helpers.getValuesFromType(from or to)
 
 	return setmetatable({
-        values = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
-        toValues = helpers.getValuesFromType(if props.to then props.to[key] else props.from[key]),
-        fromValues = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
-        type = typeof(if props.from then props.from[key] else props.to[key]),
+        values = helpers.getValuesFromType(from or to),
+        toValues = helpers.getValuesFromType(to or from),
+        fromValues = helpers.getValuesFromType(from or to),
+        type = typeof(from or to),
         config = AnimationConfig:mergeConfig(props.config or {}),
         immediate = props.immediate,
 
         v0 = table.create(length, nil),
-        lastPosition = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]),
+        lastPosition = helpers.getValuesFromType(from or to),
         lastVelocity = table.create(length, nil),
         done = table.create(length, false),
         elapsedTime = table.create(length, 0),
