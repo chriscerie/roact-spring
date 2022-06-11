@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+* Fixed `error` when passing reset = true without using from prop ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
+* Fixed `error` when passing from prop without including all keys ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
 
 ## 1.0.1 (May 26, 2022)
 * Fixed documentation incorrectly using dot operator for controllers
