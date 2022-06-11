@@ -87,13 +87,13 @@ function SpringValue:_update(props)
             except for declarative updates. When `reset` is defined, there
             must exist a value to animate from.
         ]]
-        local reset = if props.reset == nil 
-            then props.from ~= nil
+        local reset = if props.reset == nil
+            then from ~= nil
             else anim.fromValues ~= nil and props.reset
 
         if reset then
             anim.values = table.clone(anim.fromValues)
-            anim.lastPosition = helpers.getValuesFromType(from)
+            anim.lastPosition = if from then helpers.getValuesFromType(from) else anim.lastPosition
         end
 
         anim.toValues = helpers.getValuesFromType(to)
