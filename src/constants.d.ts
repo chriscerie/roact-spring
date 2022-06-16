@@ -1,6 +1,6 @@
 export type EasingFunction = (t: number) => number;
 
-declare interface Config {
+export interface Config {
   default: { tension: 170; friction: 26 };
   gentle: { tension: 120; friction: 14 };
   wobbly: { tension: 180; friction: 12 };
@@ -9,7 +9,7 @@ declare interface Config {
   molasses: { tension: 280; friction: 120 };
 }
 
-declare interface EasingDictionary {
+export interface EasingDictionary {
   linear: EasingFunction;
   easeInQuad: EasingFunction;
   easeOutQuad: EasingFunction;
@@ -42,10 +42,3 @@ declare interface EasingDictionary {
   easeOutBounce: EasingFunction;
   easeInOutBounce: EasingFunction;
 }
-
-declare interface Constants {
-  configs: Config;
-  easings: EasingDictionary;
-}
-declare const constants: Constants;
-export default constants;

@@ -1,13 +1,17 @@
-import { CoreHooks } from '@rbxts/roact-hooks';
 import { Binding } from '@rbxts/roact';
-import { AnimatableType } from '../types/common';
-import { ControllerProps, ControllerApi } from '../Controller';
+import { CoreHooks } from '@rbxts/roact-hooks';
+import { ControllerApi, ControllerProps } from '../Controller';
+import { AnimationStyle } from '../types/common';
 
 declare interface UseSpring {
-  (hooks: CoreHooks, props: ControllerProps, dependencies?: Array<unknown>): { [key: string]: Binding<AnimatableType> };
-  (hooks: CoreHooks, props: () => ControllerProps, dependencies?: Array<unknown>): LuaTuple<
-    [{ [key: string]: Binding<AnimatableType> }, ControllerApi]
-  >;
+  <T extends AnimationStyle>(hooks: CoreHooks, props: ControllerProps<T>, dependencies?: Array<unknown>): {
+    [key in keyof T]: Binding<T[key]>;
+  };
+  <T extends ControllerProps<AnimationStyle>>(
+    hooks: CoreHooks,
+    props: () => T,
+    dependencies?: Array<unknown>
+  ): LuaTuple<[{ [key in keyof T]: Binding<T[key]> }, ControllerApi]>;
 }
 
 declare const useSpring: UseSpring;
