@@ -39,7 +39,7 @@
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "@rbxts/roact": "^1.4.0-ts.2",
-    "@rbxts/roact-hooks": "^0.3.0-ts.2"
+    "@rbxts/roact": "^1.4.2-ts.2",
+    "@rbxts/roact-hooks": "^0.4.1-ts.0"
   }
 }
