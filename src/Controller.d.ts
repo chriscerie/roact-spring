@@ -6,7 +6,7 @@ export type ControllerProps = AnimationProps & {
 };
 
 export interface ControllerApi {
-  start(startProps?: ControllerProps): Promise<void>;
+  start: (startProps?: ControllerProps) => Promise<void>;
   stop(keys?: [string]): Promise<void>;
   pause(keys?: [string]): Promise<void>;
 }
