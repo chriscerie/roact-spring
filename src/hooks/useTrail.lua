@@ -38,7 +38,7 @@ local function useTrail(hooks, length: number, propsArg, deps: {any}?)
 
         modifiedApi.value.start = function(startFn)
             local currentDelay = 0
-            api.start(function(i)
+            return api.start(function(i)
                 local startProps = util.merge({ delay = 0.1 }, startFn(i))
                 local delayAmount = startProps.delay
                 startProps.delay = currentDelay
