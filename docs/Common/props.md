@@ -170,7 +170,7 @@ local styles, api = RoactSpring.useSpring(function()
     }
 end)
 
-hooks.useEffect(function()
+Roact.useEffect(function()
     -- The `config` prop is inherited by the animation
     -- Spring will animate with tension at 100
     api.start({ position = UDim2.fromScale(0.3, 0.3) })

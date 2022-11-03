@@ -23,7 +23,7 @@ local function Example(_)
         }
     end)
 
-    hooks.useEffect(function()
+    Roact.useEffect(function()
         -- We need to call `api.start` for each value
         api.start({ position1 = UDim2.fromScale(0.8, 0.2) })
         api.start({ position2 = UDim2.fromScale(0.2, 0.6) })
@@ -53,7 +53,7 @@ local function Example(_)
         }
     end)
 
-    hooks.useEffect(function()
+    Roact.useEffect(function()
         -- We only have to call `api.start` once
         api.start({ alpha = 1 })
     end, {})

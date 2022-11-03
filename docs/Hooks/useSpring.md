@@ -77,7 +77,7 @@ local function Example(_)
         alpha = 0,
     })
 
-    hooks.useEffect(function()
+    Roact.useEffect(function()
         api.start({ alpha = 1 })
     end, {})
 
