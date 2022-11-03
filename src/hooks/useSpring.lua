@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
 local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 
+-- TODO: Since we don't have Roact as a dependency, we need a way to access whichever Roact the user has
 local Roact = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Parent.Roact)
 local useSprings = require(script.Parent.useSprings)
 
