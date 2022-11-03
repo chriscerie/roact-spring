@@ -9,7 +9,7 @@ sidebar_position: 3
 Springs are configurable and can be tuned. If you want to adjust these settings, you can provide a default `config` table to `useSpring`:
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, function()
+local styles, api = RoactSpring.useSpring(function()
     return {
         from = {
             position = UDim2.fromScale(0.5, 0.5),
@@ -118,7 +118,7 @@ When a number, the `velocity` config applies initial velocity towards or away fr
 
 ```lua
 -- Start with initial velocity away from `to`
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5),
     config = { velocity = -0.01 },
 })
@@ -128,7 +128,7 @@ For further customization on the direction of the velocity, you can pass a table
 
 ```lua
 -- Start with initial velocity pointed towards the top-left corner
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     position = if toggle then UDim2.fromScale(0.5, 0.8) else UDim2.fromScale(0.5, 0.5),
     config = { velocity = {-0.01, 0, -0.01, 0} },
 })
@@ -138,13 +138,13 @@ Passing in a single number where `to` equals `from` will not move the spring at 
 
 ```lua
 -- Will not do anything
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     position = UDim2.fromScale(0.5, 0.5),
     config = { velocity = -0.01 },
 })
 
 -- Will apply velocity towards the top-left corner and then return back to original position
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     position = UDim2.fromScale(0.5, 0.5),
     config = { velocity = {-0.01, 0, -0.01, 0} },
 })

@@ -14,8 +14,8 @@ One downside to this approach is that it's only convenient when elements are ani
 
 ### Using different springs for each element
 ```lua
-local function Example(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Example(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             position1 = UDim2.fromScale(0.2, 0.2),
             position2 = UDim2.fromScale(0.1, 0.8),
@@ -46,8 +46,8 @@ end
 
 ### Using alpha values
 ```lua
-local function Example(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Example(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             alpha = 0,
         }

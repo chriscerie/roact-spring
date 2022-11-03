@@ -13,8 +13,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 -- When button is pressed, animate transparency to 0
-local function App(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function App(_)
+    local styles, api = RoactSpring.useSpring(function()
         return { transparency = 1 }
     end)
 
