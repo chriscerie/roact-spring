@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
@@ -15,8 +14,8 @@ for name, easing in pairs(RoactSpring.easings) do
     })
 end
 
-local function Button(_, hooks)
-    local toggle, setToggle = hooks.useState(false)
+local function Button(_)
+    local toggle, setToggle = Roact.useState(false)
 
     local springProps = {}
     for i in ipairs(easingsArray) do
@@ -25,9 +24,9 @@ local function Button(_, hooks)
             config = { easing = easingsArray[i].easing, duration = 2 },
         })
     end
-    local springs = RoactSpring.useSprings(hooks, #easingsArray, springProps)
+    local springs = RoactSpring.useSprings(#easingsArray, springProps)
 
-    hooks.useEffect(function()
+    Roact.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 setToggle(function(prevState)
@@ -69,8 +68,6 @@ local function Button(_, hooks)
 
 	return Roact.createFragment(buttons)
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")

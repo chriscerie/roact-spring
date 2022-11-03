@@ -1,15 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
 
 local textList = { "Lorem", "Ipsum", "Dolor", "Sit" }
 
-local function Button(_, hooks)
-    local toggle, setToggle = hooks.useState(true)
+local function Button(_)
+    local toggle, setToggle = Roact.useState(true)
 
     local springProps = {}
     for _ in ipairs(textList) do
@@ -20,7 +19,7 @@ local function Button(_, hooks)
             config = { damping = 1, frequency = 0.3 },
         })
     end
-    local springs = RoactSpring.useTrail(hooks, #textList, springProps)
+    local springs = RoactSpring.useTrail(#textList, springProps)
 
     local contents = {}
 
@@ -78,8 +77,6 @@ local function Button(_, hooks)
         })
     })
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")

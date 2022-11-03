@@ -1,15 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = Roact.createElement
 local STOP_AFTER_SECONDS = 3
 
-local function Button(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Button(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             position = UDim2.fromScale(0.5, 0.3),
         }
@@ -27,8 +26,6 @@ local function Button(_, hooks)
         end
 	})
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")

@@ -9,7 +9,6 @@ local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
@@ -42,15 +41,15 @@ local buttonProps = {
     }
 }
 
-local function Button(_, hooks)
-    local springs, api = RoactSpring.useSprings(hooks, #buttonProps, function(i)
+local function Button(_)
+    local springs, api = RoactSpring.useSprings(#buttonProps, function(i)
         return {
             Position = UDim2.fromScale(0.5, i * 0.16),
             Size = UDim2.fromScale(1, 0.13), 
             ZIndex = 1,
         }
     end)
-    local connection = hooks.useValue()
+    local connection = Roact.useRef()
 
     local buttons = {}
 
@@ -181,8 +180,6 @@ local function Button(_, hooks)
 		BackgroundTransparency = 1,
 	}, buttons)
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")

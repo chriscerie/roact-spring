@@ -1,13 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
 
-local function Button(_, hooks)
-    local styles = RoactSpring.useSpring(hooks, {
+local function Button(_)
+    local styles = RoactSpring.useSpring({
         from = { transparency = 0 },
         to = { transparency = 1 },
         loop = true,
@@ -23,8 +22,6 @@ local function Button(_, hooks)
         UICorner = e("UICorner"),
     })
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")

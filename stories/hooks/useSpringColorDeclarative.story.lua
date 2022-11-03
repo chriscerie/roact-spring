@@ -1,14 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
 
-local function Button(_, hooks)
-    local toggle, setToggle = hooks.useState(false)
-    local styles = RoactSpring.useSpring(hooks, {
+local function Button(_)
+    local toggle, setToggle = Roact.useState(false)
+    local styles = RoactSpring.useSpring({
         color = if toggle then Color3.fromRGB(0, 0, 0) else Color3.fromRGB(255, 255, 255),
     })
 
@@ -29,8 +28,6 @@ local function Button(_, hooks)
         UICorner = e("UICorner"),
     })
 end
-
-Button = Hooks.new(Roact)(Button)
 
 return function(target)
 	local handle = Roact.mount(e(Button), target, "Button")
