@@ -6,7 +6,7 @@ sidebar_position: 2
 
 ## Getting started with function components and hooks
 
-Getting started with roact-spring is easy. For function components with [hooks](https://github.com/Kampfkarren/roact-hooks), the basic spring is [useSpring](/docs/hooks/useSpring), but the same concept applies to all animation primitives. Let's have a look...
+Getting started with roact-spring is easy. For function components with hooks, the basic spring is [useSpring](/docs/hooks/useSpring), but the same concept applies to all animation primitives. Let's have a look...
 
 ```lua
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -27,6 +27,28 @@ local function App(_)
     })
 end
 ```
+
+`roact-spring` supports both [Roact17](https://github.com/grilme99/CorePackages) and the original [Roact](https://github.com/Roblox/roact) with [roact-hooks](https://github.com/Kampfkarren/roact-hooks). Usage with the original Roact and roact-hooks requires you to pass the `hooks` table to roact-spring's hooks.
+
+#### Using Roact17:
+```lua
+local function App(_)
+    local styles, api = RoactSpring.useSpring(function()
+        return { transparency = 1 }
+    end)
+end
+```
+
+#### Using the original Roact with roact-hooks:
+```lua
+local function App(_, hooks)
+    local styles, api = RoactSpring.useSpring(hooks, function()
+        return { transparency = 1 }
+    end)
+end
+```
+
+The rest of this documentation's examples will assume we are using Roact17.
 
 ## Getting started with class components
 
