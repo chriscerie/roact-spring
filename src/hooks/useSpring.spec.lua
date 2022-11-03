@@ -1,7 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 local e = Roact.createElement
@@ -9,20 +8,19 @@ local e = Roact.createElement
 local function createUpdater(initialProps, initialDeps)
     local test = {}
 
-    local function Test(_, hooks)
-        local springProps, update = hooks.useState({ initialProps, initialDeps })
+    local function Test(_)
+        local springProps, update = Roact.useState({ initialProps, initialDeps })
         test.update = function(newProps, newDeps)
             update({ newProps, newDeps })
             task.wait(0.1)
         end
-        test.styles, test.api = RoactSpring.useSpring(hooks, springProps[1], springProps[2])
+        test.styles, test.api = RoactSpring.useSpring(springProps[1], springProps[2])
         return nil
     end
 
-    Test = Hooks.new(Roact)(Test)
-
     test.handle = Roact.mount(e(Test), nil)
 
+    task.wait()
     while not test.handle do
         task.wait()
     end
