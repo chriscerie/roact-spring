@@ -1,22 +1,21 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
 
-local e = Roact.createElement
+local e = React.createElement
 
-local function Button(props, hooks)
+local function Button(props)
 	return e("TextButton", {
-        AnchorPoint = props.AnchorPoint,
-        Position = props.Position,
-		Size = props.Size,
+        AnchorPoint = props.AnchorPoint or Vector2.new(0.5, 0.5),
+        Position = props.Position or UDim2.fromScale(0.5, 0.5),
+		Size = props.Size or UDim2.fromOffset(150, 150),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         AutoButtonColor = false,
         Text = "",
 
-        [Roact.Event.Activated] = props[Roact.Event.Activated],
-        [Roact.Event.InputBegan] = props[Roact.Event.InputBegan],
-        [Roact.Event.InputEnded] = props[Roact.Event.InputEnded],
+        [React.Event.Activated] = props[React.Event.Activated],
+        [React.Event.InputBegan] = props[React.Event.InputBegan],
+        [React.Event.InputEnded] = props[React.Event.InputEnded],
 	}, {
         UICorner = e("UICorner", {
             CornerRadius = UDim.new(1, 0),
@@ -31,10 +30,4 @@ local function Button(props, hooks)
     })
 end
 
-return Hooks.new(Roact)(Button, {
-    defaultProps = {
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        Position = UDim2.fromScale(0.5, 0.5),
-        Size = UDim2.fromOffset(150, 150),
-    },
-})
+return Button

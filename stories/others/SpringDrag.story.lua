@@ -8,13 +8,14 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
-local e = Roact.createElement
+local e = React.createElement
 
-local Example = Roact.Component:extend("Example")
+local Example = React.Component:extend("Example")
 
 function Example:init()
     self.styles, self.api = RoactSpring.Controller.new({
@@ -28,7 +29,7 @@ function Example:render()
         Position = self.styles.position,
 		Size = self.styles.size,
 
-        [Roact.Event.InputBegan] = function(button, input)
+        [React.Event.InputBegan] = function(button, input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if not self.connection then
                     self.connection = RunService.Heartbeat:Connect(function()
@@ -43,7 +44,7 @@ function Example:render()
                 end
             end
         end,
-        [Roact.Event.InputEnded] = function(_,input)
+        [React.Event.InputEnded] = function(_,input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if self.connection then
                     self.api:start({
@@ -59,9 +60,12 @@ function Example:render()
 end
 
 return function(target)
-	local handle = Roact.mount(e(Example), target, "Example")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Example)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

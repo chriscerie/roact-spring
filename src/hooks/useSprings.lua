@@ -3,29 +3,33 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
 local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 
+local React = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Parent.React)
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
 
+local isRoact17 = not React.reconcile
+local useRefKey = if isRoact17 then "current" else "value"
+
 local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
-    local isImperative = hooks.useValue(nil)
-    local ctrls = hooks.useValue({})
-    local stylesList = hooks.useValue({})
-    local apiList = hooks.useValue({})
+    local isImperative = hooks[if isRoact17 then "useRef" else "useValue"](nil)
+    local ctrls = hooks[if isRoact17 then "useRef" else "useValue"]({})
+    local stylesList = hooks[if isRoact17 then "useRef" else "useValue"]({})
+    local apiList = hooks[if isRoact17 then "useRef" else "useValue"]({})
 
     if typeof(props) == "table" then
-        assert(isImperative.value == nil or isImperative.value == false, "useSprings detected a change from imperative to declarative. This is not supported.")
-        isImperative.value = false
+        assert(isImperative[useRefKey] == nil or isImperative[useRefKey] == false, "useSprings detected a change from imperative to declarative. This is not supported.")
+        isImperative[useRefKey] = false
     elseif typeof(props) == "function" then
-        assert(isImperative.value == nil or isImperative.value == true, "useSprings detected a change from declarative to imperative. This is not supported.")
-        isImperative.value = true
+        assert(isImperative[useRefKey] == nil or isImperative[useRefKey] == true, "useSprings detected a change from declarative to imperative. This is not supported.")
+        isImperative[useRefKey] = true
     else
         error("Expected table or function for useSprings, got " .. typeof(props))
     end
 
     hooks.useEffect(function()
-        if isImperative.value == false then
-            for i, spring in ipairs(ctrls.value) do
+        if isImperative[useRefKey] == false then
+            for i, spring in ipairs(ctrls[useRefKey]) do
                 local startProps = util.merge(props[i], {
                     reset = if props[i].reset then props[i].reset else false,
                 })
@@ -37,31 +41,31 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     -- Create new controllers when "length" increases, and destroy
     -- the affected controllers when "length" decreases
     hooks.useMemo(function()
-        if length > #ctrls.value then
-            for i = #ctrls.value + 1, length do
+        if length > #ctrls[useRefKey] then
+            for i = #ctrls[useRefKey] + 1, length do
                 local styles, api = Controller.new(if typeof(props) == "table" then props[i] else props(i))
-                ctrls.value[i] = api
-                stylesList.value[i] = styles
+                ctrls[useRefKey][i] = api
+                stylesList[useRefKey][i] = styles
             end
         else
             -- Clean up any unused controllers
-            for i = length + 1, #ctrls.value do
-                ctrls.value[i]:stop()
-                ctrls.value[i] = nil
-                stylesList.value[i] = nil
-                apiList.value[i] = nil
+            for i = length + 1, #ctrls[useRefKey] do
+                ctrls[useRefKey][i]:stop()
+                ctrls[useRefKey][i] = nil
+                stylesList[useRefKey][i] = nil
+                apiList[useRefKey][i] = nil
             end
         end
     end, { length })
 
     hooks.useMemo(function()
-        if isImperative.value then
-            if #ctrls.value > 0 then
-                for apiName, value in pairs(getmetatable(ctrls.value[1])) do
+        if isImperative[useRefKey] then
+            if #ctrls[useRefKey] > 0 then
+                for apiName, value in pairs(getmetatable(ctrls[useRefKey][1])) do
                     if typeof(value) == "function" and apiName ~= "new" then
-                        apiList.value[apiName] = function(apiProps: (index: number) -> any | any)
+                        apiList[useRefKey][apiName] = function(apiProps: (index: number) -> any | any)
                             local promises = {}
-                            for i, spring in ipairs(ctrls.value) do
+                            for i, spring in ipairs(ctrls[useRefKey]) do
                                 table.insert(promises, Promise.new(function(resolve)
                                     local result = spring[apiName](spring, if typeof(apiProps) == "function" then apiProps(i) else apiProps)
 
@@ -86,17 +90,23 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     -- Cancel the animations of all controllers on unmount
     hooks.useEffect(function()
         return function()
-            for _, ctrl in ipairs(ctrls.value) do
+            for _, ctrl in ipairs(ctrls[useRefKey]) do
                 ctrl:stop()
             end
         end
     end, {})
 
-    if isImperative.value then
-        return stylesList.value, apiList.value
+    if isImperative[useRefKey] then
+        return stylesList[useRefKey], apiList[useRefKey]
     end
 
-    return stylesList.value
+    return stylesList[useRefKey]
+end
+
+if isRoact17 then
+    return function(length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
+        return useSprings(React, length, props, deps)
+    end
 end
 
 return useSprings

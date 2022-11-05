@@ -1,29 +1,31 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local function createUpdater(initialProps, initialDeps)
     local test = {}
 
-    local function Test(_, hooks)
-        local springProps, update = hooks.useState({ initialProps, initialDeps })
+    local function Test(_)
+        local springProps, update = React.useState({ initialProps, initialDeps })
         test.update = function(newProps, newDeps)
             update({ newProps, newDeps })
             task.wait(0.1)
         end
-        test.styles, test.api = RoactSpring.useSpring(hooks, springProps[1], springProps[2])
+        test.styles, test.api = RoactSpring.useSpring(springProps[1], springProps[2])
         return nil
     end
 
-    Test = Hooks.new(Roact)(Test)
+    local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Test)
+    }, ReplicatedStorage))
 
-    test.handle = Roact.mount(e(Test), nil)
-
-    while not test.handle do
+    task.wait()
+    while not root do
         task.wait()
     end
 

@@ -1,15 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local textList = { "Lorem", "Ipsum", "Dolor", "Sit" }
 
-local function Button(_, hooks)
-    local toggle, setToggle = hooks.useState(true)
+local function Button(_)
+    local toggle, setToggle = React.useState(true)
 
     local springProps = {}
     for _ in ipairs(textList) do
@@ -20,7 +20,7 @@ local function Button(_, hooks)
             config = { damping = 1, frequency = 0.3 },
         })
     end
-    local springs = RoactSpring.useTrail(hooks, #textList, springProps)
+    local springs = RoactSpring.useTrail(#textList, springProps)
 
     local contents = {}
 
@@ -59,7 +59,7 @@ local function Button(_, hooks)
         AutoButtonColor = false,
         Text = "",
 
-        [Roact.Event.Activated] = function()
+        [React.Event.Activated] = function()
             setToggle(function(prevState)
                 return not prevState
             end)
@@ -74,17 +74,18 @@ local function Button(_, hooks)
             UIListLayout = e("UIListLayout", {
                 SortOrder = Enum.SortOrder.LayoutOrder,
             }),
-            Text = Roact.createFragment(contents),
+            Text = React.createFragment(contents),
         })
     })
 end
 
-Button = Hooks.new(Roact)(Button)
-
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

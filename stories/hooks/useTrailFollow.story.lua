@@ -7,11 +7,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local buttonColors = {
     Color3.fromRGB(167, 229, 255),
@@ -20,8 +20,8 @@ local buttonColors = {
     Color3.fromRGB(232, 221, 255),
 }
 
-local function Button(_, hooks)
-    local styles, api = RoactSpring.useTrail(hooks, #buttonColors, function(i)
+local function Button(_)
+    local styles, api = RoactSpring.useTrail(#buttonColors, function(i)
         return {
             position = UDim2.fromScale(0.5, 0.5),
             config = { damping = 1, frequency = 0.3 + i * 0.03 },
@@ -29,7 +29,7 @@ local function Button(_, hooks)
         }
     end)
     
-    hooks.useEffect(function()
+    React.useEffect(function()
         local conn = UserInputService.InputChanged:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
                 local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
@@ -60,15 +60,16 @@ local function Button(_, hooks)
         })
     end
 
-	return Roact.createFragment(contents)
+	return React.createFragment(contents)
 end
 
-Button = Hooks.new(Roact)(Button)
-
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

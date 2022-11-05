@@ -23,7 +23,7 @@ function Example:render()
         Position = self.styles.position,
 		Size = self.styles.size,
 
-        [Roact.Event.Activated] = function()
+        [React.Event.Activated] = function()
             self.api:start({
                 size = UDim2.fromOffset(150, 150),
                 config = { tension = 100, friction = 10 },

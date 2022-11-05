@@ -14,8 +14,8 @@ One downside to this approach is that it's only convenient when elements are ani
 
 ### Using different springs for each element
 ```lua
-local function Example(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Example(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             position1 = UDim2.fromScale(0.2, 0.2),
             position2 = UDim2.fromScale(0.1, 0.8),
@@ -23,21 +23,21 @@ local function Example(_, hooks)
         }
     end)
 
-    hooks.useEffect(function()
+    React.useEffect(function()
         -- We need to call `api.start` for each value
         api.start({ position1 = UDim2.fromScale(0.8, 0.2) })
         api.start({ position2 = UDim2.fromScale(0.2, 0.6) })
         api.start({ position3 = UDim2.fromScale(0.5, 0.9) })
     end, {})
 
-	return Roact.createFragment({
-        Frame1 = Roact.createElement("Frame", {
+	return React.createFragment({
+        Frame1 = React.createElement("Frame", {
             Position = styles.position1,
         }),
-        Frame2 = Roact.createElement("Frame", {
+        Frame2 = React.createElement("Frame", {
             Position = styles.position2,
         }),
-        Frame3 = Roact.createElement("Frame", {
+        Frame3 = React.createElement("Frame", {
             Position = styles.position3,
         }),
     })
@@ -46,30 +46,30 @@ end
 
 ### Using alpha values
 ```lua
-local function Example(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Example(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             alpha = 0,
         }
     end)
 
-    hooks.useEffect(function()
+    React.useEffect(function()
         -- We only have to call `api.start` once
         api.start({ alpha = 1 })
     end, {})
 
-	return Roact.createFragment({
-        Frame1 = Roact.createElement("Frame", {
+	return React.createFragment({
+        Frame1 = React.createElement("Frame", {
             Position = styles.position:map(function(alpha)
                 return UDim2.fromScale(0.2, 0.2):Lerp(UDim2.fromScale(0.8, 0.2), alpha)
             end),
         }),
-        Frame2 = Roact.createElement("Frame", {
+        Frame2 = React.createElement("Frame", {
             Position = styles.position:map(function(alpha)
                 return UDim2.fromScale(0.1, 0.8):Lerp(UDim2.fromScale(0.2, 0.6), alpha)
             end),
         }),
-        Frame3 = Roact.createElement("Frame", {
+        Frame3 = React.createElement("Frame", {
             Position = styles.position:map(function(alpha)
                 return UDim2.fromScale(0.6, 0.4):Lerp(UDim2.fromScale(0.5, 0.9), alpha)
             end),

@@ -13,7 +13,7 @@ Passing a function to `useSpring` or `useSprings` will return an imperative API 
     Using declarative API
 ]]
 local toggle, setToggle = useState(false)
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     transparency = if toggle then 0 else 1,
 })
 
@@ -26,7 +26,7 @@ end)
 --[[
     Using imperative API
 ]]
-local styles, api = RoactSpring.useSpring(hooks, function()
+local styles, api = RoactSpring.useSpring(function()
     return { transparency = 1 }
 end)
 
