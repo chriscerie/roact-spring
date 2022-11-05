@@ -10,4 +10,4 @@ realm = "shared"
 [dependencies]
 Promise = "evaera/promise@^4.0"
 TestEZ = "roblox/testez@^0.4"
-React ="roblox/roact@1.4.4"
+React ="roblox/roact@^1"
