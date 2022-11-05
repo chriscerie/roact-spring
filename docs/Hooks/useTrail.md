@@ -60,7 +60,7 @@ api.stop()
 ```lua
 local contents = {}
 for i = 1, 4 do
-    contents[i] = Roact.createElement("Frame", {
+    contents[i] = React.createElement("Frame", {
         Position = springs[i].position,
         Size = UDim2.fromScale(0.3, 0.3),
     })

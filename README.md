@@ -50,7 +50,7 @@ Getting started with roact-spring is as simple as:
 
 ### Declarative
 ```lua
-local toggle, setToggle = Roact.useState(false)
+local toggle, setToggle = React.useState(false)
 local styles = RoactSpring.useSpring({
     transparency = if toggle then 1 else 0,
 })

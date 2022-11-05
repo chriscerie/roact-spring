@@ -45,7 +45,7 @@ api.stop()
 ### Finally: apply styles to components
 
 ```lua
-return Roact.createElement("Frame", {
+return React.createElement("Frame", {
     Transparency = styles.transparency,
     Size = UDim2.fromScale(0.3, 0.3),
 })
@@ -77,11 +77,11 @@ local function Example(_)
         alpha = 0,
     })
 
-    Roact.useEffect(function()
+    React.useEffect(function()
         api.start({ alpha = 1 })
     end, {})
 
-	return Roact.createElement("Frame", {
+	return React.createElement("Frame", {
         Transparency = styes.alpha,
         Position = styles.alpha:map(function(alpha)
             return UDim2.fromScale(0.2, 0.2):Lerp(UDim2.fromScale(0.8, 0.2), alpha)

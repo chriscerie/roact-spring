@@ -46,7 +46,7 @@ Pass a function to be called after each loop. Return `true` to continue looping,
 
 ```lua
 -- Transparency animates from 0 to 1 three times
-local count = Roact.useRef(0)
+local count = React.useRef(0)
 local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     to = { transparency = 1 },
@@ -63,7 +63,7 @@ Define a `loop` table to customize the loop animation separately from the initia
 
 ```lua
 -- Transparency repeatedly animates from 0 to 1 with 1 second delays
-local count = Roact.useRef(0)
+local count = React.useRef(0)
 local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     to = { transparency = 1 },
@@ -170,7 +170,7 @@ local styles, api = RoactSpring.useSpring(function()
     }
 end)
 
-Roact.useEffect(function()
+React.useEffect(function()
     -- The `config` prop is inherited by the animation
     -- Spring will animate with tension at 100
     api.start({ position = UDim2.fromScale(0.3, 0.3) })
