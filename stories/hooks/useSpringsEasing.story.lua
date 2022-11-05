@@ -44,7 +44,7 @@ local function Button(_)
     local buttons = {}
 
     for index, easing in ipairs(easingsArray) do
-        buttons[easing.name] = React.createFragment({
+        buttons[easing.name] = e(React.Fragment, nil, {
             Button = e("TextButton", {
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Position = springs[index].position,
@@ -67,7 +67,7 @@ local function Button(_)
         })
     end
 
-	return React.createFragment(buttons)
+	return e(React.Fragment, nil, buttons)
 end
 
 return function(target)

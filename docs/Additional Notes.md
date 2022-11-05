@@ -30,7 +30,7 @@ local function Example(_)
         api.start({ position3 = UDim2.fromScale(0.5, 0.9) })
     end, {})
 
-	return React.createFragment({
+	return React.createElement(React.Fragment, nil, {
         Frame1 = React.createElement("Frame", {
             Position = styles.position1,
         }),
@@ -58,7 +58,7 @@ local function Example(_)
         api.start({ alpha = 1 })
     end, {})
 
-	return React.createFragment({
+	return React.createElement(React.Fragment, nil, {
         Frame1 = React.createElement("Frame", {
             Position = styles.position:map(function(alpha)
                 return UDim2.fromScale(0.2, 0.2):Lerp(UDim2.fromScale(0.8, 0.2), alpha)

@@ -60,7 +60,7 @@ local function Button(_)
         })
     end
 
-	return React.createFragment(contents)
+	return e(React.Fragment, nil, contents)
 end
 
 return function(target)

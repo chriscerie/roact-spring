@@ -74,7 +74,7 @@ local function Button(_)
             UIListLayout = e("UIListLayout", {
                 SortOrder = Enum.SortOrder.LayoutOrder,
             }),
-            Text = React.createFragment(contents),
+            Text = e(React.Fragment, nil, contents),
         })
     })
 end
