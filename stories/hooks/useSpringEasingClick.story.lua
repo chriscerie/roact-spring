@@ -7,11 +7,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local function Button(_)
     local styles, api = RoactSpring.useSpring(function()
@@ -20,7 +21,7 @@ local function Button(_)
         }
     end)
 
-    Roact.useEffect(function()
+    React.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
@@ -42,9 +43,12 @@ local function Button(_)
 end
 
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

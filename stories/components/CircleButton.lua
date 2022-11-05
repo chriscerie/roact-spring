@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local function Button(props)
 	return e("TextButton", {
@@ -13,9 +13,9 @@ local function Button(props)
         AutoButtonColor = false,
         Text = "",
 
-        [Roact.Event.Activated] = props[Roact.Event.Activated],
-        [Roact.Event.InputBegan] = props[Roact.Event.InputBegan],
-        [Roact.Event.InputEnded] = props[Roact.Event.InputEnded],
+        [React.Event.Activated] = props[React.Event.Activated],
+        [React.Event.InputBegan] = props[React.Event.InputBegan],
+        [React.Event.InputEnded] = props[React.Event.InputEnded],
 	}, {
         UICorner = e("UICorner", {
             CornerRadius = UDim.new(1, 0),

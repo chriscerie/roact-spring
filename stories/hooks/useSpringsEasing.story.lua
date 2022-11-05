@@ -1,10 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local easingsArray = {}
 for name, easing in pairs(RoactSpring.easings) do
@@ -15,7 +16,7 @@ for name, easing in pairs(RoactSpring.easings) do
 end
 
 local function Button(_)
-    local toggle, setToggle = Roact.useState(false)
+    local toggle, setToggle = React.useState(false)
 
     local springProps = {}
     for i in ipairs(easingsArray) do
@@ -26,7 +27,7 @@ local function Button(_)
     end
     local springs = RoactSpring.useSprings(#easingsArray, springProps)
 
-    Roact.useEffect(function()
+    React.useEffect(function()
         local conn = UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 setToggle(function(prevState)
@@ -43,7 +44,7 @@ local function Button(_)
     local buttons = {}
 
     for index, easing in ipairs(easingsArray) do
-        buttons[easing.name] = Roact.createFragment({
+        buttons[easing.name] = React.createFragment({
             Button = e("TextButton", {
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Position = springs[index].position,
@@ -66,13 +67,16 @@ local function Button(_)
         })
     end
 
-	return Roact.createFragment(buttons)
+	return React.createFragment(buttons)
 end
 
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

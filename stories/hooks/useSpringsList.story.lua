@@ -8,10 +8,11 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local buttonProps = {
     {
@@ -49,7 +50,7 @@ local function Button(_)
             ZIndex = 1,
         }
     end)
-    local connection = Roact.useRef()
+    local connection = React.useRef()
 
     local buttons = {}
 
@@ -62,7 +63,7 @@ local function Button(_)
             AutoButtonColor = false,
             ZIndex = springs[index].ZIndex,
 
-            [Roact.Event.InputBegan] = function(button, input)
+            [React.Event.InputBegan] = function(button, input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     connection.value = RunService.Heartbeat:Connect(function()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
@@ -114,7 +115,7 @@ local function Button(_)
                     end)
                 end
             end,
-            [Roact.Event.InputEnded] = function(button,input)
+            [React.Event.InputEnded] = function(button,input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     if connection.value then
                         connection.value:Disconnect()
@@ -182,9 +183,12 @@ local function Button(_)
 end
 
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

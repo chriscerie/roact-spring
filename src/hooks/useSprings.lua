@@ -3,12 +3,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
 local TS = rbxts_include and require(rbxts_include.RuntimeLib)
 
-local Roact = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Parent.Roact)
+local React = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.Parent.React)
 local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
 
-local isRoact17 = not Roact.reconcile
+local isRoact17 = not React.reconcile
 local useRefKey = if isRoact17 then "current" else "value"
 
 local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
@@ -105,7 +105,7 @@ end
 
 if isRoact17 then
     return function(length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
-        return useSprings(Roact, length, props, deps)
+        return useSprings(React, length, props, deps)
     end
 end
 
