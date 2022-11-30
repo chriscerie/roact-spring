@@ -94,6 +94,10 @@ function SpringValue:_update(props)
         if reset then
             anim.values = table.clone(anim.fromValues)
             anim.lastPosition = if from then helpers.getValuesFromType(from) else anim.lastPosition
+
+            local length = #anim.v0
+            anim.v0 = table.create(length, nil)
+            anim.lastVelocity = table.create(length, nil)
         end
 
         anim.toValues = helpers.getValuesFromType(to)
