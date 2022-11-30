@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed `reset` prop not properly resetting velocity, previously yielding really fast springs in certain cases ([@chriscerie](https://github.com/chriscerie) in [#36](https://github.com/chriscerie/roact-spring/pull/36))
 
 ## 1.1.1 (Nov 5, 2022)
 * Fixed `error` when passing reset = true without using from prop ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
