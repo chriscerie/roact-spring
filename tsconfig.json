@@ -8,6 +8,7 @@
 		"jsxFragmentFactory": "Roact.Fragment",
 		"module": "commonjs",
 		"moduleResolution": "Node",
+		"moduleDetection": "force",
 		"noLib": true,
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
