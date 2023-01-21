@@ -1,10 +1,6 @@
 local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
-local TS = rbxts_include and require(rbxts_include.RuntimeLib)
-
-local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
+local Promise = require(script.Parent.Promise)
 local Signal = require(script.Parent.Signal)
 local Animation = require(script.Parent.Animation)
 local AnimationConfig = require(script.Parent.AnimationConfig)

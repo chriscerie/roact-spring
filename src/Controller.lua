@@ -1,10 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
-local TS = rbxts_include and require(rbxts_include.RuntimeLib)
-
-local React = if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else require(script.Parent.Parent.React)
-local Promise = if TS then TS.Promise else require(script.Parent.Parent.Promise)
+local React = require(script.Parent.React)
+local Promise = require(script.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local helpers = require(script.Parent.helpers)
@@ -25,7 +20,6 @@ export type ControllerProps = {
 }
 
 function Controller.new(props: ControllerProps)
-    assert(React, "React not found. It must be placed in the same folder as roact-spring.")
     assert(typeof(props) == "table", "Props are required.")
 
     local self = setmetatable({
