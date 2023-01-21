@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed roblox-ts false positives when running plugins on roblox-ts games ([sasial-dev](https://github.com/sasial-dev) in [#40](https://github.com/chriscerie/roact-spring/pull/40))
 
 ## 1.1.2 (Nov 29, 2022)
 * Fixed `reset` prop not properly resetting velocity, previously yielding really fast springs in certain cases ([@chriscerie](https://github.com/chriscerie) in [#36](https://github.com/chriscerie/roact-spring/pull/36))
