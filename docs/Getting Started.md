@@ -6,27 +6,50 @@ sidebar_position: 2
 
 ## Getting started with function components and hooks
 
-Getting started with roact-spring is easy. For function components with [hooks](https://github.com/Kampfkarren/roact-hooks), the basic spring is [useSpring](/docs/hooks/useSpring), but the same concept applies to all animation primitives. Let's have a look...
+Getting started with roact-spring is easy. For function components with hooks, the basic spring is [useSpring](/docs/hooks/useSpring), but the same concept applies to all animation primitives. Let's have a look...
 
 ```lua
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local React = require(ReplicatedStorage.Packages.React)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 -- When button is pressed, animate transparency to 0
-local function App(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function App(_)
+    local styles, api = RoactSpring.useSpring(function()
         return { transparency = 1 }
     end)
 
-    return Roact.createElement("TextButton", {
+    return React.CreateElement("TextButton", {
         Size = UDim2.fromScale(0.5, 0.5),
         Transparency = styles.transparency,
-        [Roact.Event.Activated] = function()
+        [React.Event.Activated] = function()
             api.start({ transparency = 0 })
         end,
     })
 end
 ```
+
+`roact-spring` supports both [Roact17](https://github.com/grilme99/CorePackages) and [legacy Roact](https://github.com/Roblox/roact) with [roact-hooks](https://github.com/Kampfkarren/roact-hooks). Usage with legacy Roact and roact-hooks requires you to pass the `hooks` table to roact-spring's hooks.
+
+#### Using Roact17:
+```lua
+local function App(_)
+    local styles, api = RoactSpring.useSpring(function()
+        return { transparency = 1 }
+    end)
+end
+```
+
+#### Using legacy Roact with roact-hooks:
+```lua
+local function App(_, hooks)
+    local styles, api = RoactSpring.useSpring(hooks, function()
+        return { transparency = 1 }
+    end)
+end
+```
+
+The rest of this documentation's examples will assume we are using Roact17.
 
 ## Getting started with class components
 
@@ -38,6 +61,7 @@ Function components with hooks are always preferred over class components. For m
 
 ```lua
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local React = require(ReplicatedStorage.Packages.React)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
 function App:init()
@@ -48,10 +72,10 @@ end
 
 -- When button is pressed, animate transparency to 0
 function App:render()
-    return Roact.createElement("TextButton", {
+    return React.CreateElement("TextButton", {
         Size = UDim2.fromScale(0.5, 0.5),
         Transparency = self.styles.transparency,
-        [Roact.Event.Activated] = function()
+        [React.Event.Activated] = function()
             self.api:start({ transparency = 0 })
         end,
     })

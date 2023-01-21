@@ -7,7 +7,7 @@ sidebar_position: 2
 ## Overview
 
 ```lua
-RoactSpring.useSpring(hooks, {
+RoactSpring.useSpring({
     from = { ... }
 })
 ```
@@ -33,7 +33,7 @@ Use `loop = true` to repeat an animation.
 
 ```lua
 -- Transparency repeatedly animates from 0 to 1
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     to = { transparency = 1 },
     loop = true,
@@ -46,8 +46,8 @@ Pass a function to be called after each loop. Return `true` to continue looping,
 
 ```lua
 -- Transparency animates from 0 to 1 three times
-local count = hooks.useValue(0)
-local styles = RoactSpring.useSpring(hooks, {
+local count = React.useRef(0)
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     to = { transparency = 1 },
     loop = function()
@@ -63,8 +63,8 @@ Define a `loop` table to customize the loop animation separately from the initia
 
 ```lua
 -- Transparency repeatedly animates from 0 to 1 with 1 second delays
-local count = hooks.useValue(0)
-local styles = RoactSpring.useSpring(hooks, {
+local count = React.useRef(0)
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     to = { transparency = 1 },
     loop = { delay = 1, reset = true },
@@ -77,7 +77,7 @@ The `loop` object is always merged into a copy of the props object it was define
 
 ```lua
 -- The loop doesn't run more than once
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     loop = { transparency = 1 },
 })
@@ -91,7 +91,7 @@ Lastly, try adding `config = { friction: 5 }` to the loop object. This overrides
 
 ```lua
 -- Transparency repeatedly animates from 0 to 1
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     loop = {
         transparency = 1,
@@ -100,7 +100,7 @@ local styles = RoactSpring.useSpring(hooks, {
 })
 
 -- Transparency repeatedly animates from 0 to 1
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     from = { transparency = 0 },
     loop = {
         transparency = 1,
@@ -114,7 +114,7 @@ local styles = RoactSpring.useSpring(hooks, {
 Use the `reset` prop to start the animation from scratch. When undefined in imperative updates, the spring will assume `reset` is true if `from` is passed. 
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, function()
+local styles, api = RoactSpring.useSpring(function()
     return { transparency = 0.5 }
 end)
 
@@ -136,13 +136,13 @@ In declarative updates, the spring will assume reset is false if reset is not pa
 
 ```lua
 -- The spring will start from 0.2 on mount and ignore `from` on future updates
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     from = { transparency = 0.2 },
     to = { transparency = if toggle then 0 else 1 },
 }, { toggle })
 
 -- The spring will always start from scratch from 0.2
-local styles = RoactSpring.useSpring(hooks, {
+local styles = RoactSpring.useSpring({
     reset = true,
     from = { transparency = 0.2 },
     to = { transparency = if toggle then 0 else 1 },
@@ -162,7 +162,7 @@ For the declarative API, this prop is `true` by default.
 Imperative updates can use `default: true` to set default props.
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, function()
+local styles, api = RoactSpring.useSpring(function()
     return {
         position = UDim2.fromScale(0.5, 0.5),
         config = { tension = 100 },
@@ -170,7 +170,7 @@ local styles, api = RoactSpring.useSpring(hooks, function()
     }
 end)
 
-hooks.useEffect(function()
+React.useEffect(function()
     -- The `config` prop is inherited by the animation
     -- Spring will animate with tension at 100
     api.start({ position = UDim2.fromScale(0.3, 0.3) })

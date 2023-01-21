@@ -8,11 +8,11 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 
-local e = Roact.createElement
+local e = React.createElement
 
 local buttonProps = {
     {
@@ -42,15 +42,15 @@ local buttonProps = {
     }
 }
 
-local function Button(_, hooks)
-    local springs, api = RoactSpring.useSprings(hooks, #buttonProps, function(i)
+local function Button(_)
+    local springs, api = RoactSpring.useSprings(#buttonProps, function(i)
         return {
             Position = UDim2.fromScale(0.5, i * 0.16),
             Size = UDim2.fromScale(1, 0.13), 
             ZIndex = 1,
         }
     end)
-    local connection = hooks.useValue()
+    local connection = React.useRef()
 
     local buttons = {}
 
@@ -63,7 +63,7 @@ local function Button(_, hooks)
             AutoButtonColor = false,
             ZIndex = springs[index].ZIndex,
 
-            [Roact.Event.InputBegan] = function(button, input)
+            [React.Event.InputBegan] = function(button, input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     connection.value = RunService.Heartbeat:Connect(function()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
@@ -115,7 +115,7 @@ local function Button(_, hooks)
                     end)
                 end
             end,
-            [Roact.Event.InputEnded] = function(button,input)
+            [React.Event.InputEnded] = function(button,input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     if connection.value then
                         connection.value:Disconnect()
@@ -182,12 +182,13 @@ local function Button(_, hooks)
 	}, buttons)
 end
 
-Button = Hooks.new(Roact)(Button)
-
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

@@ -1,8 +1,16 @@
 # Changelog
 
 ## Unreleased
+* Fixed roblox-ts false positives when running plugins on roblox-ts games ([sasial-dev](https://github.com/sasial-dev) in [#40](https://github.com/chriscerie/roact-spring/pull/40))
+
+## 1.1.2 (Nov 29, 2022)
+* Fixed `reset` prop not properly resetting velocity, previously yielding really fast springs in certain cases ([@chriscerie](https://github.com/chriscerie) in [#36](https://github.com/chriscerie/roact-spring/pull/36))
+
+## 1.1.1 (Nov 5, 2022)
 * Fixed `error` when passing reset = true without using from prop ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
 * Fixed `error` when passing from prop without including all keys ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
+* Fixed `useTrail` not returning promises on api.start ([@rwilliaise](https://github.com/rwilliaise) in [#33](https://github.com/chriscerie/roact-spring/pull/33))
+* Added support for Roact17 ([@chriscerie](https://github.com/chriscerie) in [#35](https://github.com/chriscerie/roact-spring/pull/35))
 
 ## 1.0.1 (May 26, 2022)
 * Fixed documentation incorrectly using dot operator for controllers

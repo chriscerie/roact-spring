@@ -50,8 +50,8 @@ Getting started with roact-spring is as simple as:
 
 ### Declarative
 ```lua
-local toggle, setToggle = hooks.useState(false)
-local styles = RoactSpring.useSpring(hooks, {
+local toggle, setToggle = React.useState(false)
+local styles = RoactSpring.useSpring({
     transparency = if toggle then 1 else 0,
 })
 
@@ -64,7 +64,7 @@ end)
 ### Imperative
 
 ```lua
-local styles, api = RoactSpring.useSpring(hooks, function()
+local styles, api = RoactSpring.useSpring(function()
     return {
         position = UDim2.fromScale(0.3, 0.3),
         rotation = 0,

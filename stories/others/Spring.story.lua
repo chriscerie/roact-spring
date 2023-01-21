@@ -1,12 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
-local e = Roact.createElement
+local e = React.createElement
 
-local Example = Roact.Component:extend("Example")
+local Example = React.Component:extend("Example")
 
 function Example:init()
     self.styles, self.api = RoactSpring.Controller.new({
@@ -18,7 +19,7 @@ function Example:render()
     return e(CircleButton, {
         Position = self.styles.position,
 
-        [Roact.Event.Activated] = function()
+        [React.Event.Activated] = function()
             self.api:start({
                 position = UDim2.fromScale(0.5, 0.8),
             })
@@ -27,9 +28,12 @@ function Example:render()
 end
 
 return function(target)
-	local handle = Roact.mount(e(Example), target, "Example")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Example)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

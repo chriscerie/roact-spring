@@ -8,28 +8,28 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GuiService = game:GetService("GuiService")
 
-local Roact = require(ReplicatedStorage.Packages.Roact)
-local Hooks = require(ReplicatedStorage.Packages.Hooks)
+local React = require(ReplicatedStorage.Packages.React)
+local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
-local e = Roact.createElement
+local e = React.createElement
 
-local function Button(_, hooks)
-    local styles, api = RoactSpring.useSpring(hooks, function()
+local function Button(_)
+    local styles, api = RoactSpring.useSpring(function()
         return {
             size = UDim2.fromOffset(150, 150),
             position = UDim2.fromScale(0.5, 0.5),
             config = { tension = 100, friction = 10 },
         }
     end)
-    local connection = hooks.useValue()
+    local connection = React.useRef()
 
 	return e(CircleButton, {
         Position = styles.position,
 		Size = styles.size,
 
-        [Roact.Event.InputBegan] = function(_, input)
+        [React.Event.InputBegan] = function(_, input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if not connection.value then
                     connection.value = RunService.Heartbeat:Connect(function()
@@ -43,7 +43,7 @@ local function Button(_, hooks)
                 end
             end
         end,
-        [Roact.Event.InputEnded] = function(_,input)
+        [React.Event.InputEnded] = function(_,input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if connection.value then
                     api.start({ size = UDim2.fromOffset(150, 150) })
@@ -55,12 +55,13 @@ local function Button(_, hooks)
 	})
 end
 
-Button = Hooks.new(Roact)(Button)
-
 return function(target)
-	local handle = Roact.mount(e(Button), target, "Button")
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+    root:render(ReactRoblox.createPortal({
+        App = e(Button)
+    }, target))
 
 	return function()
-		Roact.unmount(handle)
+		root:unmount()
 	end
 end

@@ -20,7 +20,7 @@ for index, item in ipairs(items) do
         transparency = if toggles[i] then 1 else 0,
     })
 end
-local springs = RoactSpring.useSprings(hooks, length, springProps)
+local springs = RoactSpring.useSprings(length, springProps)
 ```
 
 If you want the animation to run on mount, you can use `from` to set the initial value.
@@ -34,7 +34,7 @@ for index, item in ipairs(items) do
         to = { transparency = if toggles[i] then 1 else 0 },
     })
 end
-local springs = RoactSpring.useSprings(hooks, length, springProps)
+local springs = RoactSpring.useSprings(length, springProps)
 ```
 
 ### Or: pass a function that returns values, and imperatively update using the api
@@ -43,7 +43,7 @@ You will get an API table back. It will not automatically animate on mount and r
 
 ```lua
 local length = #items
-local springs, api = RoactSpring.useSprings(hooks, length, function(index)
+local springs, api = RoactSpring.useSprings(length, function(index)
     return { transparency = items[index].transparency }
 end)
 
@@ -60,7 +60,7 @@ api.stop()
 ```lua
 local contents = {}
 for i = 1, 4 do
-    contents[i] = Roact.createElement("Frame", {
+    contents[i] = React.createElement("Frame", {
         Position = springs[i].position,
         Size = UDim2.fromScale(0.3, 0.3),
     })
