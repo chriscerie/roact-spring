@@ -1,9 +1,4 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
-local TS = rbxts_include and require(rbxts_include.RuntimeLib)
-
-local React = if script.Parent.Parent:FindFirstChild("React") then require(script.Parent.Parent.React) else if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else nil; 
+local React = require(script.Parent.Parent.React)
 local useSprings = require(script.Parent.useSprings)
 
 local isRoact17 = not React.reconcile

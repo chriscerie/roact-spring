@@ -1,10 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
-local TS = rbxts_include and require(rbxts_include.RuntimeLib)
-
-local React = if script.Parent.Parent:FindFirstChild("React") then require(script.Parent.Parent.React) else if TS then TS.import(script, TS.getModule(script, "@rbxts", "roact").src) else nil; 
-local Promise = if TS then TS.Promise else require(script.Parent.Parent.Parent.Promise)
+local React = require(script.Parent.Parent.React)
+local Promise = require(script.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
 
