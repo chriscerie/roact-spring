@@ -1,16 +1,24 @@
-import { CoreHooks } from '@rbxts/roact-hooks';
 import { Binding } from '@rbxts/roact';
-import { AnimatableType } from '../../src/types/common';
-import { ControllerProps, ControllerApi } from '../Controller';
+import { CoreHooks } from '@rbxts/roact-hooks';
+import { AnimatableType, AnimationStyle } from '../../src/types/common';
+import { ControllerProps } from '../Controller';
 import { UseSpringsApi } from './useSprings';
 
 declare interface UseTrail {
-  (hooks: CoreHooks, length: number, props: ControllerProps, dependencies?: Array<unknown>): Array<{
-    [key: string]: Binding<AnimatableType>;
+  <T extends AnimationStyle>(
+    hooks: CoreHooks,
+    length: number,
+    props: Array<ControllerProps<T>>,
+    dependencies?: Array<unknown>
+  ): Array<{
+    [key in keyof T]: Binding<T[key]>;
   }>;
-  (hooks: CoreHooks, length: number, props: (i: number) => ControllerProps, dependencies?: Array<unknown>): LuaTuple<
-    [Array<{ [key: string]: Binding<AnimatableType> }>, UseSpringsApi]
-  >;
+  <T extends AnimationStyle>(
+    hooks: CoreHooks,
+    length: number,
+    props: (i: number) => ControllerProps<T>,
+    dependencies?: Array<unknown>
+  ): LuaTuple<[Array<{ [key in keyof T]: Binding<T[key]> }>, UseSpringsApi<T>]>;
 }
 
 declare const useTrail: UseTrail;
