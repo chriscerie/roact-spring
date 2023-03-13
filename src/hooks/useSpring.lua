@@ -14,22 +14,22 @@ export type UseSpringApi<T> = {
 type UseSpring17Declarative = <T>(
     props: Controller.ControllerProps<T>,
     deps: { unknown }?
-) -> { [string]: common.ReactBinding<T> }
+) -> { [string]: common.ReactBinding }
 
 type UseSpring17Imperative = <T>(
     props: () -> Controller.ControllerProps<T>,
     deps: { unknown }?
-) -> ({ [string]: common.ReactBinding<T> }, UseSpringApi<T>)
+) -> ({ [string]: common.ReactBinding }, UseSpringApi<T>)
 
 type UseSpringLegacyRoactDeclarative = <T>(
     hooks: { [string]: any },
     props: Controller.ControllerProps<T>, deps: { unknown }?
-) -> { [string]: common.ReactBinding<T> }
+) -> { [string]: common.ReactBinding }
 
 type UseSpringLegacyRoactImperative = <T>(
     hooks: { [string]: any },
     props: () -> Controller.ControllerProps<T>, deps: { unknown }?
-) -> ({ [string]: common.ReactBinding<T> }, UseSpringApi<T>)
+) -> ({ [string]: common.ReactBinding }, UseSpringApi<T>)
 
 type UseSpring = UseSpring17Declarative & UseSpring17Imperative & UseSpringLegacyRoactDeclarative & UseSpringLegacyRoactImperative
 

@@ -9,7 +9,7 @@ local isRoact17 = require(script.Parent.Parent.isRoact17)
 
 local useRefKey = if isRoact17 then "current" else "value"
 
-export type UseSpringsStylesList = { { [string]: common.AnimationStyle } }
+export type UseSpringsStylesList = { { [string]: common.ReactBinding } }
 
 export type UseSpringsApi<T> = {
     start: (fn: (index: number) -> Controller.ControllerProps<T>) -> typeof(Promise.new()),
