@@ -1,44 +1,53 @@
+--!strict
 local React = require(script.Parent.Parent.React)
+local Controller = require(script.Parent.Parent.Controller)
 local useSprings = require(script.Parent.useSprings)
 local util = require(script.Parent.Parent.util)
+local isRoact17 = require(script.Parent.Parent.isRoact17)
 
-local isRoact17 = not React.reconcile
 local useRefKey = if isRoact17 then "current" else "value"
 
-local function useTrail(hooks, length: number, propsArg, deps: {any}?)
-    local isFn = type(propsArg) == "function"
+type UseTrailProps<T> = { Controller.ControllerProps<T> } | ((index: number) -> Controller.ControllerProps<T>)
 
-    local props = hooks.useMemo(function()
-        if isFn then
-            return propsArg
+local function useTrail<T>(
+    hooks: { [string]: any },
+    length: number,
+    props: UseTrailProps<T>,
+    deps: { unknown }?
+)
+    local mergedProps: UseTrailProps<T> = hooks.useMemo(function()
+        if type(props) == "function" then
+            return props
+        else
+            local newProps: { Controller.ControllerProps<T> } = table.create(length)
+            local currentDelay = 0
+            for i, v in ipairs(props) do
+                local prop = util.merge({ delay = 0.1 }, v)
+                local delayAmount = prop.delay
+                prop.delay = currentDelay
+                currentDelay += delayAmount
+                newProps[i] = prop
+            end
+
+            -- Luau is not converting types correctly
+            return newProps :: any
         end
-
-        local newProps = table.create(length)
-        local currentDelay = 0
-        for i, v in ipairs(propsArg) do
-            local prop = util.merge({ delay = 0.1 }, v)
-            local delayAmount = prop.delay
-            prop.delay = currentDelay
-            currentDelay += delayAmount
-            newProps[i] = prop
-        end
-        return newProps
-
         -- Need to pass {{}} because useMemo doesn't support nil dependency yet
     end, deps or {{}})
 
     -- TODO: Calculate delay for api methods as well
-    local styles, api
-        if isRoact17 then
-            styles, api = useSprings(length, props, deps)
-        else
-            styles, api = useSprings(hooks, length, props, deps)
-        end
+    local styles, api: useSprings.UseSpringsApi<T>?
+    if isRoact17 then
+        -- FIXME: Without any, type '(number) -> (T | {| from: T?, to: T? |}) & AnimationProps' could not be converted into '{a}'
+        styles, api = useSprings(length, mergedProps :: any, deps)
+    else
+        styles, api = useSprings(hooks, length, mergedProps :: any, deps)
+    end
 
     local modifiedApi = hooks[if isRoact17 then "useRef" else "useValue"]({})
 
     -- Return api with modified api.start
-    if isFn then
+    if type(props) == "function" and api then
         -- We can't just copy as we want to guarantee the returned api doesn't change its reference
         table.clear(modifiedApi[useRefKey])
         for key, value in pairs(api) do
@@ -62,10 +71,14 @@ local function useTrail(hooks, length: number, propsArg, deps: {any}?)
     return styles
 end
 
-if isRoact17 then
-    return function(length: number, propsArg, deps: {any}?)
-        return useTrail(React, length, propsArg, deps)
+local exports: any = function(...)
+    if isRoact17 then
+        return useTrail(React, ...)
     end
+
+    return useTrail(...)
 end
 
-return useTrail
+local exportsTyped: useSprings.UseSprings = exports
+
+return exportsTyped
