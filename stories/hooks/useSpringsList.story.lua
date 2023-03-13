@@ -1,3 +1,4 @@
+--!strict
 --[[
     Note: Since this story uses performs mouse position calculations, this
     must be viewed in the Roblox Studio window to work properly.
@@ -50,12 +51,12 @@ local function Button(_)
             ZIndex = 1,
         }
     end)
-    local connection = React.useRef()
+    local connection = React.useRef(nil :: RBXScriptConnection?)
 
-    local buttons = {}
+    local contents = {}
 
     for index, buttonProp in ipairs(buttonProps) do
-        buttons[index] = e("ImageButton", {
+        contents[index] = e("ImageButton", {
             AnchorPoint = Vector2.new(0.5, 0.5),
             Position = springs[index].Position,
             Size = springs[index].Size,
@@ -65,7 +66,7 @@ local function Button(_)
 
             [React.Event.InputBegan] = function(button, input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    connection.value = RunService.Heartbeat:Connect(function()
+                    connection.current = RunService.Heartbeat:Connect(function()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
                         local yPos = mousePos.Y
                         local frame = button.Parent
@@ -93,7 +94,7 @@ local function Button(_)
                             return {}
                         end)
 
-                        local buttons = frame:GetChildren()
+                        local buttons: { ImageButton } = frame:GetChildren()
 
                         table.sort(buttons, function(a, b)
                             return a.AbsolutePosition.Y < b.AbsolutePosition.Y
@@ -107,7 +108,7 @@ local function Button(_)
                         api.start(function(i)
                             if i ~= index then
                                 return {
-                                    Position = UDim2.fromScale(0.5, (table.find(sortedButtonNums, i) - 1) * 0.16 + 0.16),
+                                    Position = UDim2.fromScale(0.5, ((table.find(sortedButtonNums, i) or 1) - 1) * 0.16 + 0.16),
                                 }
                             end
                             return {}
@@ -117,9 +118,9 @@ local function Button(_)
             end,
             [React.Event.InputEnded] = function(button,input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    if connection.value then
-                        connection.value:Disconnect()
-                        connection.value = nil
+                    if connection.current then
+                        connection.current:Disconnect()
+                        connection.current = nil
                     end
 
                     local buttons = button.Parent:GetChildren()
@@ -135,7 +136,7 @@ local function Button(_)
 
                     api.start(function(i)
                         return {
-                            Position = UDim2.fromScale(0.5, (table.find(sortedButtonNums, i) - 1) * 0.16 + 0.16),
+                            Position = UDim2.fromScale(0.5, ((table.find(sortedButtonNums, i) or 1) - 1) * 0.16 + 0.16),
                             Size = UDim2.fromScale(1, 0.13),
                         }
                     end)
@@ -179,7 +180,7 @@ local function Button(_)
         Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromScale(0.3, 0.7),
 		BackgroundTransparency = 1,
-	}, buttons)
+	}, contents)
 end
 
 return function(target)

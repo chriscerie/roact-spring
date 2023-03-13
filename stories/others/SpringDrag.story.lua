@@ -1,3 +1,4 @@
+--!strict
 --[[
     Note: Since this story uses performs mouse position calculations, this
     must be viewed in the Roblox Studio window to work properly.

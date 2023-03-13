@@ -1,3 +1,4 @@
+--!strict
 --[[
     Note: Since this story uses performs mouse position calculations, this
     must be viewed in the Roblox Studio window to work properly.
@@ -23,7 +24,7 @@ local function Button(_)
             config = { tension = 100, friction = 10 },
         }
     end)
-    local connection = React.useRef()
+    local connection = React.useRef(nil :: RBXScriptConnection?)
 
 	return e(CircleButton, {
         Position = styles.position,
@@ -31,8 +32,8 @@ local function Button(_)
 
         [React.Event.InputBegan] = function(_, input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                if not connection.value then
-                    connection.value = RunService.Heartbeat:Connect(function()
+                if not connection.current then
+                    connection.current = RunService.Heartbeat:Connect(function()
                         local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, GuiService:GetGuiInset().Y)
 
                         api.start({
@@ -45,10 +46,10 @@ local function Button(_)
         end,
         [React.Event.InputEnded] = function(_,input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                if connection.value then
+                if connection.current then
                     api.start({ size = UDim2.fromOffset(150, 150) })
-                    connection.value:Disconnect()
-                    connection.value = nil
+                    connection.current:Disconnect()
+                    connection.current = nil
                 end
             end
         end
