@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed luau typings ([@chriscerie](https://github.com/chriscerie) in [#42](https://github.com/chriscerie/roact-spring/pull/42))
 
 ## 1.1.3 (Jan 20, 2023)
 * Fixed roblox-ts typings ([Xuleos](https://github.com/Xuleos) in [#29](https://github.com/chriscerie/roact-spring/pull/29))
@@ -10,8 +11,8 @@
 * Fixed `reset` prop not properly resetting velocity, previously yielding really fast springs in certain cases ([@chriscerie](https://github.com/chriscerie) in [#36](https://github.com/chriscerie/roact-spring/pull/36))
 
 ## 1.1.1 (Nov 5, 2022)
-* Fixed `error` when passing reset = true without using from prop ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
-* Fixed `error` when passing from prop without including all keys ([@chriscerie](https://github.com/chriscerie) in [#20](https://github.com/chriscerie/roact-spring/pull/28))
+* Fixed `error` when passing reset = true without using from prop ([@chriscerie](https://github.com/chriscerie) in [#28](https://github.com/chriscerie/roact-spring/pull/28))
+* Fixed `error` when passing from prop without including all keys ([@chriscerie](https://github.com/chriscerie) in [#28](https://github.com/chriscerie/roact-spring/pull/28))
 * Fixed `useTrail` not returning promises on api.start ([@rwilliaise](https://github.com/rwilliaise) in [#33](https://github.com/chriscerie/roact-spring/pull/33))
 * Added support for Roact17 ([@chriscerie](https://github.com/chriscerie) in [#35](https://github.com/chriscerie/roact-spring/pull/35))
 
