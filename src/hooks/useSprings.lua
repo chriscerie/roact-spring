@@ -1,16 +1,71 @@
+--!strict
+
 local React = require(script.Parent.Parent.React)
 local Promise = require(script.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
+local common = require(script.Parent.Parent.types.common)
+local isRoact17 = require(script.Parent.Parent.isRoact17)
 
-local isRoact17 = not React.reconcile
 local useRefKey = if isRoact17 then "current" else "value"
 
-local function useSprings(hooks, length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
-    local isImperative = hooks[if isRoact17 then "useRef" else "useValue"](nil)
-    local ctrls = hooks[if isRoact17 then "useRef" else "useValue"]({})
-    local stylesList = hooks[if isRoact17 then "useRef" else "useValue"]({})
-    local apiList = hooks[if isRoact17 then "useRef" else "useValue"]({})
+export type UseSpringsStylesList = { { [string]: common.ReactBinding } }
+
+export type UseSpringsApi<T> = {
+    start: (fn: (index: number) -> Controller.ControllerProps<T>) -> typeof(Promise.new()),
+    stop: (keys: {string}?) -> nil,
+    pause: (keys: {string}?) -> nil,
+}
+
+type UseSprings17Declarative = <T>(
+    length: number,
+    -- FIXME: doing `props: { Controller.ControllerProps<T> }` fails with inferred `to` props
+    props: { T },
+    deps: { unknown }?
+) -> UseSpringsStylesList
+
+type UseSprings17Imperative = <T>(
+    length: number,
+    props: (index: number) -> Controller.ControllerProps<T>,
+    deps: { unknown }?
+) -> (UseSpringsStylesList, UseSpringsApi<T>)
+
+type UseSpringsLegacyRoactDeclarative = <T>(
+    hooks: { [string]: any },
+    length: number,
+    -- FIXME: doing `props: { Controller.ControllerProps<T> }` fails with inferred `to` props
+    props: { T },
+    deps: { unknown }?
+) -> UseSpringsStylesList
+
+type UseSpringsLegacyRoactImperative = <T>(
+    hooks: { [string]: any },
+    length: number,
+    props: (index: number) -> Controller.ControllerProps<T>,
+    deps: { unknown }?
+) -> (UseSpringsStylesList, UseSpringsApi<T>)
+
+export type UseSprings = UseSprings17Declarative & UseSprings17Imperative & UseSpringsLegacyRoactDeclarative & UseSpringsLegacyRoactImperative
+
+local function useSprings<T>(
+    hooks: { [string]: any },
+    length: number,
+    props: { Controller.ControllerProps<T> } | (index: number) -> Controller.ControllerProps<T>,
+    deps: { unknown }?
+)
+    local useRef: <T>(T) -> {
+        current: T,
+        value: T,
+    } = hooks[if isRoact17 then "useRef" else "useValue"]
+    
+    local isImperative = useRef(nil :: boolean?)
+    local ctrls = useRef({} :: {
+        {
+            [string]: Controller.ControllerApi
+        }
+    })
+    local UseSpringsStylesList = useRef({} :: UseSpringsStylesList)
+    local apiList = useRef({} :: { { [string]: UseSpringsApi<common.AnimatableType> } })
 
     if typeof(props) == "table" then
         assert(isImperative[useRefKey] == nil or isImperative[useRefKey] == false, "useSprings detected a change from imperative to declarative. This is not supported.")
@@ -23,7 +78,7 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     end
 
     hooks.useEffect(function()
-        if isImperative[useRefKey] == false then
+        if isImperative[useRefKey] == false and typeof(props) == "table" then
             for i, spring in ipairs(ctrls[useRefKey]) do
                 local startProps = util.merge(props[i], {
                     reset = if props[i].reset then props[i].reset else false,
@@ -40,14 +95,14 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
             for i = #ctrls[useRefKey] + 1, length do
                 local styles, api = Controller.new(if typeof(props) == "table" then props[i] else props(i))
                 ctrls[useRefKey][i] = api
-                stylesList[useRefKey][i] = styles
+                UseSpringsStylesList[useRefKey][i] = styles
             end
         else
             -- Clean up any unused controllers
             for i = length + 1, #ctrls[useRefKey] do
                 ctrls[useRefKey][i]:stop()
                 ctrls[useRefKey][i] = nil
-                stylesList[useRefKey][i] = nil
+                UseSpringsStylesList[useRefKey][i] = nil
                 apiList[useRefKey][i] = nil
             end
         end
@@ -92,16 +147,20 @@ local function useSprings(hooks, length: number, props: { any } | (index: number
     end, {})
 
     if isImperative[useRefKey] then
-        return stylesList[useRefKey], apiList[useRefKey]
+        return UseSpringsStylesList[useRefKey], apiList[useRefKey]
     end
 
-    return stylesList[useRefKey]
+    return UseSpringsStylesList[useRefKey]
 end
 
-if isRoact17 then
-    return function(length: number, props: { any } | (index: number) -> ({[string]: any}), deps: {any}?)
-        return useSprings(React, length, props, deps)
+local exports: any = function(...)
+    if isRoact17 then
+        return useSprings(React, ...)
     end
+
+    return useSprings(...)
 end
 
-return useSprings
+local exportsTyped: UseSprings = exports
+
+return exportsTyped

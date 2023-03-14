@@ -1,31 +1,36 @@
+--!strict
+
 local React = require(script.Parent.React)
 local Promise = require(script.Parent.Promise)
 local SpringValue = require(script.Parent.SpringValue)
-local AnimationConfig = require(script.Parent.AnimationConfig)
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
+local common = require(script.Parent.types.common)
 
 local Controller = {}
 Controller.__index = Controller
 
-export type ControllerProps = { 
-    [string]: any? 
-} | {
-    from: { [string]: any }?,
-    to: { [string]: any }?,
-    delay: number?,
-    immediate: boolean?,
-    config: AnimationConfig.SpringConfigs?,
-    [string]: any?,
+export type ControllerProps<T = any> = common.AnimationProps & ({
+    from: T?;
+    to: T?;
+} | T)
+
+type yes<T> = {T}
+
+
+-- Need to export this for other files as we can't extract the second type from the tuple returned by `Controller.new`
+export type ControllerApi = {
+    start: (self: ControllerApi, startProps: ControllerProps<common.AnimationStyle>) -> typeof(Promise.new()),
+    stop: (self: ControllerApi, keys: {string}?) -> nil,
+    pause: (self: ControllerApi, keys: {string}?) -> nil,
 }
 
-function Controller.new(props: ControllerProps)
+function Controller.new<T>(props: ControllerProps<T>)
     assert(typeof(props) == "table", "Props are required.")
 
     local self = setmetatable({
-        bindings = {},
-        controls = {},
-        queue = {},
+        bindings = {} :: { [string]: any },
+        controls = {} :: { [string]: any },
     }, Controller)
 
     self:start(util.merge({ default = true }, props))
@@ -35,7 +40,7 @@ end
 
 local function createSpring(props, key: string)
     local spring = SpringValue.new(props, key)
-    local binding, setBinding = React.createBinding()
+    local binding, setBinding = React.createBinding(nil)
     spring.key = key
     spring.onChange = function(newValue)
         setBinding(newValue)
@@ -85,7 +90,7 @@ local function flushUpdate(ctrl, props, isLoop: boolean?)
     end)
 end
 
-function Controller:start(startProps: ControllerProps?)
+function Controller:start(startProps: ControllerProps<common.AnimationStyle>)
     if not startProps then
         return Promise.new(function(resolve)
             resolve()

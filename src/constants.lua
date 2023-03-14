@@ -33,6 +33,8 @@ local bounceOut = function(x)
     end
 end
 
+export type EasingFunction = (t: number) -> number;
+
 constants.easings = table.freeze({
     linear = function(x) return x end,
     easeInQuad = function(x) return x^2 end,
