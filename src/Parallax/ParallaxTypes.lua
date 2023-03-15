@@ -53,6 +53,8 @@ export type ParallaxLayerProps = {
     speed: number?,
     -- Layer will be sticky between these two offsets, all other props are ignored
     sticky: StickyConfig?,
+
+    children: any,
 } & {
     [string]: any
 }

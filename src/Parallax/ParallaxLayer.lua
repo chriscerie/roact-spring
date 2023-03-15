@@ -35,9 +35,16 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.IParallaxLayer, 
     layerProps.speed = nil
     local sticky = layerProps.sticky
     layerProps.sticky = nil
+    local children = layerProps.children
+    layerProps.children = nil
 
     -- Parent controls height and position
     local parent: ParallaxTypes.IParallax = React.useContext(ParentContext)
+
+    -- DEVIATION: Since api:start with `immediate` only takes effect in the next frame, using controller when sticky will cause flickering when
+    -- user scrolls with middle mouse wheel. Using a binding instead also causes minor flickering (possibly due to offset whole number
+    -- imprecision which gets worse as resolution gets smaller), but it's much less noticeable.
+    local stickyTranslate, setStickyTranslate = React.useBinding(0)
 
     local styles, api = React.useMemo(function()
         local translate
@@ -91,7 +98,10 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.IParallaxLayer, 
         if sticky then
             local start = sticky.start or 0
             local finish = sticky.finish or start + 1
-            layer.sticky = { start, finish }
+            layer.sticky = {
+                start = start,
+                finish = finish
+            }
         end
     end, {})
 
@@ -99,26 +109,19 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.IParallaxLayer, 
         return layer
     end)
 
-    local layerRef = React.useRef(nil :: any)
-
     setSticky = function(height: number, scrollTop: number)
         local start = layer.sticky and layer.sticky.start and layer.sticky.start * height
         local finish = layer.sticky and layer.sticky.finish and layer.sticky.finish * height
         if start and finish then
-            local isSticky = scrollTop >= start and scrollTop <= finish
+            layer.isSticky = scrollTop >= start and scrollTop <= finish
 
-            if isSticky == layer.isSticky then
-                return
+            -- DEVIATION: Since `sticky` is not natively supported, we must manually set the position of the sticky layer every time
+            -- the scroll position changes
+            if scrollTop > start and scrollTop < finish then
+                setStickyTranslate(scrollTop)
+            else
+                setStickyTranslate(if scrollTop < start then start else finish)
             end
-            layer.isSticky = isSticky
-
-            local thisRef = layerRef.current
-            -- FIXME
-            --thisRef.style.position = if isSticky then "sticky" else "absolute"
-            api:start({
-               translate = if isSticky then 0 else if scrollTop < start then start else finish,
-               immediate = true
-            })
         end
     end
 
@@ -143,11 +146,11 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.IParallaxLayer, 
     layerProps.Size = styles.space:map(function(value)
         return if layer.horizontal then UDim2.new(0, value, 1, 0) else UDim2.new(1, 0, 0, value)
     end)
-    layerProps.Position = styles.translate:map(function(value)
+    layerProps.Position = (if sticky then stickyTranslate else styles.translate):map(function(value)
         return if layer.horizontal then UDim2.new(0, value, 0, 0) else UDim2.new(0, 0, 0, value)
     end)
 
-    return e("Frame", layerProps, props.children)
+    return e("Frame", layerProps, children)
 end)
 
 return Parallax
