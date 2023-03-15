@@ -11,8 +11,8 @@ local SpringValue = {}
 SpringValue.__index = SpringValue
 
 export type SpringValueProps = {
-    from: number,
-    to: number,
+    from: number?,
+    to: number?,
     delay: number?,
     immediate: boolean?,
     config: AnimationConfig.SpringConfigs?,
