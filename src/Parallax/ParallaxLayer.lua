@@ -120,7 +120,7 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.IParallaxLayer, 
             if scrollTop > start and scrollTop < finish then
                 setStickyTranslate(scrollTop)
             else
-                setStickyTranslate(if scrollTop < start then start else finish)
+                setStickyTranslate(if scrollTop <= start then start else finish)
             end
         end
     end
