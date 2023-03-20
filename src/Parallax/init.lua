@@ -10,22 +10,6 @@ local ParallaxTypes = require(script.ParallaxTypes)
 
 local e = React.createElement
 
-local isReactFragment = function(node: any)
-    if node.type then
-        return node.type == React.Fragment
-    end
-    return node == React.Fragment
-end
-
-local function mapChildrenRecursive(children, callback: (any) -> any)
-    return React.Children.map(children, function(child: any)
-        return if isReactFragment(child) then 
-            mapChildrenRecursive(child.props.children, callback) 
-        else
-            callback(child)
-    end)
-end
-
 local Parallax = React.forwardRef(function(props: ParallaxTypes.ParallaxProps, ref)
     local ready, setReady = React.useState(false)
     local containerRef = React.useRef(nil :: any)
@@ -188,24 +172,9 @@ local Parallax = React.forwardRef(function(props: ParallaxTypes.ParallaxProps, r
     return e("ScrollingFrame",
         containerProps,
         ready and e(React.Fragment, {}, {
-            e("Frame", {
-                Size = UDim2.fromScale(1, 1),
-                BackgroundTransparency = 1,
-                ref = contentRef,
-            }, {
-                e(ParentContext.Provider, {
-                    value = state,
-                }, mapChildrenRecursive(children, function(child)
-                    return not child.props.sticky and child
-                end))
-            }),
             e(ParentContext.Provider, {
                 value = state,
-            }, {
-                mapChildrenRecursive(children, function(child)
-                    return child.props.sticky and child
-                end)
-            }),
+            }, children)
         })
     )
 end)
