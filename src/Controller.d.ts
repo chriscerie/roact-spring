@@ -4,9 +4,9 @@ import { AnimationProps, AnimationStyle, SharedAnimationProps } from './types/co
 export type ControllerProps<T extends AnimationStyle> = (AnimationProps<T> | T) & SharedAnimationProps;
 
 export interface ControllerApi {
-  start(this: void, startProps?: ControllerProps<AnimationStyle>): Promise<void>;
-  stop(this: void, keys?: [string]): Promise<void>;
-  pause(this: void, keys?: [string]): Promise<void>;
+  start(startProps?: ControllerProps<AnimationStyle>): Promise<void>;
+  stop(keys?: [string]): Promise<void>;
+  pause(keys?: [string]): Promise<void>;
 }
 
 declare interface Constructor {
