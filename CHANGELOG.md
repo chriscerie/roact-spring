@@ -1,9 +1,12 @@
 # Changelog
 
 ## Unreleased
+
+## 1.1.4 (April 22, 2023)
 * Fixed luau typings ([@chriscerie](https://github.com/chriscerie) in [#42](https://github.com/chriscerie/roact-spring/pull/42))
 * Fixed controller using dot operator for rbxts ([@chriscerie](https://github.com/chriscerie) in [#45](https://github.com/chriscerie/roact-spring/pull/45))
 * Added roact and roact-hooks as peerDependencies for rbxts ([@chriscerie](https://github.com/chriscerie) in [#46](https://github.com/chriscerie/roact-spring/pull/46))
+* Fixed `isRoact17` require for rbxts users
 
 ## 1.1.3 (Jan 20, 2023)
 * Fixed roblox-ts typings ([Xuleos](https://github.com/Xuleos) in [#29](https://github.com/chriscerie/roact-spring/pull/29))
