@@ -208,6 +208,9 @@ function SpringValue:advance(dt: number)
 
                 local precision = config.precision or (if from == to then 0.005 else math.min(1, math.abs(to - from) * 0.001))
 
+                -- DEVIATION: If precision is too low, it will never finish
+				precision = math.max(0.0001, precision)
+
                 -- The velocity at which movement is essentially none
                 local restVelocity = config.restVelocity or precision / 10
     

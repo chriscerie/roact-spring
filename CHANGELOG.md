@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed an issue where the spring would never finish if precision is too low
 
 ## 1.1.4 (April 22, 2023)
 * Fixed luau typings ([@chriscerie](https://github.com/chriscerie) in [#42](https://github.com/chriscerie/roact-spring/pull/42))
