@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 1.1.5 (April 23, 2023)
 * Fixed an issue where the spring would never finish if precision is too low
 
 ## 1.1.4 (April 22, 2023)
