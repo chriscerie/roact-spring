@@ -1,3 +1,3 @@
-local React = require(script.Parent.Parent.React)
+local React = require(script.Parent.React)
 
 return not React.reconcile
