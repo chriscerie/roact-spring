@@ -7,240 +7,244 @@ local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
 local e = React.createElement
 
 local function createUpdater(initialLength, initialProps, initialDeps)
-    local test = {}
+	local test = {}
 
-    local function Test(_)
-        local springProps, update = React.useState({ initialLength, initialProps, initialDeps })
-        test.update = function(newLength, newProps, newDeps)
-            update({ newLength, newProps, newDeps })
-            task.wait(0.1)
-        end
-        test.springs, test.api = RoactSpring.useSprings(springProps[1], springProps[2], springProps[3])
-        return nil
-    end
+	local function Test(_)
+		local springProps, update = React.useState({ initialLength, initialProps, initialDeps })
+		test.update = function(newLength, newProps, newDeps)
+			update({ newLength, newProps, newDeps })
+			task.wait(0.1)
+		end
+		test.springs, test.api = RoactSpring.useSprings(springProps[1], springProps[2], springProps[3])
+		return nil
+	end
 
-    local root = ReactRoblox.createRoot(Instance.new("Folder"))
-    root:render(ReactRoblox.createPortal({
-        App = e(Test)
-    }, ReplicatedStorage))
+	local root = ReactRoblox.createRoot(Instance.new("Folder"))
+	root:render(ReactRoblox.createPortal({
+		App = e(Test),
+	}, ReplicatedStorage))
 
-    task.wait()
-    while not root do
-        task.wait()
-    end
+	task.wait()
+	while not root do
+		task.wait()
+	end
 
-    return test
+	return test
 end
 
 return function()
-    describe("useSprings", function()
-        describe("when only a props array is passed", function()
-            it("can animate supported data types", function()
-                local test = createUpdater(1, {
-                    {
-                        number = 0,
-                        udim = UDim.new(0, 0),
-                        udim2 = UDim2.new(0, 0, 0, 0),
-                        vector2 = Vector2.new(0, 0),
-                        vector3 = Vector3.new(0, 0, 0),
-                        color3 = Color3.fromRGB(0, 0, 0),
-                    }
-                })
+	describe("useSprings", function()
+		describe("when only a props array is passed", function()
+			it("can animate supported data types", function()
+				local test = createUpdater(1, {
+					{
+						number = 0,
+						udim = UDim.new(0, 0),
+						udim2 = UDim2.new(0, 0, 0, 0),
+						vector2 = Vector2.new(0, 0),
+						vector3 = Vector3.new(0, 0, 0),
+						color3 = Color3.fromRGB(0, 0, 0),
+					},
+				})
 
-                expect(test.springs[1].number:getValue()).to.equal(0)
-                expect(test.springs[1].udim:getValue()).to.equal(UDim.new(0, 0))
-                expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(0, 0, 0, 0))
-                expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(0, 0))
-                expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(0, 0, 0))
-                expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(0, 0, 0))
+				expect(test.springs[1].number:getValue()).to.equal(0)
+				expect(test.springs[1].udim:getValue()).to.equal(UDim.new(0, 0))
+				expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(0, 0, 0, 0))
+				expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(0, 0))
+				expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(0, 0, 0))
+				expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(0, 0, 0))
 
-                test.update(1, {
-                    {
-                        number = 100,
-                        udim = UDim.new(100, 200),
-                        udim2 = UDim2.new(100, 200, 300, 400),
-                        vector2 = Vector2.new(100, 200),
-                        vector3 = Vector3.new(100, 200, 300),
-                        color3 = Color3.fromRGB(255, 255, 255),
-                    }
-                })
-                task.wait(1)
+				test.update(1, {
+					{
+						number = 100,
+						udim = UDim.new(100, 200),
+						udim2 = UDim2.new(100, 200, 300, 400),
+						vector2 = Vector2.new(100, 200),
+						vector3 = Vector3.new(100, 200, 300),
+						color3 = Color3.fromRGB(255, 255, 255),
+					},
+				})
+				task.wait(1)
 
-                expect(test.springs[1].number:getValue()).to.be.near(100, 10)
-                expect(test.springs[1].udim:getValue().Scale).to.near(100, 10)
-                expect(test.springs[1].udim:getValue().Offset).to.near(200, 20)
-                expect(test.springs[1].udim2:getValue().X.Scale).to.near(100, 10)
-                expect(test.springs[1].udim2:getValue().X.Offset).to.near(200, 20)
-                expect(test.springs[1].udim2:getValue().Y.Scale).to.near(300, 30)
-                expect(test.springs[1].udim2:getValue().Y.Offset).to.near(400, 40)
-                expect(test.springs[1].vector2:getValue().X).to.be.near(100, 10)
-                expect(test.springs[1].vector2:getValue().Y).to.be.near(200, 20)
-                expect(test.springs[1].vector3:getValue().X).to.be.near(100, 10)
-                expect(test.springs[1].vector3:getValue().Y).to.be.near(200, 20)
-                expect(test.springs[1].vector3:getValue().Z).to.be.near(300, 30)
-                expect(test.springs[1].color3:getValue().R).to.be.near(1, 0.1)
-                expect(test.springs[1].color3:getValue().G).to.be.near(1, 0.1)
-                expect(test.springs[1].color3:getValue().B).to.be.near(1, 0.1)
-            end)
+				expect(test.springs[1].number:getValue()).to.be.near(100, 10)
+				expect(test.springs[1].udim:getValue().Scale).to.near(100, 10)
+				expect(test.springs[1].udim:getValue().Offset).to.near(200, 20)
+				expect(test.springs[1].udim2:getValue().X.Scale).to.near(100, 10)
+				expect(test.springs[1].udim2:getValue().X.Offset).to.near(200, 20)
+				expect(test.springs[1].udim2:getValue().Y.Scale).to.near(300, 30)
+				expect(test.springs[1].udim2:getValue().Y.Offset).to.near(400, 40)
+				expect(test.springs[1].vector2:getValue().X).to.be.near(100, 10)
+				expect(test.springs[1].vector2:getValue().Y).to.be.near(200, 20)
+				expect(test.springs[1].vector3:getValue().X).to.be.near(100, 10)
+				expect(test.springs[1].vector3:getValue().Y).to.be.near(200, 20)
+				expect(test.springs[1].vector3:getValue().Z).to.be.near(300, 30)
+				expect(test.springs[1].color3:getValue().R).to.be.near(1, 0.1)
+				expect(test.springs[1].color3:getValue().G).to.be.near(1, 0.1)
+				expect(test.springs[1].color3:getValue().B).to.be.near(1, 0.1)
+			end)
 
-            it("should set style instantly when immediate prop is passed", function()
-                local test = createUpdater(2, {
-                    { x = 0, immediate = true },
-                    { x = 0, immediate = true },
-                })
+			it("should set style instantly when immediate prop is passed", function()
+				local test = createUpdater(2, {
+					{ x = 0, immediate = true },
+					{ x = 0, immediate = true },
+				})
 
-                expect(test.springs[1].x:getValue()).to.equal(0)
-                expect(test.springs[2].x:getValue()).to.equal(0)
+				expect(test.springs[1].x:getValue()).to.equal(0)
+				expect(test.springs[2].x:getValue()).to.equal(0)
 
-                test.update(3, {
-                    { x = 1, immediate = true, },
-                    { x = 2, immediate = true, },
-                    { x = 3, immediate = true, },
-                })
+				test.update(3, {
+					{ x = 1, immediate = true },
+					{ x = 2, immediate = true },
+					{ x = 3, immediate = true },
+				})
 
-                expect(test.springs[1].x:getValue()).to.equal(1)
-                expect(test.springs[2].x:getValue()).to.equal(2)
-                expect(test.springs[3].x:getValue()).to.equal(3)
-            end)
+				expect(test.springs[1].x:getValue()).to.equal(1)
+				expect(test.springs[2].x:getValue()).to.equal(2)
+				expect(test.springs[3].x:getValue()).to.equal(3)
+			end)
 
-            describe("when the length argument changes", function()
-                it("should create and remove springs accordingly", function()
-                    local test = createUpdater(0, {})
-    
-                    expect(#test.springs).to.equal(0)
-    
-                    test.update(3, {
-                        { x = 1, immediate = true, },
-                        { x = 2, immediate = true, },
-                        { x = 3, immediate = true, },
-                    })
-                    expect(#test.springs).to.equal(3)
+			describe("when the length argument changes", function()
+				it("should create and remove springs accordingly", function()
+					local test = createUpdater(0, {})
 
-                    test.update(2, {
-                        { x = 1, immediate = true, },
-                        { x = 2, immediate = true, },
-                    })
+					expect(#test.springs).to.equal(0)
 
-                    expect(#test.springs).to.equal(2)
+					test.update(3, {
+						{ x = 1, immediate = true },
+						{ x = 2, immediate = true },
+						{ x = 3, immediate = true },
+					})
+					expect(#test.springs).to.equal(3)
 
-                    test.update(0, {})
-                    expect(#test.springs).to.equal(0)
+					test.update(2, {
+						{ x = 1, immediate = true },
+						{ x = 2, immediate = true },
+					})
 
-                    test.update(1, {
-                        { x = 1, immediate = true, },
-                    })
-                    expect(#test.springs).to.equal(1)
-                end)
-            end)
-        end)
+					expect(#test.springs).to.equal(2)
 
-        describe("when both a prop object and a deps array are passed", function()
-            it("should only update when deps change", function()
-                local test = createUpdater(2, {
-                    { x = 1, immediate = true },
-                    { x = 2, immediate = true },
-                }, { 1 })
+					test.update(0, {})
+					expect(#test.springs).to.equal(0)
 
-                expect(test.springs[1].x:getValue()).to.equal(1)
-                expect(test.springs[2].x:getValue()).to.equal(2)
+					test.update(1, {
+						{ x = 1, immediate = true },
+					})
+					expect(#test.springs).to.equal(1)
+				end)
+			end)
+		end)
 
-                test.update(3, {
-                    { x = 3, immediate = true },
-                    { x = 4, immediate = true },
-                    { x = 5, immediate = true },
-                }, { 2 })
-                expect(test.springs[1].x:getValue()).to.equal(3)
-                expect(test.springs[2].x:getValue()).to.equal(4)
-                expect(test.springs[3].x:getValue()).to.equal(5)
+		describe("when both a prop object and a deps array are passed", function()
+			it("should only update when deps change", function()
+				local test = createUpdater(2, {
+					{ x = 1, immediate = true },
+					{ x = 2, immediate = true },
+				}, { 1 })
 
-                test.update(2, {
-                    { x = 6, immediate = true },
-                    { x = 7, immediate = true },
-                }, { 2 })
-                expect(test.springs[1].x:getValue()).to.equal(3)
-                expect(test.springs[2].x:getValue()).to.equal(4)
-                expect(test.springs[3]).never.to.be.ok()
-            end)
-        end)
+				expect(test.springs[1].x:getValue()).to.equal(1)
+				expect(test.springs[2].x:getValue()).to.equal(2)
 
-        describe("when only a function is passed", function()
-            it("can animate supported data types", function()
-                local test = createUpdater(1, function()
-                    return {
-                        number = 0,
-                        udim = UDim.new(0, 0),
-                        udim2 = UDim2.new(0, 0, 0, 0),
-                        vector2 = Vector2.new(0, 0),
-                        vector3 = Vector3.new(0, 0, 0),
-                        color3 = Color3.fromRGB(0, 0, 0),
-                    }
-                end)
+				test.update(3, {
+					{ x = 3, immediate = true },
+					{ x = 4, immediate = true },
+					{ x = 5, immediate = true },
+				}, { 2 })
+				expect(test.springs[1].x:getValue()).to.equal(3)
+				expect(test.springs[2].x:getValue()).to.equal(4)
+				expect(test.springs[3].x:getValue()).to.equal(5)
 
-                expect(test.springs[1].number:getValue()).to.equal(0)
-                expect(test.springs[1].udim:getValue()).to.equal(UDim.new(0, 0))
-                expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(0, 0, 0, 0))
-                expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(0, 0))
-                expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(0, 0, 0))
-                expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(0, 0, 0))
+				test.update(2, {
+					{ x = 6, immediate = true },
+					{ x = 7, immediate = true },
+				}, { 2 })
+				expect(test.springs[1].x:getValue()).to.equal(3)
+				expect(test.springs[2].x:getValue()).to.equal(4)
+				expect(test.springs[3]).never.to.be.ok()
+			end)
+		end)
 
-                test.api.start(function()
-                    return {
-                        number = 100,
-                        udim = UDim.new(100, 200),
-                        udim2 = UDim2.new(100, 200, 300, 400),
-                        vector2 = Vector2.new(100, 200),
-                        vector3 = Vector3.new(100, 200, 300),
-                        color3 = Color3.fromRGB(255, 255, 255),
-                    }
-                end):await()
+		describe("when only a function is passed", function()
+			it("can animate supported data types", function()
+				local test = createUpdater(1, function()
+					return {
+						number = 0,
+						udim = UDim.new(0, 0),
+						udim2 = UDim2.new(0, 0, 0, 0),
+						vector2 = Vector2.new(0, 0),
+						vector3 = Vector3.new(0, 0, 0),
+						color3 = Color3.fromRGB(0, 0, 0),
+					}
+				end)
 
-                expect(test.springs[1].number:getValue()).to.equal(100)
-                expect(test.springs[1].udim:getValue()).to.equal(UDim.new(100, 200))
-                expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(100, 200, 300, 400))
-                expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(100, 200))
-                expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(100, 200, 300))
-                expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(255, 255, 255))
-            end)
+				expect(test.springs[1].number:getValue()).to.equal(0)
+				expect(test.springs[1].udim:getValue()).to.equal(UDim.new(0, 0))
+				expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(0, 0, 0, 0))
+				expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(0, 0))
+				expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(0, 0, 0))
+				expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(0, 0, 0))
 
-            it("should set style instantly when immediate prop is passed", function()
-                local test = createUpdater(2, function(i: number)
-                    return { x = i * 100, immediate = true }
-                end)
+				test.api
+					.start(function()
+						return {
+							number = 100,
+							udim = UDim.new(100, 200),
+							udim2 = UDim2.new(100, 200, 300, 400),
+							vector2 = Vector2.new(100, 200),
+							vector3 = Vector3.new(100, 200, 300),
+							color3 = Color3.fromRGB(255, 255, 255),
+						}
+					end)
+					:await()
 
-                expect(test.springs[1].x:getValue()).to.equal(100)
-                expect(test.springs[2].x:getValue()).to.equal(200)
+				expect(test.springs[1].number:getValue()).to.equal(100)
+				expect(test.springs[1].udim:getValue()).to.equal(UDim.new(100, 200))
+				expect(test.springs[1].udim2:getValue()).to.equal(UDim2.new(100, 200, 300, 400))
+				expect(test.springs[1].vector2:getValue()).to.equal(Vector2.new(100, 200))
+				expect(test.springs[1].vector3:getValue()).to.equal(Vector3.new(100, 200, 300))
+				expect(test.springs[1].color3:getValue()).to.equal(Color3.fromRGB(255, 255, 255))
+			end)
 
-                test.api.start(function(i: number)
-                    return { x = i * 1000, immediate = true }
-                end):await()
+			it("should set style instantly when immediate prop is passed", function()
+				local test = createUpdater(2, function(i: number)
+					return { x = i * 100, immediate = true }
+				end)
 
-                expect(test.springs[1].x:getValue()).to.equal(1000)
-                expect(test.springs[2].x:getValue()).to.equal(2000)
-            end)
+				expect(test.springs[1].x:getValue()).to.equal(100)
+				expect(test.springs[2].x:getValue()).to.equal(200)
 
-            describe("when the length argument changes", function()
-                it("should create and remove springs accordingly", function()
-                    local getProps = function(i: number)
-                        return { x = i * 100, immediate = true }
-                    end
+				test.api
+					.start(function(i: number)
+						return { x = i * 1000, immediate = true }
+					end)
+					:await()
 
-                    local test = createUpdater(0, getProps)
-    
-                    expect(#test.springs).to.equal(0)
-    
-                    test.update(3, getProps)
-                    expect(#test.springs).to.equal(3)
+				expect(test.springs[1].x:getValue()).to.equal(1000)
+				expect(test.springs[2].x:getValue()).to.equal(2000)
+			end)
 
-                    test.update(2, getProps)
-                    expect(#test.springs).to.equal(2)
+			describe("when the length argument changes", function()
+				it("should create and remove springs accordingly", function()
+					local getProps = function(i: number)
+						return { x = i * 100, immediate = true }
+					end
 
-                    test.update(0, getProps)
-                    expect(#test.springs).to.equal(0)
+					local test = createUpdater(0, getProps)
 
-                    test.update(1, getProps)
-                    expect(#test.springs).to.equal(1)
-                end)
-            end)
-        end)
-    end)
+					expect(#test.springs).to.equal(0)
+
+					test.update(3, getProps)
+					expect(#test.springs).to.equal(3)
+
+					test.update(2, getProps)
+					expect(#test.springs).to.equal(2)
+
+					test.update(0, getProps)
+					expect(#test.springs).to.equal(0)
+
+					test.update(1, getProps)
+					expect(#test.springs).to.equal(1)
+				end)
+			end)
+		end)
+	end)
 end

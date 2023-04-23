@@ -20,7 +20,6 @@
 local Connection = {}
 Connection.__index = Connection
 
-
 function Connection.new(signal, fn)
 	return setmetatable({
 		Connected = true,
@@ -30,9 +29,10 @@ function Connection.new(signal, fn)
 	}, Connection)
 end
 
-
 function Connection:Disconnect()
-	if not self.Connected then return end
+	if not self.Connected then
+		return
+	end
 	self.Connected = false
 
 	-- Unhook the node, but DON'T clear it. That way any fire calls that are
@@ -61,7 +61,7 @@ setmetatable(Connection, {
 	end,
 	__newindex = function(_tb, key, _value)
 		error(("Attempt to set Connection::%s (not a valid member)"):format(tostring(key)), 2)
-	end
+	end,
 })
 
 local Signal = {}
@@ -124,7 +124,7 @@ setmetatable(Signal, {
 	end,
 	__newindex = function(_tb, key, _value)
 		error(("Attempt to set Signal::%s (not a valid member)"):format(tostring(key)), 2)
-	end
+	end,
 })
 
 return Signal
