@@ -82,7 +82,7 @@ local function Example(_)
     end, {})
 
 	return React.createElement("Frame", {
-        Transparency = styes.alpha,
+        Transparency = styles.alpha,
         Position = styles.alpha:map(function(alpha)
             return UDim2.fromScale(0.2, 0.2):Lerp(UDim2.fromScale(0.8, 0.2), alpha)
         end),

@@ -36,9 +36,9 @@ The following configs are available:
 | ----------- | ----------- | ---- |
 | mass | 1 | spring mass |
 | tension | 170 | spring energetic load |
-| friction | 26 | spring resistence |
+| friction | 26 | spring resistance |
 | clamp | false | when true, stops the spring once it overshoots its boundaries |
-| velocity | 0 | initial velocity, see [velocity config](/docs/common/configs#velocity-config) for more detais |
+| velocity | 0 | initial velocity, see [velocity config](/docs/common/configs#velocity-config) for more details |
 | easing | t => t | linear by default, there is a multitude of easings available [here](/docs/common/configs#easings) |
 | damping | 1 | The damping ratio, which dictates how the spring slows down. Only works when `frequency` is defined. Defaults to `1`. |
 | progress | 0 | When used with `duration`, it decides how far into the easing function to start from. The duration itself is unaffected. |
@@ -107,7 +107,7 @@ api.start({
 ```
 
 :::caution ONLY UPDATE IMPERATIVELY
-Due to the way easings handle interuptions, it is recommended to only update the spring values imperatively. Setting the target value midway will cause the duration timer to reset.
+Due to the way easings handle interruptions, it is recommended to only update the spring values imperatively. Setting the target value midway will cause the duration timer to reset.
 :::caution
 
 ## Advanced Configs
