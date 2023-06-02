@@ -73,9 +73,11 @@ The `styles` table is just a table of bindings. This means you can map them to p
 
 ```lua
 local function Example(_)
-    local styles = RoactSpring.useSpring({
-        alpha = 0,
-    })
+    local styles, api = RoactSpring.useSpring(function()
+        return {
+            alpha = 0,
+        }
+    end)
 
     React.useEffect(function()
         api.start({ alpha = 1 })
