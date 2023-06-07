@@ -94,7 +94,7 @@ constants.easings = table.freeze({
 		return if x == 0
 			then 0
 			elseif x == 1 then 1
-			elseif x < 0.5 then 2 ^ (20 * x + 10) / 2
+			elseif x < 0.5 then 2 ^ (20 * x - 10) / 2
 			else 2 - 2 ^ (-20 * x + 10) / 2
 	end,
 	easeInCirc = function(x)
