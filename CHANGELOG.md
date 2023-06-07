@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 1.1.6 (June 7, 2023)
 * Fixed incorrect easing functions for easeInExpo, easeOutExpo, easeInOutCirc, easeInElastic, and easeOutElastic. This is potentially breaking if you relied on the incorrect easing behavior ([@passhley](https://github.com/passhley) in [#49](https://github.com/chriscerie/roact-spring/pull/49))
 * Added easing easeInOutElastic ([@passhley](https://github.com/passhley) in [#49](https://github.com/chriscerie/roact-spring/pull/49))
 
