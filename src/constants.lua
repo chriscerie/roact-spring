@@ -85,10 +85,10 @@ constants.easings = table.freeze({
 		return -(math.cos(math.pi * x) - 1) / 2
 	end,
 	easeInExpo = function(x)
-		return if x == 0 then 0 else 2 ^ (10 * (x - 1))
+		return if x == 0 then 0 else 2 ^ (10 * x - 10)
 	end,
 	easeOutExpo = function(x)
-		return if x == 1 then 1 else -2 ^ (10 * x - 10) + 1
+		return if x == 1 then 1 else 1 - 2 ^ (-10 * x)
 	end,
 	easeInOutExpo = function(x)
 		return if x == 0
@@ -104,7 +104,7 @@ constants.easings = table.freeze({
 		return math.sqrt(1 - (x - 1) ^ 2)
 	end,
 	easeInOutCirc = function(x)
-		return if x < 0.5 then (1 - math.sqrt(1 - (2 * x) ^ 2)) / 2 else (math.sqrt(1 - (2 * x - 1) ^ 2) + 1) / 2
+		return if x < 0.5 then (1 - math.sqrt(1 - (2 * x) ^ 2)) / 2 else (math.sqrt(1 - (-2 * x + 2) ^ 2) + 1) / 2
 	end,
 	easeInBack = function(x)
 		return c3 * x ^ 3 - c1 * x ^ 2
@@ -118,14 +118,17 @@ constants.easings = table.freeze({
 			else ((2 * x - 2) ^ 2 * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2
 	end,
 	easeInElastic = function(x)
-		return if x == 0 then 0 elseif x == 1 then 1 else 2 ^ (-10 * x) * math.sin((x * 10 - 0.75) * c4) + 1
+		return if x == 0 then 0 elseif x == 1 then 1 else -2 ^ (10 * x - 10) * math.sin((x * 10 - 10.75) * c4)
 	end,
 	easeOutElastic = function(x)
+		return if x == 0 then 0 elseif x == 1 then 1 else 2 ^ (-10 * x) * math.sin((x * 10 - 0.75) * c4) + 1
+	end,
+	easeInOutElastic = function(x)
 		return if x == 0
 			then 0
 			elseif x == 1 then 1
 			elseif x < 0.5 then -(2 ^ (20 * x - 10) * math.sin((20 * x - 11.125) * c5)) / 2
-			else 2 ^ (-20 * x + 10) * math.sin((20 * x - 11.125) * c5) / 2 + 1
+			else (2 ^ (-20 * x + 10) * math.sin((20 * x - 11.125) * c5)) / 2 + 1
 	end,
 	easeInBounce = function(x)
 		return 1 - bounceOut(1 - x)
