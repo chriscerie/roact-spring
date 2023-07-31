@@ -10,5 +10,5 @@ realm = "shared"
 [dependencies]
 Promise = "evaera/promise@^4.0"
 TestEZ = "roblox/testez@^0.4"
-React ="jsdotlua/react@17.0.1"
-ReactRoblox = "jsdotlua/react-roblox@17.0.1"
+React ="jsdotlua/react@^17"
+ReactRoblox = "jsdotlua/react-roblox@^17"
