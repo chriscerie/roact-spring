@@ -12,12 +12,14 @@ This library represents a modern approach to animation. It is the perfect bridge
 
 ### Wally
 
-`roact-spring` has two packages to support [Roact17](https://github.com/grilme99/CorePackages) and [legacy Roact](https://github.com/Roblox/roact). It is important to install the correct package or you **will** encounter bugs. To install, add the latest version of roact-spring to your wally.toml:
+`roact-spring` has two packages to support [react-lua](https://github.com/jsdotlua/react-lua) and [legacy Roact](https://github.com/Roblox/roact). It's crucial to install the correct package or you **will** encounter bugs. To install, add the latest version of roact-spring to your wally.toml:
 
-#### With Roact17
+#### With react-lua
 ```console
 RoactSpring = "chriscerie/react-spring@<version>"
 ```
+
+Note: react-lua packages under the scope jsdotlua must use react-spring >= 2.0. react-lua packages under the legacy scope corepackages must use react-spring v1.
 
 #### With legacy Roact
 ```console

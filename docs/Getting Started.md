@@ -29,9 +29,9 @@ local function App(_)
 end
 ```
 
-`roact-spring` supports both [Roact17](https://github.com/grilme99/CorePackages) and [legacy Roact](https://github.com/Roblox/roact) with [roact-hooks](https://github.com/Kampfkarren/roact-hooks). Usage with legacy Roact and roact-hooks requires you to pass the `hooks` table to roact-spring's hooks.
+`roact-spring` supports both [react-lua](https://github.com/jsdotlua/react-lua) and [legacy Roact](https://github.com/Roblox/roact) with [roact-hooks](https://github.com/Kampfkarren/roact-hooks). Usage with legacy Roact and roact-hooks requires you to pass the `hooks` table to roact-spring's hooks.
 
-#### Using Roact17:
+#### Using react-lua:
 ```lua
 local function App(_)
     local styles, api = RoactSpring.useSpring(function()
@@ -49,7 +49,7 @@ local function App(_, hooks)
 end
 ```
 
-The rest of this documentation's examples will assume we are using Roact17.
+The rest of this documentation's examples will assume we are using react-lua.
 
 ## Getting started with class components
 
