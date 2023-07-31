@@ -1,6 +1,6 @@
 {
   "name": "@rbxts/roact-spring",
-  "version": "1.1.6",
+  "version": "2.0.0",
   "description": "A modern spring-physics based animation library for Roact inspired by react-spring",
   "main": "src/init.lua",
   "typings": "src/index.d.ts",

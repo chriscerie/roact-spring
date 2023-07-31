@@ -1,9 +1,9 @@
 [package]
 name = "chriscerie/roact-spring"
 description = "A modern spring-physics based animation library for Roact inspired by react-spring"
-version = "1.1.6"
+version = "2.0.0"
 license = "MIT"
-authors = ["chriscerie"]
+authors = ["Paul Henschel", "chriscerie"]
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
