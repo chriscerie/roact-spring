@@ -39,7 +39,7 @@
 
 #### With react-lua
 ```console
-RoactSpring = "chriscerie/react-spring@<version>"
+ReactSpring = "chriscerie/react-spring@<version>"
 ```
 
 Note: react-lua packages under the scope jsdotlua must use react-spring >= 2.0. react-lua packages under the legacy scope corepackages must use react-spring v1.
