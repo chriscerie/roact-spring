@@ -1,11 +1,11 @@
 --!strict
 
-local React = require(script.Parent.Parent.React)
-local Promise = require(script.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
-local util = require(script.Parent.Parent.util)
+local Promise = require(script.Parent.Parent.Promise)
+local React = require(script.Parent.Parent.React)
 local common = require(script.Parent.Parent.types.common)
 local isRoact17 = require(script.Parent.Parent.isRoact17)
+local util = require(script.Parent.Parent.util)
 
 local useRefKey = if isRoact17 then "current" else "value"
 

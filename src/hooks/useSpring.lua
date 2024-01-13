@@ -1,9 +1,9 @@
 --!strict
-local Promise = require(script.Parent.Parent.Promise)
 local Controller = require(script.Parent.Parent.Controller)
+local Promise = require(script.Parent.Parent.Promise)
 local common = require(script.Parent.Parent.types.common)
-local useSprings = require(script.Parent.useSprings)
 local isRoact17 = require(script.Parent.Parent.isRoact17)
+local useSprings = require(script.Parent.useSprings)
 
 export type UseSpringApi<T> = {
 	start: (startProps: Controller.ControllerProps<T>) -> typeof(Promise.new()),

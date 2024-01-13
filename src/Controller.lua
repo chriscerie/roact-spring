@@ -1,11 +1,11 @@
 --!strict
 
-local React = require(script.Parent.React)
 local Promise = require(script.Parent.Promise)
+local React = require(script.Parent.React)
 local SpringValue = require(script.Parent.SpringValue)
+local common = require(script.Parent.types.common)
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
-local common = require(script.Parent.types.common)
 
 local Controller = {}
 Controller.__index = Controller
@@ -66,7 +66,7 @@ end
 
     Process a single set of props using the given controller.
 ]]
-local function flushUpdate(ctrl, props, isLoop: boolean?)
+local function flushUpdate(ctrl, props, _isLoop: boolean?)
 	-- Looping must be handled in this function, or else the values
 	-- would end up looping out-of-sync in many common cases.
 	local loop = props.loop
