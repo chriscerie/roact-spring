@@ -1,9 +1,9 @@
 --!strict
-local React = require(script.Parent.Parent.React)
 local Controller = require(script.Parent.Parent.Controller)
+local React = require(script.Parent.Parent.React)
+local isRoact17 = require(script.Parent.Parent.isRoact17)
 local useSprings = require(script.Parent.useSprings)
 local util = require(script.Parent.Parent.util)
-local isRoact17 = require(script.Parent.Parent.isRoact17)
 
 local useRefKey = if isRoact17 then "current" else "value"
 

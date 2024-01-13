@@ -1,11 +1,11 @@
 --!strict
 
-local React = require(script.Parent.React)
 local Promise = require(script.Parent.Promise)
+local React = require(script.Parent.React)
 local SpringValue = require(script.Parent.SpringValue)
+local common = require(script.Parent.types.common)
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
-local common = require(script.Parent.types.common)
 
 local Controller = {}
 Controller.__index = Controller

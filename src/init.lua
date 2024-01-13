@@ -1,8 +1,8 @@
 --!strict
 
+local Controller = require(script.Controller)
 local common = require(script.types.common)
 local useSprings = require(script.hooks.useSprings)
-local Controller = require(script.Controller)
 
 export type AnimatableType = common.AnimatableType
 export type AnimationStyle = common.AnimationStyle

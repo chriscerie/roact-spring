@@ -1,10 +1,10 @@
 --!strict
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local CircleButton = require(script.Parent.Parent.components.CircleButton)
 local React = require(ReplicatedStorage.Packages.React)
 local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
-local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = React.createElement
 local STOP_AFTER_SECONDS = 3

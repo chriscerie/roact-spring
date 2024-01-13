@@ -4,14 +4,14 @@
     must be viewed in the Roblox Studio window to work properly.
 ]]
 
+local GuiService = game:GetService("GuiService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
-local GuiService = game:GetService("GuiService")
 
+local CircleButton = require(script.Parent.Parent.components.CircleButton)
 local React = require(ReplicatedStorage.Packages.React)
 local ReactRoblox = require(ReplicatedStorage.Packages.ReactRoblox)
 local RoactSpring = require(ReplicatedStorage.Packages.RoactSpring)
-local CircleButton = require(script.Parent.Parent.components.CircleButton)
 
 local e = React.createElement
 
