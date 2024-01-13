@@ -9,26 +9,26 @@ local CircleButton = require(script.Parent.Parent.components.CircleButton)
 local e = React.createElement
 
 local function Button(_)
-    local styles, api = RoactSpring.useSpring(function()
-        return { position = UDim2.fromScale(0.5, 0.5) }
-    end)
+	local styles, api = RoactSpring.useSpring(function()
+		return { position = UDim2.fromScale(0.5, 0.5) }
+	end)
 
 	return e(CircleButton, {
-        Position = styles.position,
-        [React.Event.Activated] = function()
-            api.start({
-                from = { position = UDim2.fromScale(0.2, 0.2) },
-                to = { position = UDim2.fromScale(0.5, 0.8) },
-            })
-        end,
+		Position = styles.position,
+		[React.Event.Activated] = function()
+			api.start({
+				from = { position = UDim2.fromScale(0.2, 0.2) },
+				to = { position = UDim2.fromScale(0.5, 0.8) },
+			})
+		end,
 	})
 end
 
 return function(target)
 	local root = ReactRoblox.createRoot(Instance.new("Folder"))
-    root:render(ReactRoblox.createPortal({
-        App = e(Button)
-    }, target))
+	root:render(ReactRoblox.createPortal({
+		App = e(Button),
+	}, target))
 
 	return function()
 		root:unmount()

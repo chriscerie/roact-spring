@@ -66,7 +66,7 @@ end
 
     Process a single set of props using the given controller.
 ]]
-local function flushUpdate(ctrl, props, isLoop: boolean?)
+local function flushUpdate(ctrl, props, _isLoop: boolean?)
 	-- Looping must be handled in this function, or else the values
 	-- would end up looping out-of-sync in many common cases.
 	local loop = props.loop

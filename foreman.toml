@@ -1,4 +1,6 @@
 [tools]
-wally = { source = "upliftgames/wally", version = "0.3.1" }
-rojo = { source = "rojo-rbx/rojo", version = "7.0.0" }
-selene = { source = "Kampfkarren/selene", version = "0.16" }
+rojo = "rojo-rbx/rojo@7.3.0"
+wally-package-types = "JohnnyMorganz/wally-package-types@1.2.1"
+selene = "kampfkarren/selene@0.26.1"
+wally = "upliftgames/wally@0.3.1"
+StyLua = "JohnnyMorganz/StyLua@0.19.1"
