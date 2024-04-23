@@ -17,6 +17,8 @@ function helpers.getValuesFromType(data)
 		return { data.X, data.Y, data.Z }
 	elseif dataType == "Color3" then
 		return { data.R, data.G, data.B }
+	elseif dataType == "NumberRange" then
+		return { data.Min, data.Max }
 	end
 
 	error("Unsupported type: " .. dataType)
@@ -35,6 +37,8 @@ function helpers.getTypeFromValues(type: string, values: { number })
 		return Vector3.new(values[1], values[2], values[3])
 	elseif type == "Color3" then
 		return Color3.new(values[1], values[2], values[3])
+	elseif type == "NumberRange" then
+		return NumberRange.new(values[1], values[2])
 	end
 
 	error("Unsupported type: " .. type)
