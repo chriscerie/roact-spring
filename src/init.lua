@@ -6,6 +6,7 @@ local useSprings = require(script.hooks.useSprings)
 
 export type AnimatableType = common.AnimatableType
 export type AnimationStyle = common.AnimationStyle
+export type ReactBinding = common.ReactBinding
 
 export type UseSpringsApi<T> = useSprings.UseSpringsApi<T>
 export type UseSpringsStylesList = useSprings.UseSpringsStylesList
