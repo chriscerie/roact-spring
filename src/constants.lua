@@ -25,10 +25,10 @@ local bounceOut = function(x)
 		x -= 1.5 / d1
 		return n1 * x ^ 2 + 0.75
 	elseif x < 2.5 / d1 then
-		x -= -2.25 / d1
+		x -= 2.25 / d1
 		return n1 * x ^ 2 + 0.9375
 	else
-		x -= -2.625 / d1
+		x -= 2.625 / d1
 		return n1 * x ^ 2 + 0.984375
 	end
 end
@@ -95,7 +95,7 @@ constants.easings = table.freeze({
 			then 0
 			elseif x == 1 then 1
 			elseif x < 0.5 then 2 ^ (20 * x - 10) / 2
-			else 2 - 2 ^ (-20 * x + 10) / 2
+			else (2 - 2 ^ (-20 * x + 10)) / 2
 	end,
 	easeInCirc = function(x)
 		return 1 - math.sqrt(1 - x ^ 2)

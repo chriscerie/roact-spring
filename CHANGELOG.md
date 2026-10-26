@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed incorrect easing functions for easeInOutExpo, easeInBounce, easeOutBounce, and easeInOutBounce
 
 ## 2.0.0 (July 30, 2023)
 * Switched react-spring's react and reactroblox scopes from corepackages to jsdotlua ([@vocksel](https://github.com/vocksel) in [#51](https://github.com/chriscerie/roact-spring/pull/51))
